@@ -1,0 +1,1795 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HR-панель Ред Петролеум</title>
+<meta name="description" content="Ежемесячный отчёт управления человеческими ресурсами">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    --bg:#F1F1EF; --surface:#FFFFFF; --surface-2:#F6F5F3; --surface-3:#EDECE9;
+    --ink:#16181C; --ink-2:#4B4F58; --muted:#5E6169;
+    --grid:#E4E3E0; --border:rgba(15,17,21,0.10); --border-strong:rgba(15,17,21,0.18);
+    --accent:#8C2F3E; --accent-ink:#FFFFFF; --accent-soft:#F3DEE1; --accent-soft-ink:#5C1F2A;
+    --steel:#2A5FA5; --steel-soft:#DCE6F3; --steel-soft-ink:#1D3F6E;
+    --good:#0ca30c; --warning:#c98100; --serious:#c14e2b; --critical:#b32e2e;
+    --good-soft:#DDF1DC; --warning-soft:#FBEBCF; --serious-soft:#F7DDD1; --critical-soft:#F6D9D9;
+    --seq-1:#F3DEE1; --seq-2:#DDA3AC; --seq-3:#C06B7C; --seq-4:#8C2F3E; --seq-5:#5A1826;
+    --shadow-sm: 0 1px 2px rgba(15,17,21,.06), 0 1px 1px rgba(15,17,21,.04);
+    --shadow-md: 0 8px 24px rgba(15,17,21,.10), 0 2px 6px rgba(15,17,21,.06);
+    --shadow-lg: 0 20px 48px rgba(15,17,21,.16), 0 4px 12px rgba(15,17,21,.08);
+    --radius: 16px; --radius-sm: 10px;
+    --font-display: 'Unbounded', system-ui, sans-serif;
+    --font-body: 'Golos Text', system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --bg:#0E0F11; --surface:#1B1D21; --surface-2:#202226; --surface-3:#26282D;
+      --ink:#F4F4F3; --ink-2:#C3C2BE; --muted:#9EA1A8;
+      --grid:#303236; --border:rgba(255,255,255,0.10); --border-strong:rgba(255,255,255,0.18);
+      --accent:#C25569; --accent-ink:#1B1013; --accent-soft:#3A1F26; --accent-soft-ink:#F0C3CB;
+      --steel:#5B8FCF; --steel-soft:#1E2A3A; --steel-soft-ink:#BFD6F2;
+      --good:#3FC53F; --warning:#E4A93A; --serious:#E88E6B; --critical:#E4696E;
+      --good-soft:#173420; --warning-soft:#3A2C10; --serious-soft:#3A2318; --critical-soft:#3A1B1D;
+      --seq-1:#3A1F26; --seq-2:#5A2C36; --seq-3:#8C3F4E; --seq-4:#C25569; --seq-5:#E895A2;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+      --shadow-md: 0 8px 24px rgba(0,0,0,.45);
+      --shadow-lg: 0 24px 56px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --bg:#0E0F11; --surface:#1B1D21; --surface-2:#202226; --surface-3:#26282D;
+    --ink:#F4F4F3; --ink-2:#C3C2BE; --muted:#9EA1A8;
+    --grid:#303236; --border:rgba(255,255,255,0.10); --border-strong:rgba(255,255,255,0.18);
+    --accent:#C25569; --accent-ink:#1B1013; --accent-soft:#3A1F26; --accent-soft-ink:#F0C3CB;
+    --steel:#5B8FCF; --steel-soft:#1E2A3A; --steel-soft-ink:#BFD6F2;
+    --good:#3FC53F; --warning:#E4A93A; --serious:#E88E6B; --critical:#E4696E;
+    --good-soft:#173420; --warning-soft:#3A2C10; --serious-soft:#3A2318; --critical-soft:#3A1B1D;
+    --seq-1:#3A1F26; --seq-2:#5A2C36; --seq-3:#8C3F4E; --seq-4:#C25569; --seq-5:#E895A2;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+    --shadow-md: 0 8px 24px rgba(0,0,0,.45);
+    --shadow-lg: 0 24px 56px rgba(0,0,0,.55);
+  }
+
+  *{box-sizing:border-box;}
+  body{ background:var(--bg); color:var(--ink); font-family:var(--font-body); font-size:16px; line-height:1.5; -webkit-font-smoothing:antialiased; }
+  h1,h2,h3,h4{ font-family:var(--font-display); font-weight:700; letter-spacing:-0.01em; text-wrap:balance; margin:0; color:var(--ink); }
+  p{margin:0;}
+  button{font-family:inherit; font-size:16px;}
+  table{border-collapse:collapse; width:100%;}
+  .num{ font-variant-numeric:tabular-nums; }
+  ::selection{ background:var(--accent-soft); color:var(--accent-soft-ink); }
+
+  .app{ min-height:100%; display:flex; flex-direction:column; }
+
+  /* ---------- Topbar ---------- */
+  .topbar{
+    position:sticky; top:env(safe-area-inset-top,0px); z-index:40;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    padding:12px 20px; padding-inline:max(20px, calc(16px + env(safe-area-inset-left,0px))) max(20px, calc(16px + env(safe-area-inset-right,0px)));
+    background:color-mix(in oklab, var(--bg) 86%, transparent);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .brand{ display:flex; flex-direction:column; gap:1px; margin-right:auto; }
+  .brand-name{ font-family:var(--font-display); font-weight:700; font-size:15px; letter-spacing:.01em; }
+  .brand-sub{ font-size:13px; color:var(--muted); font-weight:500; }
+  .topbar-group{ display:flex; align-items:center; gap:8px; }
+  .icon-btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    height:38px; padding:0 14px; border-radius:999px; border:1px solid var(--border-strong);
+    background:var(--surface); color:var(--ink); cursor:pointer; font-size:13.5px; font-weight:600;
+    transition:box-shadow .16s ease, transform .16s ease, background .16s ease;
+  }
+  .icon-btn:hover{ box-shadow:var(--shadow-md); transform:translateY(-1px); background:var(--surface-2); }
+  .icon-btn:active{ transform:translateY(0); }
+  .icon-btn.primary{ background:var(--accent); color:var(--accent-ink); border-color:transparent; }
+  .icon-btn.primary:hover{ filter:brightness(1.06); }
+  .icon-btn[disabled]{ opacity:.45; cursor:not-allowed; box-shadow:none; transform:none; }
+  .slide-index{ font-size:13.5px; font-weight:600; color:var(--muted); min-width:56px; text-align:center; font-variant-numeric:tabular-nums; }
+  .dots{ display:flex; gap:6px; align-items:center; }
+  .dot{ width:7px; height:7px; border-radius:50%; background:var(--border-strong); cursor:pointer; transition:background .15s, transform .15s; }
+  .dot:hover{ transform:scale(1.3); }
+  .dot.active{ background:var(--accent); transform:scale(1.35); }
+  .badge-demo{
+    font-size:11.5px; font-weight:600; padding:4px 10px; border-radius:999px;
+    background:var(--warning-soft); color:var(--serious); border:1px solid var(--border);
+    display:inline-flex; align-items:center; gap:5px; white-space:nowrap;
+  }
+  .badge-demo.is-live{ background:var(--good-soft); color:var(--good); }
+
+  /* ---------- Deck ---------- */
+  .deck-wrap{ flex:1; display:flex; align-items:center; justify-content:center; padding:22px clamp(12px,4vw,40px); }
+  .deck{
+    position:relative; width:min(100%, 1280px); aspect-ratio:16/9; max-height:80vh;
+    background:var(--surface); border-radius:22px; box-shadow:var(--shadow-lg); overflow:hidden;
+    border:1px solid var(--border);
+  }
+  @media (max-width:700px){
+    .deck{ aspect-ratio:auto; height:auto; min-height:min(560px, 78vh); max-height:82vh; }
+  }
+  .slide{
+    position:absolute; inset:0; display:flex; flex-direction:column; background:var(--surface);
+    opacity:0; transform:translateX(28px); pointer-events:none;
+    transition:opacity .38s cubic-bezier(.22,.61,.36,1), transform .42s cubic-bezier(.22,.61,.36,1);
+  }
+  .slide.is-active{ opacity:1; transform:translateX(0); pointer-events:auto; z-index:2; }
+  .slide.is-prev{ transform:translateX(-28px); }
+  .exporting .slide{ transition:none; }
+  @media (prefers-reduced-motion: reduce){ .slide{ transition:opacity .12s linear; transform:none !important; } }
+
+  .slide-inner{
+    flex:1; min-height:0; overflow-y:auto; padding:clamp(20px,3.4vw,40px); display:flex; flex-direction:column; gap:16px;
+    scrollbar-width:thin; scrollbar-color:var(--border-strong) transparent;
+  }
+  .slide-inner::-webkit-scrollbar{ width:9px; }
+  .slide-inner::-webkit-scrollbar-track{ background:transparent; }
+  .slide-inner::-webkit-scrollbar-thumb{ background:var(--border-strong); border-radius:999px; border:2px solid var(--surface); background-clip:padding-box; }
+  .slide-inner::-webkit-scrollbar-thumb:hover{ background:var(--accent); background-clip:padding-box; }
+  .scroll-fade{
+    position:absolute; left:0; right:0; bottom:0; height:64px; pointer-events:none;
+    background:linear-gradient(to bottom, transparent, var(--surface) 78%);
+    opacity:0; transition:opacity .2s ease; z-index:5;
+  }
+  .scroll-hint{
+    position:absolute; left:50%; bottom:14px; transform:translateX(-50%) translateY(0);
+    display:inline-flex; align-items:center; gap:6px; padding:6px 13px; border-radius:999px;
+    background:var(--accent); color:var(--accent-ink); font-size:12.5px; font-weight:600;
+    box-shadow:var(--shadow-md); opacity:0; pointer-events:none; z-index:6;
+    transition:opacity .2s ease, transform .2s ease;
+    animation:scrollHintBob 1.6s ease-in-out infinite;
+  }
+  .slide.has-overflow .scroll-fade, .slide.has-overflow .scroll-hint{ opacity:1; }
+  .slide.has-overflow.at-bottom .scroll-fade, .slide.has-overflow.at-bottom .scroll-hint{ opacity:0; }
+  @keyframes scrollHintBob{ 0%,100%{ transform:translateX(-50%) translateY(0); } 50%{ transform:translateX(-50%) translateY(4px); } }
+  @media (prefers-reduced-motion: reduce){ .scroll-hint{ animation:none; } }
+  .slide-head{ display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .slide-eyebrow{ font-size:12.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+  .slide-title{ font-size:clamp(20px,2.6vw,28px); }
+  .slide-conclusion{
+    font-size:14px; color:var(--ink-2); background:var(--surface-2); border:1px solid var(--border);
+    border-radius:var(--radius-sm); padding:10px 14px; max-width:520px;
+  }
+  .slide-conclusion b{ color:var(--ink); }
+
+  /* ---------- Grid / cards ---------- */
+  .grid{ display:grid; gap:14px; }
+  .grid-cols-2{ grid-template-columns:1fr 1fr; }
+  .grid-cols-3{ grid-template-columns:repeat(3,1fr); }
+  .grid-cols-4{ grid-template-columns:repeat(4,1fr); }
+  @media (max-width:760px){ .grid-cols-2,.grid-cols-3,.grid-cols-4{ grid-template-columns:1fr; } }
+
+  .card{
+    background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius);
+    padding:16px; display:flex; flex-direction:column; gap:10px; min-width:0;
+  }
+  .card-title{ font-size:13px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+  .hoverable{ transition:box-shadow .18s ease, transform .18s ease, border-color .18s ease; }
+  .hoverable:hover{ box-shadow:var(--shadow-md); transform:translateY(-2px); border-color:var(--border-strong); }
+
+  /* ---------- Stat tiles ---------- */
+  .stat{ display:flex; flex-direction:column; gap:6px; }
+  .stat-value{ font-family:var(--font-display); font-size:clamp(26px,3.4vw,38px); font-weight:700; line-height:1; }
+  .stat-value .unit{ font-family:var(--font-body); font-size:.5em; font-weight:700; color:var(--muted); margin-left:4px; }
+  .stat-delta{ display:inline-flex; align-items:center; gap:4px; font-size:12.5px; font-weight:600; width:fit-content; padding:3px 8px; border-radius:999px; }
+  .stat-delta.up-good{ color:var(--good); background:var(--good-soft); }
+  .stat-delta.up-bad{ color:var(--critical); background:var(--critical-soft); }
+  .stat-delta.down-good{ color:var(--good); background:var(--good-soft); }
+  .stat-delta.down-bad{ color:var(--critical); background:var(--critical-soft); }
+  .stat-delta.flat{ color:var(--muted); background:var(--surface-3); }
+  .stat-label{ font-size:13px; color:var(--ink-2); }
+
+  /* ---------- Charts ---------- */
+  .chart-wrap{ width:100%; }
+  .chart-wrap svg{ width:100%; height:auto; display:block; overflow:visible; }
+  .mark{ transition:opacity .12s ease; cursor:pointer; }
+  .mark:hover{ opacity:.78; }
+  .axis-label{ font-size:12px; font-weight:500; fill:var(--muted); font-family:var(--font-body); }
+  .value-label{ font-size:12.5px; font-weight:600; fill:var(--ink-2); font-family:var(--font-body); font-variant-numeric:tabular-nums; }
+  .gridline{ stroke:var(--grid); stroke-width:1; }
+  .baseline{ stroke:var(--border-strong); stroke-width:1; }
+  .legend{ display:flex; gap:14px; flex-wrap:wrap; margin-top:2px; }
+  .legend-item{ display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-2); }
+  .legend-swatch{ width:10px; height:10px; border-radius:3px; flex:none; }
+
+  /* ---------- Tables ---------- */
+  .tbl-wrap{ overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius-sm); }
+  .tbl{ font-size:13.5px; }
+  .tbl th{ text-align:left; font-weight:700; color:var(--muted); font-size:12.5px; text-transform:uppercase; letter-spacing:.04em; padding:9px 12px; background:var(--surface-3); position:sticky; top:0; }
+  .tbl td{ padding:9px 12px; border-top:1px solid var(--border); color:var(--ink); vertical-align:middle; }
+  .tbl tr.row-hover:hover td{ background:var(--surface-2); }
+  .tbl td.num, .tbl th.num{ text-align:right; font-variant-numeric:tabular-nums; }
+
+  /* ---------- Status pills ---------- */
+  .pill{ display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:600; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .pill::before{ content:""; width:6px; height:6px; border-radius:50%; background:currentColor; }
+  .pill-good{ background:var(--good-soft); color:var(--good); }
+  .pill-warning{ background:var(--warning-soft); color:var(--warning); }
+  .pill-serious{ background:var(--serious-soft); color:var(--serious); }
+  .pill-critical{ background:var(--critical-soft); color:var(--critical); }
+  .pill-muted{ background:var(--surface-3); color:var(--muted); font-weight:700; }
+
+  /* ---------- TOC ---------- */
+  .toc-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+  @media (max-width:900px){ .toc-grid{ grid-template-columns:repeat(3,1fr);} }
+  @media (max-width:640px){ .toc-grid{ grid-template-columns:repeat(2,1fr);} }
+  .toc-card{
+    text-align:left; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius);
+    padding:14px; cursor:pointer; display:flex; flex-direction:column; gap:8px; height:100%;
+    color:inherit; font:inherit;
+  }
+  .toc-num{ font-family:var(--font-display); font-size:12px; color:var(--accent); font-weight:700; }
+  .toc-title{ font-size:13.5px; font-weight:600; line-height:1.25; }
+  .toc-conclusion{ font-size:12.5px; font-weight:500; color:var(--muted); line-height:1.4; }
+
+  /* ---------- Title slide ---------- */
+  .title-slide{
+    --city-h:clamp(64px,9vw,104px);
+    position:relative; flex:1; display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-end;
+    padding:clamp(24px,4.4vw,56px) clamp(24px,4.4vw,56px) calc(clamp(24px,4.4vw,56px) + var(--city-h)) clamp(24px,4.4vw,56px);
+    overflow:hidden;
+    background-image:
+      radial-gradient(58% 50% at 18% 12%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 68%),
+      radial-gradient(52% 46% at 88% 82%, color-mix(in oklab, var(--steel) 17%, transparent), transparent 68%),
+      linear-gradient(160deg, var(--surface) 0%, var(--surface-2) 100%);
+    background-size:190% 190%, 190% 190%, 100% 100%;
+    background-position:0% 0%, 100% 100%, 0 0;
+    background-repeat:no-repeat;
+    animation:gradientDrift 26s ease-in-out infinite;
+  }
+  @keyframes gradientDrift{
+    0%,100%{ background-position:0% 0%, 100% 100%, 0 0; }
+    50%{ background-position:26% 18%, 74% 80%, 0 0; }
+  }
+  @media (prefers-reduced-motion: reduce){ .title-slide{ animation:none; } }
+  .title-kicker{ font-size:13px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin-bottom:14px; }
+  .title-heading{ font-size:clamp(28px,5vw,46px); max-width:9.5em; line-height:1.05; }
+  .title-meta{ margin-top:18px; display:flex; align-items:center; gap:10px; font-size:14.5px; color:var(--ink-2); }
+  .title-meta .sep{ width:4px; height:4px; border-radius:50%; background:var(--muted); }
+
+  /* ---------- Title city scene (easter egg) ---------- */
+  .title-city{ position:absolute; left:0; right:0; bottom:0; height:var(--city-h); pointer-events:none; overflow:hidden; }
+  .title-city svg{ display:block; width:100%; height:100%; }
+  .title-city-label{
+    position:absolute; left:50%; top:6%; transform:translateX(-50%);
+    font-size:clamp(7.5px,.9vw,12px); font-weight:800; letter-spacing:.05em;
+    color:var(--accent); text-transform:uppercase; white-space:nowrap;
+  }
+
+  .city-ln{ fill:none; stroke:var(--ink); stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; opacity:.82; }
+  .city-ln-thin{ fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; opacity:.45; }
+  .city-fill-win{ fill:var(--ink); opacity:.16; }
+  .city-fill-accent{ fill:var(--accent); opacity:.16; }
+  .city-fill-ink{ fill:var(--ink); opacity:.82; }
+
+  .city-car{ animation-timing-function:linear; animation-iteration-count:infinite; }
+  .city-car-1{ animation-name:cityCarThrough1; animation-duration:8s;  animation-delay:0s; }   /* быстрый седан */
+  .city-car-2{ animation-name:cityCarStopL;    animation-duration:19s; animation-delay:2s; }   /* неторопливый хэтчбек, заезжает на АЗС */
+  .city-car-3{ animation-name:cityCarThrough2; animation-duration:23s; animation-delay:5s; }   /* медленный фургон */
+  .city-car-4{ animation-name:cityCarStopR;    animation-duration:13s; animation-delay:10s; }  /* шустрое спорткупе, заезжает на АЗС */
+
+  @keyframes cityCarThrough1{
+    0%{ transform:translate(-90px,0); }
+    100%{ transform:translate(1690px,0); }
+  }
+  @keyframes cityCarThrough2{
+    0%{ transform:translate(-90px,0); }
+    100%{ transform:translate(1690px,0); }
+  }
+  @keyframes cityCarStopL{
+    0%{   transform:translate(-90px,0); }
+    34%{  transform:translate(610px,0); }
+    38%{  transform:translate(660px,-9px); }             /* остановка у левой колонки */
+    58%{  transform:translate(660px,-9px); }
+    62%{  transform:translate(700px,0); }
+    100%{ transform:translate(1690px,0); }
+  }
+  @keyframes cityCarStopR{
+    0%{   transform:translate(-90px,0); }
+    44%{  transform:translate(760px,0); }
+    48%{  transform:translate(850px,-9px); }             /* остановка у правой колонки */
+    66%{  transform:translate(850px,-9px); }
+    70%{  transform:translate(900px,0); }
+    100%{ transform:translate(1690px,0); }
+  }
+
+  .city-bird{ animation:cityBirdFly 30s linear infinite; }
+  @keyframes cityBirdFly{
+    0%{   transform:translate(1650px,2px); opacity:0; }
+    1%{   opacity:1; }
+    22%{  transform:translate(-60px,2px); opacity:1; }
+    23.5%{ opacity:0; transform:translate(-60px,2px); }
+    100%{ opacity:0; transform:translate(-60px,2px); }
+  }
+  .city-bird-wing{ transform-origin:0px 0px; animation:cityBirdFlap .55s ease-in-out infinite; }
+  @keyframes cityBirdFlap{
+    0%,100%{ transform:scaleY(1); }
+    50%{ transform:scaleY(.35); }
+  }
+
+  .city-cloud{ animation-timing-function:linear; animation-iteration-count:infinite; }
+  .city-cloud-1{ animation-name:cityCloudDrift1; animation-duration:42s; animation-delay:0s; }
+  .city-cloud-2{ animation-name:cityCloudDrift2; animation-duration:58s; animation-delay:16s; }
+  @keyframes cityCloudDrift1{ 0%{ transform:translate(-90px,0); } 100%{ transform:translate(1690px,0); } }
+  @keyframes cityCloudDrift2{ 0%{ transform:translate(-110px,0); } 100%{ transform:translate(1710px,0); } }
+
+  @media (prefers-reduced-motion: reduce){
+    .city-car{ animation:none; }
+    .city-bird{ animation:none; opacity:0; }
+    .city-bird-wing{ animation:none; }
+    .city-cloud{ animation:none; }
+  }
+
+  /* ---------- Upload modal ---------- */
+  .modal-scrim{ position:fixed; inset:0; background:rgba(10,10,12,.5); backdrop-filter:blur(2px); z-index:100; display:flex; align-items:center; justify-content:center; padding:20px; }
+  .modal{ width:min(480px,100%); background:var(--surface); border-radius:18px; box-shadow:var(--shadow-lg); padding:22px; display:flex; flex-direction:column; gap:14px; border:1px solid var(--border); max-height:86vh; overflow-y:auto; }
+  .modal h3{ font-size:17px; }
+  .modal p{ font-size:13.5px; color:var(--ink-2); line-height:1.5; }
+  .modal .row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .file-drop{ border:1.5px dashed var(--border-strong); border-radius:var(--radius-sm); padding:20px; text-align:center; font-size:13.5px; font-weight:500; color:var(--muted); cursor:pointer; transition:border-color .15s, background .15s; }
+  .file-drop:hover{ border-color:var(--accent); background:var(--accent-soft); }
+  .modal-status{ font-size:13px; padding:8px 10px; border-radius:var(--radius-sm); }
+  .modal-status.ok{ background:var(--good-soft); color:var(--good); }
+  .modal-status.err{ background:var(--critical-soft); color:var(--critical); }
+
+  .toast{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(10px); background:var(--ink); color:var(--bg); padding:10px 18px; border-radius:999px; font-size:13.5px; font-weight:600; box-shadow:var(--shadow-lg); opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:200; }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  #chart-tip{ position:fixed; z-index:300; pointer-events:none; background:var(--ink); color:var(--bg); font-size:12px; line-height:1.4; padding:7px 10px; border-radius:8px; box-shadow:var(--shadow-md); opacity:0; transform:translate(-50%,-100%); transition:opacity .1s; max-width:220px; }
+  #chart-tip.show{ opacity:1; }
+  #chart-tip b{ font-weight:700; }
+
+  .footer-hint{ text-align:center; font-size:12.5px; font-weight:500; color:var(--muted); padding:10px 0 max(10px, env(safe-area-inset-bottom,0px)); }
+
+  .empty-note{ font-size:13.5px; font-weight:500; color:var(--muted); padding:20px; text-align:center; }
+
+  .person-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  @media (max-width:760px){ .person-grid{ grid-template-columns:1fr 1fr; } }
+  .person-card{ background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius); padding:13px; display:flex; flex-direction:column; gap:6px; position:relative; }
+  .person-card.is-flag{ border-color:var(--critical); background:color-mix(in oklab, var(--critical-soft) 70%, var(--surface-2)); }
+  .person-card.is-best{ border-color:var(--accent); }
+  .person-star{ position:absolute; top:10px; right:10px; font-size:15px; }
+  .person-name{ font-weight:600; font-size:13.5px; }
+  .person-role{ font-size:12.5px; font-weight:500; color:var(--muted); }
+  .person-func{ font-size:11.5px; color:var(--ink-2); line-height:1.35; }
+  .kpi-bar{ height:6px; border-radius:99px; background:var(--surface-3); overflow:hidden; margin-top:2px; }
+  .kpi-bar-fill{ height:100%; background:var(--accent); border-radius:99px; width:0; transition:width 1s cubic-bezier(.22,.61,.36,1); }
+  .person-violation{ font-size:11px; color:var(--critical); background:var(--critical-soft); border-radius:8px; padding:5px 7px; margin-top:2px; }
+  .best-history{ display:flex; flex-wrap:wrap; gap:6px; }
+  .best-chip{ font-size:11px; background:var(--surface-3); color:var(--ink-2); padding:4px 9px; border-radius:999px; }
+</style>
+
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="brand">
+      <span class="brand-name">HR · Ред Петролеум</span>
+      <span class="brand-sub" id="topbar-period">—</span>
+    </div>
+    <span class="badge-demo" id="data-badge">● Демонстрационные данные</span>
+    <div class="topbar-group">
+      <button class="icon-btn" id="btn-prev" title="Предыдущий слайд (←)">←</button>
+      <span class="slide-index"><span id="slide-cur">1</span> / <span id="slide-total">12</span></span>
+      <button class="icon-btn" id="btn-next" title="Следующий слайд (→)">→</button>
+    </div>
+    <div class="topbar-group">
+      <button class="icon-btn" id="btn-upload">⇪ Обновить данные</button>
+      <button class="icon-btn" id="btn-export-pdf">PDF</button>
+      <button class="icon-btn primary" id="btn-export-word">Сводка Word</button>
+    </div>
+  </div>
+
+  <div class="deck-wrap">
+    <div class="deck" id="deck">
+      <section class="slide" data-slide="0" id="slide-0">
+        <div class="title-slide">
+          <div class="title-kicker">Ежемесячный отчёт · HR</div>
+          <h1 class="title-heading">Отчёт управления человеческими ресурсами</h1>
+          <div class="title-meta">
+            <span id="title-company">Ред Петролеум</span><span class="sep"></span><span id="title-period">—</span>
+          </div>
+          <div class="title-city" aria-hidden="true">
+            <svg viewBox="0 0 1600 130" preserveAspectRatio="none">
+              <!-- road -->
+              <line class="city-ln" x1="0" y1="100" x2="1600" y2="100" />
+              <line class="city-ln-thin" x1="0" y1="113" x2="1600" y2="113" stroke-dasharray="18 16" />
+
+              <!-- clouds: drift left to right, high above the rooftops -->
+              <g class="city-cloud city-cloud-1">
+                <path class="city-ln-thin" d="M-20,16 Q-20,8 -12,8 Q-10,2 -2,2 Q6,0 12,6 Q20,6 20,14 Q20,18 14,18 L-14,18 Q-20,18 -20,16 Z" />
+              </g>
+              <g class="city-cloud city-cloud-2">
+                <path class="city-ln-thin" d="M-28,24 Q-28,14 -18,14 Q-15,6 -5,6 Q5,3 13,10 Q23,10 25,19 Q30,19 30,26 Q30,30 22,30 L-20,30 Q-28,30 -28,24 Z" />
+              </g>
+
+              <!-- left skyline -->
+              <g>
+                <rect class="city-ln" x="10" y="70" width="40" height="30" />
+                <rect class="city-fill-win" x="18" y="78" width="8" height="8" />
+                <rect class="city-fill-win" x="34" y="78" width="8" height="8" />
+                <line class="city-ln-thin" x1="64" y1="100" x2="64" y2="88" />
+                <circle class="city-ln-thin" cx="64" cy="80" r="11" />
+                <rect class="city-ln" x="95" y="52" width="36" height="48" />
+                <rect class="city-fill-win" x="102" y="60" width="7" height="7" />
+                <rect class="city-fill-win" x="115" y="60" width="7" height="7" />
+                <rect class="city-fill-win" x="102" y="75" width="7" height="7" />
+                <rect class="city-fill-win" x="115" y="75" width="7" height="7" />
+                <rect class="city-ln" x="145" y="66" width="46" height="34" />
+                <rect class="city-fill-win" x="154" y="74" width="8" height="8" />
+                <rect class="city-fill-win" x="172" y="74" width="8" height="8" />
+                <line class="city-ln-thin" x1="205" y1="100" x2="205" y2="90" />
+                <circle class="city-ln-thin" cx="205" cy="81" r="12" />
+                <rect class="city-ln" x="230" y="44" width="40" height="56" />
+                <rect class="city-fill-win" x="238" y="52" width="7" height="7" />
+                <rect class="city-fill-win" x="252" y="52" width="7" height="7" />
+                <rect class="city-fill-win" x="238" y="66" width="7" height="7" />
+                <rect class="city-fill-win" x="252" y="66" width="7" height="7" />
+                <rect class="city-fill-win" x="238" y="80" width="7" height="7" />
+                <rect class="city-fill-win" x="252" y="80" width="7" height="7" />
+                <rect class="city-ln" x="285" y="62" width="44" height="38" />
+                <rect class="city-fill-win" x="294" y="70" width="8" height="8" />
+                <rect class="city-fill-win" x="310" y="70" width="8" height="8" />
+                <line class="city-ln-thin" x1="345" y1="100" x2="345" y2="90" />
+                <circle class="city-ln-thin" cx="345" cy="81" r="12" />
+                <rect class="city-ln" x="375" y="50" width="42" height="50" />
+                <rect class="city-fill-win" x="384" y="58" width="7" height="7" />
+                <rect class="city-fill-win" x="398" y="58" width="7" height="7" />
+                <rect class="city-fill-win" x="384" y="72" width="7" height="7" />
+                <rect class="city-fill-win" x="398" y="72" width="7" height="7" />
+                <rect class="city-ln" x="430" y="70" width="40" height="30" />
+                <rect class="city-fill-win" x="438" y="78" width="8" height="8" />
+                <rect class="city-fill-win" x="454" y="78" width="8" height="8" />
+                <line class="city-ln-thin" x1="495" y1="100" x2="495" y2="88" />
+                <circle class="city-ln-thin" cx="495" cy="80" r="11" />
+                <rect class="city-ln" x="520" y="60" width="40" height="40" />
+                <rect class="city-fill-win" x="528" y="68" width="7" height="7" />
+                <rect class="city-fill-win" x="544" y="68" width="7" height="7" />
+              </g>
+
+              <!-- gas station -->
+              <g>
+                <line class="city-ln" x1="680" y1="42" x2="680" y2="100" />
+                <line class="city-ln" x1="920" y1="42" x2="920" y2="100" />
+                <rect class="city-ln city-fill-accent" x="640" y="30" width="320" height="13" rx="3" />
+                <rect class="city-ln" x="722" y="6" width="156" height="21" rx="3" />
+
+                <rect class="city-ln" x="726" y="58" width="14" height="27" rx="2" />
+                <rect class="city-ln" x="726" y="81" width="14" height="18" rx="1" />
+                <rect class="city-ln" x="860" y="58" width="14" height="27" rx="2" />
+                <rect class="city-ln" x="860" y="81" width="14" height="18" rx="1" />
+              </g>
+
+              <!-- right skyline -->
+              <g>
+                <rect class="city-ln" x="970" y="70" width="40" height="30" />
+                <rect class="city-fill-win" x="978" y="78" width="8" height="8" />
+                <rect class="city-fill-win" x="994" y="78" width="8" height="8" />
+                <line class="city-ln-thin" x1="1025" y1="100" x2="1025" y2="88" />
+                <circle class="city-ln-thin" cx="1025" cy="80" r="11" />
+                <rect class="city-ln" x="1050" y="58" width="40" height="42" />
+                <rect class="city-fill-win" x="1058" y="66" width="7" height="7" />
+                <rect class="city-fill-win" x="1073" y="66" width="7" height="7" />
+                <rect class="city-fill-win" x="1058" y="80" width="7" height="7" />
+                <rect class="city-fill-win" x="1073" y="80" width="7" height="7" />
+                <rect class="city-ln" x="1100" y="45" width="44" height="55" />
+                <rect class="city-fill-win" x="1109" y="53" width="7" height="7" />
+                <rect class="city-fill-win" x="1124" y="53" width="7" height="7" />
+                <rect class="city-fill-win" x="1109" y="67" width="7" height="7" />
+                <rect class="city-fill-win" x="1124" y="67" width="7" height="7" />
+                <rect class="city-fill-win" x="1109" y="81" width="7" height="7" />
+                <rect class="city-fill-win" x="1124" y="81" width="7" height="7" />
+                <line class="city-ln-thin" x1="1165" y1="100" x2="1165" y2="90" />
+                <circle class="city-ln-thin" cx="1165" cy="81" r="12" />
+                <rect class="city-ln" x="1185" y="68" width="40" height="32" />
+                <rect class="city-fill-win" x="1193" y="76" width="8" height="8" />
+                <rect class="city-fill-win" x="1209" y="76" width="8" height="8" />
+                <rect class="city-ln" x="1235" y="52" width="42" height="48" />
+                <rect class="city-fill-win" x="1244" y="60" width="7" height="7" />
+                <rect class="city-fill-win" x="1258" y="60" width="7" height="7" />
+                <rect class="city-fill-win" x="1244" y="74" width="7" height="7" />
+                <rect class="city-fill-win" x="1258" y="74" width="7" height="7" />
+                <line class="city-ln-thin" x1="1310" y1="100" x2="1310" y2="90" />
+                <circle class="city-ln-thin" cx="1310" cy="81" r="12" />
+                <rect class="city-ln" x="1335" y="50" width="40" height="50" />
+                <rect class="city-fill-win" x="1343" y="58" width="7" height="7" />
+                <rect class="city-fill-win" x="1357" y="58" width="7" height="7" />
+                <rect class="city-fill-win" x="1343" y="72" width="7" height="7" />
+                <rect class="city-fill-win" x="1357" y="72" width="7" height="7" />
+                <rect class="city-ln" x="1385" y="70" width="40" height="30" />
+                <rect class="city-fill-win" x="1393" y="78" width="8" height="8" />
+                <rect class="city-fill-win" x="1409" y="78" width="8" height="8" />
+                <line class="city-ln-thin" x1="1450" y1="100" x2="1450" y2="88" />
+                <circle class="city-ln-thin" cx="1450" cy="80" r="11" />
+                <rect class="city-ln" x="1475" y="62" width="42" height="38" />
+                <rect class="city-fill-win" x="1484" y="70" width="8" height="8" />
+                <rect class="city-fill-win" x="1500" y="70" width="8" height="8" />
+                <rect class="city-ln" x="1530" y="72" width="38" height="28" />
+                <rect class="city-fill-win" x="1538" y="80" width="8" height="8" />
+              </g>
+
+              <!-- cars: distinct body shapes -->
+              <!-- car-1: sedan (fast) -->
+              <g class="city-car city-car-1">
+                <rect class="city-ln" x="0" y="86" width="56" height="13" rx="5" />
+                <rect class="city-ln" x="10" y="76" width="30" height="13" rx="5" />
+                <circle class="city-fill-ink" cx="12" cy="100" r="5.5" />
+                <circle class="city-fill-ink" cx="44" cy="100" r="5.5" />
+              </g>
+              <!-- car-2: hatchback (unhurried, stops at the left pump) -->
+              <g class="city-car city-car-2">
+                <rect class="city-ln" x="0" y="88" width="44" height="11" rx="5" />
+                <rect class="city-ln" x="6" y="78" width="26" height="12" rx="6" />
+                <circle class="city-fill-ink" cx="10" cy="100" r="5" />
+                <circle class="city-fill-ink" cx="34" cy="100" r="5" />
+              </g>
+              <!-- car-3: van (slow, boxy) -->
+              <g class="city-car city-car-3">
+                <rect class="city-ln" x="0" y="84" width="62" height="15" rx="4" />
+                <rect class="city-ln" x="4" y="70" width="54" height="16" rx="4" />
+                <circle class="city-fill-ink" cx="14" cy="100" r="6" />
+                <circle class="city-fill-ink" cx="48" cy="100" r="6" />
+              </g>
+              <!-- car-4: low sports coupe (quick, stops at the right pump) -->
+              <g class="city-car city-car-4">
+                <rect class="city-ln" x="0" y="90" width="68" height="10" rx="5" />
+                <rect class="city-ln" x="30" y="82" width="22" height="10" rx="5" />
+                <circle class="city-fill-ink" cx="14" cy="101" r="5.5" />
+                <circle class="city-fill-ink" cx="54" cy="101" r="5.5" />
+              </g>
+
+              <!-- bird: crosses the whole scene right-to-left once every 30s, just above the sign -->
+              <g class="city-bird">
+                <path class="city-ln-thin city-bird-wing" d="M-13,0 Q-6.5,-8 0,0 Q6.5,-8 13,0" />
+              </g>
+            </svg>
+            <div class="title-city-label">Red Petroleum</div>
+          </div>
+        </div>
+      </section>
+      <section class="slide" data-slide="1" id="slide-1">
+        <div class="slide-inner">
+          <div class="slide-head">
+            <div>
+              <div class="slide-eyebrow">Оглавление</div>
+              <h2 class="slide-title">Направления отчёта</h2>
+            </div>
+          </div>
+          <div class="toc-grid" id="toc-grid"></div>
+        </div>
+        <div class="scroll-fade"></div>
+        <div class="scroll-hint">Прокрутите вниз ↓</div>
+      </section>
+      <section class="slide" data-slide="12" id="slide-view">
+        <div class="slide-inner" id="view-body"></div>
+        <div class="scroll-fade"></div>
+        <div class="scroll-hint">Прокрутите вниз ↓</div>
+      </section>
+    </div>
+  </div>
+
+  <div class="footer-hint">Клавиши ← → для навигации · кликните по карточке направления на слайде 2, чтобы перейти к разделу</div>
+</div>
+
+<div id="chart-tip"></div>
+<div class="toast" id="toast"></div>
+<input type="file" id="file-input" accept=".csv,.xlsx,.xls" style="display:none">
+<div class="modal-scrim" id="upload-modal" style="display:none" role="dialog" aria-modal="true">
+  <div class="modal">
+    <h3>Обновить данные раздела</h3>
+    <p>Скачайте шаблон Excel с текущими значениями, отредактируйте его в своей системе и загрузите обратно — данные обновятся для всех, кто открывает этот отчёт. Можно также загрузить CSV одной таблицы.</p>
+    <div class="row">
+      <select id="upload-block-select" class="icon-btn" style="flex:1;min-width:180px"></select>
+    </div>
+    <div class="row">
+      <button class="icon-btn" id="btn-download-template" style="flex:1">⇩ Скачать шаблон (.xlsx)</button>
+    </div>
+    <div class="file-drop" id="file-drop">Нажмите, чтобы выбрать файл .xlsx или .csv для загрузки</div>
+    <div id="upload-status"></div>
+    <div class="row" style="justify-content:flex-end">
+      <button class="icon-btn" id="btn-modal-close">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+/* =========================================================================
+   HR-панель Ред Петролеум — конфигурация, данные, рендер, интерактивность
+   ========================================================================= */
+(function(){
+  "use strict";
+
+  var COLORS = {
+    accent:'var(--accent)', steel:'var(--steel)',
+    good:'var(--good)', warning:'var(--warning)', serious:'var(--serious)', critical:'var(--critical)',
+    seq:['var(--seq-1)','var(--seq-2)','var(--seq-3)','var(--seq-4)','var(--seq-5)']
+  };
+
+  var BLOCKS = [
+    {key:'recruitment', title:'Подбор, найм, адаптация, резерв кадров', short:'Подбор и адаптация'},
+    {key:'admin', title:'Кадровое администрирование', short:'Администрирование'},
+    {key:'assessment', title:'Оценка и обучение', short:'Оценка и обучение'},
+    {key:'discipline', title:'Дисциплина труда', short:'Дисциплина труда'},
+    {key:'analytics', title:'HR-аналитика по компании и процессам', short:'HR-аналитика'},
+    {key:'departments', title:'Результативность отделов', short:'Результативность отделов'},
+    {key:'budget', title:'Бюджет', short:'Бюджет'},
+    {key:'plan', title:'План работы и протокольные поручения', short:'План и поручения'},
+    {key:'hrEfficiency', title:'Эффективность сотрудников HR', short:'Эффективность HR'},
+    {key:'proposals', title:'Предложения и прочее', short:'Предложения'}
+  ];
+  var SLIDE_COUNT = BLOCKS.length + 2; // title + toc + blocks
+
+  window.__HR__ = { COLORS:COLORS, BLOCKS:BLOCKS, SLIDE_COUNT:SLIDE_COUNT };
+})();
+</script>
+<script>
+window.__HR__.DEMO = {
+  meta:{ period:'Сентябрь 2026', prevPeriod:'Август 2026', company:'Ред Петролеум' },
+
+  recruitment:{
+    funnel:[{stage:'Заявки',count:186},{stage:'Скрининг',count:124},{stage:'Собеседование',count:71},{stage:'Оффер',count:34},{stage:'Выход на работу',count:27}],
+    avgTimeToHire:{current:24,prev:29,unit:'дн.'},
+    byDept:[{dept:'МАЗС',open:9,avgDays:26},{dept:'САУП',open:6,avgDays:21},{dept:'Ред Маркет',open:5,avgDays:23},{dept:'ОРП',open:4,avgDays:19},{dept:'Али Гарант',open:3,avgDays:18},{dept:'ДИТ',open:2,avgDays:31}],
+    adaptation:{total:27,passed:22,failed:3,inProgress:2,successRate:81,prevSuccessRate:74},
+    reserve:{inReserve:38,readyToAssign:14,assignedFromReserve:5,closedFromReservePct:19,prevClosedFromReservePct:14},
+    conclusion:'Срок закрытия вакансий сократился до 24 дней (−5 к прошлому месяцу), доля закрытий из кадрового резерва выросла до 19%.'
+  },
+
+  admin:{
+    docsByType:[{type:'Приказы',count:142,prev:131},{type:'Справки',count:96,prev:104},{type:'Письма',count:58,prev:52},{type:'Договоры',count:21,prev:19},{type:'Прочее',count:33,prev:30}],
+    avgProcessingDays:{current:2.1,prev:2.6},
+    statusBreakdown:{done:312,inProgress:29,overdue:9},
+    overdueList:[{doc:'Приказ о переводе №118',dept:'МАЗС',responsible:'Т. Ибраева',daysOverdue:4},{doc:'Доп. соглашение №27',dept:'САУП',responsible:'Н. Сыпабекова',daysOverdue:2},{doc:'Приказ об увольнении №94',dept:'ДИТ',responsible:'Б. Асылбеков',daysOverdue:6},{doc:'Справки 2-НДФЛ (партия)',dept:'Ред Маркет',responsible:'А. Мамбетакунова',daysOverdue:1}],
+    conclusion:'Документооборот вырос на 7%, среднее время оформления сократилось до 2,1 дня; на контроле 9 просроченных документов.'
+  },
+
+  assessment:{
+    avgScore:{current:78,prev:74,history:[{month:'Апр',score:71},{month:'Май',score:73},{month:'Июн',score:75},{month:'Июл',score:74},{month:'Авг',score:76},{month:'Сен',score:78}]},
+    resultsDistribution:[{band:'90–100',count:18},{band:'75–89',count:41},{band:'60–74',count:27},{band:'<60',count:9}],
+    topTopics:[{topic:'Охрана труда — обновление',participants:64,avgScore:82},{topic:'Клиентский сервис МАЗС',participants:38,avgScore:76},{topic:'1С: Документооборот',participants:22,avgScore:71},{topic:'Управленческие навыки (резерв)',participants:14,avgScore:85}],
+    radar360:{axes:['Коммуникация','Результативность','Лидерство','Клиентоориентир.','Дисциплина'],self:[7,8,6,8,9],peers:[6,7,7,7,8]},
+    movers:[{name:'Д. Керимбеков',delta:14,direction:'up'},{name:'А. Молдалиева',delta:11,direction:'up'},{name:'С. Турсунов',delta:-9,direction:'down'}],
+    conclusion:'Средний балл аттестаций вырос до 78 (+4); лучшая динамика — по программе «Управленческие навыки» для кадрового резерва.'
+  },
+
+  discipline:{
+    totalViolations:{current:11,prev:16},
+    byType:[{type:'Опоздания',count:6},{type:'Нарушение регламента',count:3},{type:'Прогул',count:1},{type:'Иное',count:1}],
+    byDept:[{dept:'МАЗС',count:5},{dept:'САУП',count:2},{dept:'ОРП',count:2},{dept:'Ред Маркет',count:1},{dept:'Али Гарант',count:1},{dept:'ДИТ',count:0}],
+    history:[{month:'Апр',count:19},{month:'Май',count:17},{month:'Июн',count:21},{month:'Июл',count:18},{month:'Авг',count:16},{month:'Сен',count:11}],
+    recent:[{date:'12.09',employee:'Р. Асанов',dept:'МАЗС',type:'Опоздание',status:'Замечание',severity:'warning'},{date:'09.09',employee:'К. Оморова',dept:'САУП',type:'Нарушение регламента',status:'Выговор',severity:'serious'},{date:'03.09',employee:'Е. Волков',dept:'ОРП',type:'Прогул',status:'На рассмотрении',severity:'critical'},{date:'01.09',employee:'Ж. Абдыкадырова',dept:'МАЗС',type:'Опоздание',status:'Замечание',severity:'warning'}],
+    conclusion:'Нарушения снизились до 11 случаев (−5 к прошлому месяцу), третий месяц подряд устойчивое снижение; основной вклад — опоздания на МАЗС.'
+  },
+
+  analytics:{
+    headcount:{current:412,prev:405},
+    hired:14, fired:7,
+    turnoverRate:{current:1.7,prev:2.1, history:[{month:'Апр',rate:2.4},{month:'Май',rate:2.2},{month:'Июн',rate:2.6},{month:'Июл',rate:2.0},{month:'Авг',rate:2.1},{month:'Сен',rate:1.7}]},
+    structureByDept:[{dept:'МАЗС',count:158},{dept:'САУП',count:74},{dept:'Ред Маркет',count:63},{dept:'ОРП',count:51},{dept:'Али Гарант',count:38},{dept:'ДИТ',count:28}],
+    hrRatio:1.5,
+    internalFillRate:{current:19,prev:14},
+    conclusion:'Численность выросла до 412 человек, текучесть снизилась до 1,7% — минимум за полгода; доля закрытия вакансий внутренними кандидатами — 19%.'
+  },
+
+  departments:{
+    rows:[
+      {dept:'Али Гарант',interaction:8.6,execution:9.0,hrWork:8.2,kpi:91,total:8.7},
+      {dept:'ДИТ',interaction:8.1,execution:8.4,hrWork:7.9,kpi:87,total:8.3},
+      {dept:'ОРП',interaction:7.8,execution:8.0,hrWork:8.1,kpi:84,total:8.1},
+      {dept:'Ред Маркет',interaction:7.5,execution:7.6,hrWork:7.4,kpi:79,total:7.6},
+      {dept:'САУП',interaction:7.2,execution:7.9,hrWork:7.0,kpi:76,total:7.4},
+      {dept:'МАЗС',interaction:6.4,execution:6.8,hrWork:6.5,kpi:68,total:6.6}
+    ],
+    conclusion:'Лидер рейтинга — Али Гарант (8,7 балла); в антирейтинге — МАЗС (6,6) на фоне роста нарушений дисциплины.'
+  },
+
+  budget:{
+    byLine:[
+      {line:'Фонд оплаты труда',plan:18400000,fact:18100000,nextPlan:18600000,note:'Плановый рост окладов с октября'},
+      {line:'Подбор и HR-маркетинг',plan:620000,fact:705000,nextPlan:600000,note:'Перерасход из-за срочного подбора на МАЗС'},
+      {line:'Обучение и развитие',plan:540000,fact:410000,nextPlan:650000,note:'Часть программ перенесена на октябрь'},
+      {line:'Кадровое администрирование',plan:180000,fact:171000,nextPlan:180000,note:''},
+      {line:'Корпоративные мероприятия',plan:260000,fact:258000,nextPlan:150000,note:''}
+    ],
+    history:[{month:'Апр',plan:19200000,fact:18700000},{month:'Май',plan:19500000,fact:19100000},{month:'Июн',plan:19800000,fact:19950000},{month:'Июл',plan:19700000,fact:19300000},{month:'Авг',plan:19900000,fact:19500000},{month:'Сен',plan:20000000,fact:19644000}],
+    conclusion:'Освоение бюджета — 98,2% плана; перерасход по подбору компенсирован экономией на обучении.'
+  },
+
+  plan:{
+    factVsPlan:[
+      {item:'Закрыть 6 приоритетных вакансий МАЗС',status:'done',comment:'Закрыто 5 из 6'},
+      {item:'Провести аттестацию отдела продаж',status:'done',comment:'Выполнено в срок'},
+      {item:'Запустить геолокационный контроль полевых визитов',status:'inProgress',comment:'Пилот на 2 подразделениях'},
+      {item:'Обновить регламент кадрового резерва',status:'postponed',comment:'Перенесено на октябрь'}
+    ],
+    nextPlan:[
+      {item:'Завершить внедрение геоконтроля во всех подразделениях',description:'Полный запуск, обучение руководителей'},
+      {item:'Провести оценку 360 для руководителей среднего звена',description:'До 15 октября'},
+      {item:'Актуализировать штатное расписание Ред Маркет',description:'С учётом открытия новой точки'}
+    ],
+    protocolStatus:{done:14,postponed:3,notDone:1,inProgress:5},
+    protocolHistory:[{month:'Апр',done:9,postponed:2,notDone:2,inProgress:4},{month:'Май',done:11,postponed:3,notDone:1,inProgress:3},{month:'Июн',done:10,postponed:4,notDone:2,inProgress:5},{month:'Июл',done:12,postponed:2,notDone:1,inProgress:4},{month:'Авг',done:13,postponed:3,notDone:2,inProgress:4},{month:'Сен',done:14,postponed:3,notDone:1,inProgress:5}],
+    currentTasks:[{task:'Согласовать бюджет обучения на Q4',responsible:'А. Маслов',deadline:'25.09',status:'inProgress'},{task:'Подготовить отчёт по резерву для правления',responsible:'З. Акматова',deadline:'28.09',status:'inProgress'},{task:'Обновить должностные инструкции ДИТ',responsible:'У. Абилов',deadline:'20.09',status:'postponed'}],
+    conclusion:'14 из 23 протокольных поручений исполнено в срок, доля просроченных — 4%, исторический минимум.'
+  },
+
+  hrEfficiency:{
+    staff:[
+      {name:'Н. Сыпабекова',position:'Ведущий рекрутер',functions:'Подбор МАЗС, ОРП',kpiPct:104,isBestThisMonth:true,violation:null},
+      {name:'А. Мамбетакунова',position:'Рекрутер',functions:'Подбор САУП, Ред Маркет',kpiPct:97,isBestThisMonth:false,violation:null},
+      {name:'Б. Асылбеков',position:'Рекрутер',functions:'Подбор Али Гарант, ДИТ',kpiPct:91,isBestThisMonth:false,violation:null},
+      {name:'Т. Ибраева',position:'Специалист по кадровому администрированию',functions:'Приказы, документооборот',kpiPct:88,isBestThisMonth:false,violation:null},
+      {name:'Д. Керимбеков',position:'Специалист по обучению',functions:'Программы обучения и аттестации',kpiPct:93,isBestThisMonth:false,violation:null},
+      {name:'С. Турсунов',position:'Специалист по кадровому администрированию',functions:'Учёт рабочего времени',kpiPct:74,isBestThisMonth:false,violation:'Просрочено оформление 3 приказов подряд'}
+    ],
+    pastBest:[{name:'Т. Ибраева',month:'Июнь'},{name:'Д. Керимбеков',month:'Июль'},{name:'А. Мамбетакунова',month:'Август'}],
+    conclusion:'Лучший сотрудник месяца — Н. Сыпабекова (104% КПЭ); зафиксировано системное нарушение сроков у С. Турсунова.'
+  },
+
+  proposals:{
+    items:[
+      {direction:'Подбор',proposal:'Расширить резерв на позиции МАЗС за счёт стажёрской программы',responsible:'Н. Сыпабекова',priority:'high',status:'new'},
+      {direction:'Дисциплина труда',proposal:'Ввести гибкий старт смены на МАЗС для снижения опозданий',responsible:'Т. Ибраева',priority:'medium',status:'inProgress'},
+      {direction:'Обучение',proposal:'Перенести программы Q3 на октябрь без потери бюджета',responsible:'Д. Керимбеков',priority:'medium',status:'new'},
+      {direction:'Бюджет',proposal:'Пересмотреть лимит на срочный подбор с учётом сезонности',responsible:'А. Маслов',priority:'high',status:'new'}
+    ],
+    notes:'В следующем отчёте — детализация по пилоту геолокационного контроля и итоги оценки 360 для руководителей среднего звена.',
+    conclusion:'Приоритет следующего месяца — снижение опозданий на МАЗС и завершение пилота геоконтроля.'
+  }
+};
+</script>
+<script>
+(function(){
+  "use strict";
+  var H = window.__HR__;
+
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function fmt(n, digits){
+    if(n===null||n===undefined||isNaN(n)) return '—';
+    var d = digits===undefined?0:digits;
+    return Number(n).toLocaleString('ru-RU', {minimumFractionDigits:d, maximumFractionDigits:d});
+  }
+  function fmtMoney(n){ return fmt(Math.round(n/1000)) + ' тыс. с'; }
+  function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+  function tip(html){ return ' data-tip="'+esc(html).replace(/"/g,'&quot;')+'"'; }
+
+  function legendHTML(items){
+    return '<div class="legend">' + items.map(function(it){
+      return '<span class="legend-item"><span class="legend-swatch" style="background:'+it.color+'"></span>'+esc(it.label)+'</span>';
+    }).join('') + '</div>';
+  }
+
+  function svgWrap(vbW, vbH, inner, extraClass){
+    return '<div class="chart-wrap'+(extraClass?(' '+extraClass):'')+'"><svg viewBox="0 0 '+vbW+' '+vbH+'" preserveAspectRatio="xMidYMid meet" role="img">'+inner+'</svg></div>';
+  }
+
+  /* ---------------- Horizontal bar chart (ranked categories) ---------------- */
+  function barChartH(opts){
+    var items = opts.items, color = opts.color || 'var(--accent)';
+    var W=560, rowH=30, gap=8, labelW=118, padR=64, top=6;
+    var max = opts.max || Math.max.apply(null, items.map(function(i){return i.value;})) * 1.12;
+    var H_ = top*2 + items.length*(rowH+gap) - gap;
+    var barMaxW = W - labelW - padR;
+    var rows = items.map(function(it,i){
+      var y = top + i*(rowH+gap);
+      var w = max>0 ? clamp((it.value/max)*barMaxW,2,barMaxW) : 2;
+      var valTxt = opts.valueFmt ? opts.valueFmt(it.value) : fmt(it.value);
+      return ''
+        + '<text x="'+labelW+'" y="'+(y+rowH/2+4)+'" text-anchor="end" class="axis-label" dx="-10">'+esc(it.label)+'</text>'
+        + '<rect x="'+labelW+'" y="'+y+'" width="'+barMaxW+'" height="'+rowH+'" rx="6" style="fill:var(--surface-3)"></rect>'
+        + '<rect class="mark" x="'+labelW+'" y="'+y+'" width="'+w+'" height="'+rowH+'" rx="6" style="fill:'+(it.color||color)+'"'+tip('<b>'+esc(it.label)+'</b><br>'+esc(it.tip||valTxt))+'></rect>'
+        + '<text x="'+(labelW+w+10)+'" y="'+(y+rowH/2+4)+'" class="value-label">'+esc(valTxt)+(it.sub?(' <tspan style="fill:var(--muted)">'+esc(it.sub)+'</tspan>'):'')+'</text>';
+    }).join('');
+    return svgWrap(W, H_, rows);
+  }
+
+  /* ---------------- Vertical bar chart (categories over x) ---------------- */
+  function barChartV(opts){
+    var items = opts.items.map(function(it){
+      var v = it.value!==undefined ? it.value : it.count;
+      return {label: it.type||it.label, value: v, prev: it.prev};
+    });
+    var W=560, H_=260, padL=40, padB=34, padT=14, padR=10;
+    var plotW = W-padL-padR, plotH = H_-padT-padB;
+    var max = opts.max || Math.max.apply(null, items.map(function(i){return Math.max(i.value||0, i.prev||0);})) * 1.18 || 1;
+    var bw = plotW/items.length;
+    var grid = [0,0.25,0.5,0.75,1].map(function(f){
+      var y = padT + plotH*(1-f);
+      return '<line class="gridline" x1="'+padL+'" x2="'+(W-padR)+'" y1="'+y+'" y2="'+y+'"></line>'
+        + '<text x="'+(padL-8)+'" y="'+(y+3)+'" text-anchor="end" class="axis-label">'+fmt(max*f)+'</text>';
+    }).join('');
+    var bars = items.map(function(it,i){
+      var x = padL + i*bw;
+      var showPrev = it.prev!==undefined && it.prev!==null;
+      var innerPad = showPrev? bw*0.16 : bw*0.24;
+      var slotW = bw - innerPad*2;
+      var curW = showPrev ? slotW*0.46 : slotW;
+      var h = clamp(((it.value||0)/max)*plotH,1,plotH);
+      var y = padT+plotH-h;
+      var bars2 = '<rect class="mark" x="'+(x+innerPad)+'" y="'+y+'" width="'+curW+'" height="'+h+'" rx="4" style="fill:var(--accent)"'+tip('<b>'+esc(it.label)+'</b><br>Текущий период: '+fmt(it.value))+'></rect>';
+      if(showPrev){
+        var h2 = clamp(((it.prev||0)/max)*plotH,1,plotH), y2=padT+plotH-h2;
+        bars2 += '<rect class="mark" x="'+(x+innerPad+curW+4)+'" y="'+y2+'" width="'+(slotW*0.46)+'" height="'+h2+'" rx="4" style="fill:var(--steel)"'+tip('<b>'+esc(it.label)+'</b><br>Прошлый период: '+fmt(it.prev))+'></rect>';
+      }
+      var lbl = '<text x="'+(x+bw/2)+'" y="'+(padT+plotH+18)+'" text-anchor="middle" class="axis-label">'+esc(it.label)+'</text>';
+      return bars2+lbl;
+    }).join('');
+    var legend = opts.items.some(function(i){return i.prev!==undefined;}) ? legendHTML([{label:'Текущий период',color:'var(--accent)'},{label:'Прошлый период',color:'var(--steel)'}]) : '';
+    return svgWrap(W,H_, '<line class="baseline" x1="'+padL+'" x2="'+(W-padR)+'" y1="'+(padT+plotH)+'" y2="'+(padT+plotH)+'"></line>'+grid+bars) + legend;
+  }
+
+  /* ---------------- Line / area chart ---------------- */
+  function lineChart(opts){
+    var labels = opts.labels, series = opts.series;
+    var W=560, H_=230, padL=38, padR=14, padT=16, padB=28;
+    var plotW=W-padL-padR, plotH=H_-padT-padB;
+    var allVals = series.reduce(function(a,s){return a.concat(s.values);},[]);
+    var minV = Math.min(0, Math.min.apply(null, allVals));
+    var maxV = Math.max.apply(null, allVals) * 1.15 || 1;
+    function xAt(i){ return padL + (labels.length<=1?0:(plotW*i/(labels.length-1))); }
+    function yAt(v){ return padT + plotH - ( (v-minV)/(maxV-minV||1) )*plotH; }
+    var grid = [0,0.33,0.66,1].map(function(f){
+      var y = padT+plotH*(1-f), val = minV+(maxV-minV)*f;
+      return '<line class="gridline" x1="'+padL+'" x2="'+(W-padR)+'" y1="'+y+'" y2="'+y+'"></line><text x="'+(padL-8)+'" y="'+(y+3)+'" text-anchor="end" class="axis-label">'+(opts.yFmt?opts.yFmt(val):fmt(val))+'</text>';
+    }).join('');
+    var xLabels = labels.map(function(l,i){ return '<text x="'+xAt(i)+'" y="'+(H_-8)+'" text-anchor="middle" class="axis-label">'+esc(l)+'</text>'; }).join('');
+    var paths = series.map(function(s){
+      var d = s.values.map(function(v,i){ return (i===0?'M':'L')+xAt(i)+','+yAt(v); }).join(' ');
+      var areaD = d + ' L'+xAt(s.values.length-1)+','+(padT+plotH)+' L'+xAt(0)+','+(padT+plotH)+' Z';
+      var area = s.area!==false ? '<path d="'+areaD+'" style="fill:'+s.color+';opacity:.10"></path>' : '';
+      var dots = s.values.map(function(v,i){
+        return '<circle class="mark" cx="'+xAt(i)+'" cy="'+yAt(v)+'" r="4.5" style="fill:'+s.color+';stroke:var(--surface);stroke-width:2"'+tip('<b>'+esc(s.name)+'</b><br>'+esc(labels[i])+': '+(opts.yFmt?opts.yFmt(v):fmt(v)))+'></circle>';
+      }).join('');
+      return '<path d="'+d+'" style="fill:none;stroke:'+s.color+';stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"></path>' + area + dots;
+    }).join('');
+    var legend = series.length>1 ? legendHTML(series.map(function(s){return {label:s.name,color:s.color};})) : '';
+    return svgWrap(W,H_, grid+'<line class="baseline" x1="'+padL+'" x2="'+(W-padR)+'" y1="'+(padT+plotH)+'" y2="'+(padT+plotH)+'"></line>'+paths+xLabels) + legend;
+  }
+
+  /* ---------------- Donut chart ---------------- */
+  function donutChart(opts){
+    var segs = opts.segments, total = segs.reduce(function(a,s){return a+s.value;},0) || 1;
+    var W=220,H_=220,cx=110,cy=110,rOuter=92,rInner=60;
+    var angle=-Math.PI/2, paths='';
+    segs.forEach(function(s){
+      var frac = s.value/total, a2 = angle + frac*Math.PI*2;
+      var large = (a2-angle)>Math.PI ? 1:0;
+      var x1=cx+rOuter*Math.cos(angle), y1=cy+rOuter*Math.sin(angle);
+      var x2=cx+rOuter*Math.cos(a2), y2=cy+rOuter*Math.sin(a2);
+      var x3=cx+rInner*Math.cos(a2), y3=cy+rInner*Math.sin(a2);
+      var x4=cx+rInner*Math.cos(angle), y4=cy+rInner*Math.sin(angle);
+      var d = 'M'+x1+','+y1+' A'+rOuter+','+rOuter+' 0 '+large+' 1 '+x2+','+y2+' L'+x3+','+y3+' A'+rInner+','+rInner+' 0 '+large+' 0 '+x4+','+y4+' Z';
+      var pct = Math.round(frac*100);
+      paths += '<path class="mark" d="'+d+'" style="fill:'+s.color+'"'+tip('<b>'+esc(s.label)+'</b><br>'+fmt(s.value)+' ('+pct+'%)')+'></path>';
+      angle=a2;
+    });
+    var center = '<text x="'+cx+'" y="'+(cy-4)+'" text-anchor="middle" style="font-family:var(--font-display);font-weight:700;font-size:26px;fill:var(--ink)">'+esc(opts.centerValue!==undefined?opts.centerValue:total)+'</text>'
+      + '<text x="'+cx+'" y="'+(cy+16)+'" text-anchor="middle" class="axis-label">'+esc(opts.centerLabel||'')+'</text>';
+    return svgWrap(W,H_, paths+center) + legendHTML(segs.map(function(s){return {label:s.label+' · '+fmt(s.value),color:s.color};}));
+  }
+
+  /* ---------------- Funnel chart ---------------- */
+  function funnelChart(opts){
+    var stages = opts.stages;
+    var W=560, rowH=44, gap=10, top=6, labelW=170;
+    var max = stages[0].count || 1;
+    var H_ = top*2 + stages.length*(rowH+gap)-gap;
+    var plotW = W-labelW-70;
+    var rows = stages.map(function(s,i){
+      var y = top+i*(rowH+gap);
+      var w = clamp((s.count/max)*plotW, 24, plotW);
+      var x = labelW + (plotW-w)/2;
+      var convTxt = i>0 ? ' <tspan style="fill:var(--muted)">('+Math.round(s.count/stages[i-1].count*100)+'%)</tspan>' : '';
+      return ''
+        + '<text x="'+(labelW-14)+'" y="'+(y+rowH/2+4)+'" text-anchor="end" class="axis-label">'+esc(s.stage)+'</text>'
+        + '<rect class="mark" x="'+x+'" y="'+y+'" width="'+w+'" height="'+rowH+'" rx="8" style="fill:var(--seq-'+clamp(5-i,1,5)+')"'+tip('<b>'+esc(s.stage)+'</b><br>'+fmt(s.count)+' чел.')+'></rect>'
+        + '<text x="'+(labelW+plotW+14)+'" y="'+(y+rowH/2+4)+'" class="value-label">'+fmt(s.count)+convTxt+'</text>';
+    }).join('');
+    return svgWrap(W,H_, rows);
+  }
+
+  /* ---------------- Radar chart (max 2 series) ---------------- */
+  function radarChart(opts){
+    var axes = opts.axes, series = opts.series, maxV = opts.maxValue||10;
+    var W=300,H_=280,cx=150,cy=136,r=100;
+    var n=axes.length, angleStep=(Math.PI*2)/n;
+    function pt(i,v){ var a=-Math.PI/2+i*angleStep; var rad=(v/maxV)*r; return [cx+rad*Math.cos(a), cy+rad*Math.sin(a)]; }
+    var rings=[0.33,0.66,1].map(function(f){
+      var pts = axes.map(function(_,i){ var p=pt(i,maxV*f); return p.join(','); }).join(' ');
+      return '<polygon points="'+pts+'" style="fill:none;stroke:var(--grid);stroke-width:1"></polygon>';
+    }).join('');
+    var spokes = axes.map(function(a,i){
+      var p = pt(i,maxV); var lp = pt(i, maxV*1.22);
+      return '<line x1="'+cx+'" y1="'+cy+'" x2="'+p[0]+'" y2="'+p[1]+'" style="stroke:var(--grid);stroke-width:1"></line>'
+        + '<text x="'+lp[0]+'" y="'+lp[1]+'" text-anchor="middle" class="axis-label">'+esc(a)+'</text>';
+    }).join('');
+    var polys = series.map(function(s){
+      var pts = s.values.map(function(v,i){ return pt(i,v).join(','); }).join(' ');
+      var dots = s.values.map(function(v,i){ var p=pt(i,v); return '<circle class="mark" cx="'+p[0]+'" cy="'+p[1]+'" r="3.5" style="fill:'+s.color+'"'+tip('<b>'+esc(s.name)+'</b><br>'+esc(axes[i])+': '+fmt(v,1))+'></circle>'; }).join('');
+      return '<polygon points="'+pts+'" style="fill:'+s.color+';fill-opacity:.16;stroke:'+s.color+';stroke-width:2"></polygon>'+dots;
+    }).join('');
+    return svgWrap(W,H_, rings+spokes+polys) + legendHTML(series.map(function(s){return {label:s.name,color:s.color};}));
+  }
+
+  /* ---------------- Stacked status bar (protocol history) ---------------- */
+  function stackedBarChart(opts){
+    var items = opts.items, keys = opts.keys; // keys:[{k,label,color}]
+    var W=560,H_=210,padL=10,padR=10,padT=10,padB=26;
+    var plotW=W-padL-padR, plotH=H_-padT-padB;
+    var totals = items.map(function(it){ return keys.reduce(function(a,k){return a+(it[k.k]||0);},0); });
+    var max = Math.max.apply(null, totals)*1.1 || 1;
+    var bw = plotW/items.length;
+    var bars = items.map(function(it,i){
+      var x = padL+i*bw, innerPad=bw*0.18, w=bw-innerPad*2;
+      var yCursor = padT+plotH;
+      var segs = keys.map(function(k){
+        var v = it[k.k]||0; var h = (v/max)*plotH;
+        var y = yCursor-h; yCursor = y-2;
+        if(h<=0) return '';
+        return '<rect class="mark" x="'+(x+innerPad)+'" y="'+y+'" width="'+w+'" height="'+Math.max(h-0,2)+'" rx="3" style="fill:'+k.color+'"'+tip('<b>'+esc(k.label)+'</b><br>'+esc(it.month)+': '+fmt(v))+'></rect>';
+      }).join('');
+      var lbl = '<text x="'+(x+bw/2)+'" y="'+(H_-8)+'" text-anchor="middle" class="axis-label">'+esc(it.month)+'</text>';
+      return segs+lbl;
+    }).join('');
+    return svgWrap(W,H_,bars) + legendHTML(keys.map(function(k){return {label:k.label,color:k.color};}));
+  }
+
+  function statTile(opts){
+    var deltaCls='', arrow='', deltaTxt='';
+    if(opts.delta!==undefined && opts.delta!==null){
+      var up = opts.delta>0, good = opts.deltaGood!==false;
+      var sense = up ? (good?'up-good':'up-bad') : (opts.delta<0 ? (good?'down-good':'down-bad') : 'flat');
+      arrow = opts.delta>0?'↑':(opts.delta<0?'↓':'→');
+      deltaCls = sense;
+      deltaTxt = arrow+' '+fmt(Math.abs(opts.delta), opts.deltaDigits||0)+(opts.deltaUnit||'');
+    }
+    return '<div class="stat">'
+      + '<div class="stat-label">'+esc(opts.label)+'</div>'
+      + '<div class="stat-value num" data-countup data-target="'+opts.value+'" data-digits="'+(opts.digits||0)+'">0'+(opts.unit?('<span class="unit">'+esc(opts.unit)+'</span>'):'')+'</div>'
+      + (deltaTxt?('<span class="stat-delta '+deltaCls+'">'+deltaTxt+'</span>'):'')
+      + '</div>';
+  }
+
+  function statusPill(text, severity){
+    return '<span class="pill pill-'+severity+'">'+esc(text)+'</span>';
+  }
+
+  H.charts = { esc:esc, fmt:fmt, fmtMoney:fmtMoney, barChartH:barChartH, barChartV:barChartV, lineChart:lineChart,
+    donutChart:donutChart, funnelChart:funnelChart, radarChart:radarChart, stackedBarChart:stackedBarChart,
+    statTile:statTile, statusPill:statusPill, legendHTML:legendHTML };
+})();
+</script>
+<script>
+(function(){
+  "use strict";
+  var H = window.__HR__, C = H.charts;
+  var esc=C.esc, fmt=C.fmt;
+
+  function head(n, title, conclusion, extraRight){
+    return '<div class="slide-head">'
+      + '<div><div class="slide-eyebrow">Раздел '+n+' из 10</div><h2 class="slide-title">'+esc(title)+'</h2></div>'
+      + (extraRight||'')
+      + '</div>'
+      + '<div class="slide-conclusion"><b>Вывод: </b>'+esc(conclusion)+'</div>';
+  }
+  function card(title, inner, cls){ return '<div class="card hoverable'+(cls?(' '+cls):'')+'"><div class="card-title">'+esc(title)+'</div>'+inner+'</div>'; }
+
+  /* ---------- 1. Подбор ---------- */
+  function render_recruitment(d){
+    return head(1,'Подбор, найм, адаптация, резерв кадров', d.conclusion)
+    + '<div class="grid grid-cols-3">'
+      + card('Воронка найма', C.funnelChart({stages:d.funnel}))
+      + card('Среднее время закрытия вакансии', C.statTile({label:'дней на закрытие', value:d.avgTimeToHire.current, unit:' '+d.avgTimeToHire.unit, delta:d.avgTimeToHire.current-d.avgTimeToHire.prev, deltaGood:false, deltaUnit:' дн.'})
+        + '<div style="margin-top:6px">'+card('Адаптация', ''+C.statTile({label:'успешно прошли испытательный срок',value:d.adaptation.successRate,unit:'%',delta:d.adaptation.successRate-d.adaptation.prevSuccessRate,deltaGood:true,deltaUnit:' п.п.'})+'<p style="font-size:12px;color:var(--ink-2)">Всего адаптируется: '+d.adaptation.total+' · завершили: '+d.adaptation.passed+' · сорвались: '+d.adaptation.failed+' · в процессе: '+d.adaptation.inProgress+'</p>')+'</div>')
+      + card('Кадровый резерв', ''
+          + '<div class="grid grid-cols-2" style="gap:8px">'
+            + C.statTile({label:'в резерве',value:d.reserve.inReserve})
+            + C.statTile({label:'готовы к назначению',value:d.reserve.readyToAssign})
+          + '</div>'
+          + '<p style="font-size:12px;color:var(--ink-2);margin-top:4px">Закрыто из резерва: <b class="num">'+d.reserve.closedFromReservePct+'%</b> ('+(d.reserve.closedFromReservePct-d.reserve.prevClosedFromReservePct>=0?'+':'')+(d.reserve.closedFromReservePct-d.reserve.prevClosedFromReservePct)+' п.п.)</p>')
+    + '</div>'
+    + '<div class="grid grid-cols-2">'
+      + card('Открытые вакансии по подразделениям', C.barChartH({items:d.byDept.map(function(x){return {label:x.dept,value:x.open,sub:x.avgDays+' дн.'};})}))
+      + card('Срок закрытия по подразделениям, дней', C.barChartH({items:d.byDept.slice().sort(function(a,b){return b.avgDays-a.avgDays;}).map(function(x){return {label:x.dept,value:x.avgDays,color:'var(--steel)'};})}))
+    + '</div>';
+  }
+
+  /* ---------- 2. Кадровое администрирование ---------- */
+  function render_admin(d){
+    var overdueRows = d.overdueList.map(function(o){
+      return '<tr class="row-hover"><td>'+esc(o.doc)+'</td><td>'+esc(o.dept)+'</td><td>'+esc(o.responsible)+'</td><td class="num">'+C.statusPill(o.daysOverdue+' дн.','critical')+'</td></tr>';
+    }).join('');
+    return head(2,'Кадровое администрирование', d.conclusion)
+    + '<div class="grid grid-cols-3">'
+      + card('Среднее время оформления', C.statTile({label:'дней на документ',value:d.avgProcessingDays.current,digits:1,delta:d.avgProcessingDays.current-d.avgProcessingDays.prev,deltaGood:false,deltaUnit:' дн.',deltaDigits:1}))
+      + card('Статус исполнения', C.donutChart({segments:[
+            {label:'Исполнено',value:d.statusBreakdown.done,color:'var(--good)'},
+            {label:'В работе',value:d.statusBreakdown.inProgress,color:'var(--steel)'},
+            {label:'Просрочено',value:d.statusBreakdown.overdue,color:'var(--critical)'}
+          ], centerLabel:'документов', centerValue:d.statusBreakdown.done+d.statusBreakdown.inProgress+d.statusBreakdown.overdue}))
+      + card('Документооборот по типам', C.barChartV({items:d.docsByType}))
+    + '</div>'
+    + card('Просроченные документы', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Документ</th><th>Подразделение</th><th>Ответственный</th><th class="num">Просрочка</th></tr></thead><tbody>'+overdueRows+'</tbody></table></div>');
+  }
+
+  /* ---------- 3. Оценка и обучение ---------- */
+  function render_assessment(d){
+    var seqColors=['var(--critical)','var(--serious)','var(--warning)','var(--good)'];
+    var distSegs = d.resultsDistribution.map(function(x,i){ return {label:x.band,value:x.count,color:seqColors[seqColors.length-1-i]||'var(--accent)'}; });
+    var topicRows = d.topTopics.map(function(t){ return '<tr class="row-hover"><td>'+esc(t.topic)+'</td><td class="num">'+t.participants+'</td><td class="num">'+t.avgScore+'</td></tr>'; }).join('');
+    var moversHtml = d.movers.map(function(m){
+      var good=m.direction==='up';
+      return '<div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:6px 0;border-top:1px solid var(--border)"><span>'+esc(m.name)+'</span><span class="stat-delta '+(good?'up-good':'up-bad')+'">'+(good?'↑':'↓')+' '+Math.abs(m.delta)+'</span></div>';
+    }).join('');
+    return head(3,'Оценка и обучение', d.conclusion)
+    + '<div class="grid grid-cols-3">'
+      + card('Средний балл аттестаций, динамика', C.lineChart({labels:d.avgScore.history.map(function(h){return h.month;}), series:[{name:'Средний балл',values:d.avgScore.history.map(function(h){return h.score;}),color:'var(--accent)'}]}))
+      + card('Распределение результатов', C.donutChart({segments:distSegs, centerLabel:'аттестовано', centerValue:d.resultsDistribution.reduce(function(a,x){return a+x.count;},0)}))
+      + card('Оценка 360: я vs коллеги', C.radarChart({axes:d.radar360.axes, maxValue:10, series:[{name:'Самооценка',values:d.radar360.self,color:'var(--accent)'},{name:'Оценка коллег',values:d.radar360.peers,color:'var(--steel)'}]}))
+    + '</div>'
+    + '<div class="grid grid-cols-2">'
+      + card('Топ программ обучения', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Программа</th><th class="num">Участники</th><th class="num">Ср. балл</th></tr></thead><tbody>'+topicRows+'</tbody></table></div>')
+      + card('Наибольшая динамика результата', moversHtml)
+    + '</div>';
+  }
+
+  /* ---------- 4. Дисциплина труда ---------- */
+  function render_discipline(d){
+    var rows = d.recent.map(function(r){
+      return '<tr class="row-hover"><td>'+r.date+'</td><td>'+esc(r.employee)+'</td><td>'+esc(r.dept)+'</td><td>'+esc(r.type)+'</td><td>'+C.statusPill(r.status,r.severity)+'</td></tr>';
+    }).join('');
+    return head(4,'Дисциплина труда', d.conclusion)
+    + '<div class="grid grid-cols-3">'
+      + card('Нарушения за месяц', C.statTile({label:'случаев',value:d.totalViolations.current,delta:d.totalViolations.current-d.totalViolations.prev,deltaGood:false}))
+      + card('По типам', C.barChartH({items:d.byType.map(function(x){return {label:x.type,value:x.count,color:'var(--serious)'};})}))
+      + card('По подразделениям', C.barChartH({items:d.byDept.map(function(x){return {label:x.dept,value:x.count,color:'var(--critical)'};})}))
+    + '</div>'
+    + '<div class="grid grid-cols-2">'
+      + card('Динамика за 6 месяцев', C.lineChart({labels:d.history.map(function(h){return h.month;}), series:[{name:'Нарушения',values:d.history.map(function(h){return h.count;}),color:'var(--critical)'}]}))
+      + card('Последние случаи', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Дата</th><th>Сотрудник</th><th>Подразд.</th><th>Тип</th><th>Статус</th></tr></thead><tbody>'+rows+'</tbody></table></div>')
+    + '</div>';
+  }
+
+  /* ---------- 5. HR-аналитика ---------- */
+  function render_analytics(d){
+    return head(5,'HR-аналитика по компании и процессам', d.conclusion)
+    + '<div class="grid grid-cols-4">'
+      + card('Численность', C.statTile({label:'сотрудников',value:d.headcount.current,delta:d.headcount.current-d.headcount.prev,deltaGood:true}))
+      + card('Принято / уволено', C.statTile({label:'принято в этом месяце',value:d.hired})+'<p style="font-size:12px;color:var(--ink-2)">Уволено: <b class="num">'+d.fired+'</b></p>')
+      + card('Текучесть кадров', C.statTile({label:'% в месяц',value:d.turnoverRate.current,digits:1,unit:'%',delta:d.turnoverRate.current-d.turnoverRate.prev,deltaGood:false,deltaUnit:' п.п.',deltaDigits:1}))
+      + card('Внутреннее закрытие вакансий', C.statTile({label:'% от закрытых',value:d.internalFillRate.current,unit:'%',delta:d.internalFillRate.current-d.internalFillRate.prev,deltaGood:true,deltaUnit:' п.п.'}))
+    + '</div>'
+    + '<div class="grid grid-cols-2">'
+      + card('Текучесть, динамика 6 месяцев', C.lineChart({labels:d.turnoverRate.history.map(function(h){return h.month;}), series:[{name:'Текучесть, %',values:d.turnoverRate.history.map(function(h){return h.rate;}),color:'var(--accent)'}], yFmt:function(v){return fmt(v,1)+'%';}}))
+      + card('Структура персонала по подразделениям', C.barChartH({items:d.structureByDept.map(function(x){return {label:x.dept,value:x.count};})}))
+    + '</div>';
+  }
+
+  /* ---------- 6. Результативность отделов ---------- */
+  function render_departments(d){
+    var rows = d.rows.slice().sort(function(a,b){return b.total-a.total;});
+    var trs = rows.map(function(r,i){
+      var cls = i===0?'pill-good':(i===rows.length-1?'pill-critical':'pill-muted');
+      return '<tr class="row-hover dept-row" data-dept="'+esc(r.dept)+'" style="cursor:pointer"><td>'+C.statusPill('#'+(i+1),i===0?'good':(i===rows.length-1?'critical':'muted'))+' '+esc(r.dept)+'</td>'
+        + '<td class="num">'+fmt(r.interaction,1)+'</td><td class="num">'+fmt(r.execution,1)+'</td><td class="num">'+fmt(r.hrWork,1)+'</td><td class="num">'+r.kpi+'</td><td class="num"><b>'+fmt(r.total,1)+'</b></td></tr>';
+    }).join('');
+    return head(6,'Результативность отделов', d.conclusion)
+    + '<div class="grid grid-cols-2">'
+      + card('Сводный рейтинг (клик по строке — детали справа)', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Подразделение</th><th class="num">Взаимод.</th><th class="num">Исполнение</th><th class="num">Кадр. работа</th><th class="num">KPI</th><th class="num">Итог</th></tr></thead><tbody>'+trs+'</tbody></table></div>')
+      + card('Детали подразделения', '<div id="dept-radar">'+C.radarChart({axes:['Взаимод.','Поручения','Кадр. работа','KPI'], maxValue:10, series:[{name:rows[0].dept,values:[rows[0].interaction,rows[0].execution,rows[0].hrWork,rows[0].kpi/10],color:'var(--accent)'},{name:'Средний по компании',values:['interaction','execution','hrWork','kpi'].map(function(k){return rows.reduce(function(a,r){return a+(k==='kpi'?r.kpi/10:r[k]);},0)/rows.length;}),color:'var(--steel)'}]})+'</div>')
+    + '</div>';
+  }
+
+  /* ---------- 7. Бюджет ---------- */
+  function render_budget(d){
+    var totalPlan = d.byLine.reduce(function(a,x){return a+x.plan;},0);
+    var totalFact = d.byLine.reduce(function(a,x){return a+x.fact;},0);
+    var pct = Math.round(totalFact/totalPlan*1000)/10;
+    var rows = d.byLine.map(function(l){
+      var p = Math.round(l.fact/l.plan*1000)/10;
+      var over = l.fact>l.plan;
+      return '<tr class="row-hover"><td>'+esc(l.line)+'</td><td class="num">'+C.fmtMoney(l.plan)+'</td><td class="num">'+C.fmtMoney(l.fact)+'</td><td class="num">'+C.statusPill(p+'%', over?'serious':'good')+'</td><td class="num">'+C.fmtMoney(l.nextPlan)+'</td><td style="font-size:12px;color:var(--ink-2)">'+esc(l.note||'—')+'</td></tr>';
+    }).join('');
+    return head(7,'Бюджет', d.conclusion)
+    + '<div class="grid grid-cols-3">'
+      + card('Освоено за месяц', C.statTile({label:'от плана',value:pct,unit:'%',digits:1}))
+      + card('План на месяц', C.statTile({label:'тыс. сомони' ,value:Math.round(totalPlan/1000)}))
+      + card('Факт за месяц', C.statTile({label:'тыс. сомони',value:Math.round(totalFact/1000)}))
+    + '</div>'
+    + card('Освоение по статьям', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Статья</th><th class="num">План</th><th class="num">Факт</th><th class="num">%</th><th class="num">План след. мес.</th><th>Комментарий</th></tr></thead><tbody>'+rows+'</tbody></table></div>')
+    + card('Динамика освоения бюджета', C.lineChart({labels:d.history.map(function(h){return h.month;}), series:[{name:'План',values:d.history.map(function(h){return h.plan;}),color:'var(--steel)',area:false},{name:'Факт',values:d.history.map(function(h){return h.fact;}),color:'var(--accent)'}], yFmt:function(v){return fmt(v/1000000,1)+' млн';}}));
+  }
+
+  /* ---------- 8. План и поручения ---------- */
+  function render_plan(d){
+    var statusMap = {done:['Выполнено','good'], inProgress:['В работе','warning'], postponed:['Отложено','muted'], notDone:['Не выполнено','critical']};
+    var factRows = d.factVsPlan.map(function(x){ var s=statusMap[x.status]; return '<div class="card" style="padding:10px 12px;gap:4px"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:13px">'+esc(x.item)+'</span>'+C.statusPill(s[0],s[1])+'</div><div style="font-size:12.5px;font-weight:500;color:var(--muted)">'+esc(x.comment)+'</div></div>'; }).join('');
+    var nextRows = d.nextPlan.map(function(x){ return '<div class="card" style="padding:10px 12px;gap:2px"><div style="font-size:13px;font-weight:600">'+esc(x.item)+'</div><div style="font-size:12.5px;font-weight:500;color:var(--muted)">'+esc(x.description)+'</div></div>'; }).join('');
+    var taskRows = d.currentTasks.map(function(t){ var s=statusMap[t.status]; return '<tr class="row-hover"><td>'+esc(t.task)+'</td><td>'+esc(t.responsible)+'</td><td class="num">'+t.deadline+'</td><td class="num">'+C.statusPill(s[0],s[1])+'</td></tr>'; }).join('');
+    return head(8,'План работы и протокольные поручения', d.conclusion)
+    + '<div class="grid grid-cols-2">'
+      + card('Факт vs план за прошедший месяц', factRows)
+      + card('План на следующий месяц', nextRows)
+    + '</div>'
+    + '<div class="grid grid-cols-3">'
+      + card('Протокольные поручения — статус', C.donutChart({segments:[
+          {label:'Исполнено',value:d.protocolStatus.done,color:'var(--good)'},
+          {label:'В работе',value:d.protocolStatus.inProgress,color:'var(--steel)'},
+          {label:'Отложено',value:d.protocolStatus.postponed,color:'var(--warning)'},
+          {label:'Не выполнено',value:d.protocolStatus.notDone,color:'var(--critical)'}
+        ], centerLabel:'поручений', centerValue:d.protocolStatus.done+d.protocolStatus.inProgress+d.protocolStatus.postponed+d.protocolStatus.notDone}))
+      + card('Динамика исполнения, 6 мес.', C.stackedBarChart({items:d.protocolHistory, keys:[
+          {k:'done',label:'Исполнено',color:'var(--good)'},{k:'inProgress',label:'В работе',color:'var(--steel)'},
+          {k:'postponed',label:'Отложено',color:'var(--warning)'},{k:'notDone',label:'Не выполнено',color:'var(--critical)'}]}))
+      + card('Текущие поручения', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Поручение</th><th>Ответств.</th><th class="num">Срок</th><th class="num">Статус</th></tr></thead><tbody>'+taskRows+'</tbody></table></div>')
+    + '</div>';
+  }
+
+  /* ---------- 9. Эффективность сотрудников HR ---------- */
+  function render_hrEfficiency(d){
+    var cards = d.staff.map(function(s){
+      var cls = (s.violation?'is-flag':(s.isBestThisMonth?'is-best':''));
+      return '<div class="person-card '+cls+'">'
+        + (s.isBestThisMonth?'<span class="person-star" title="Лучший сотрудник месяца">★</span>':'')
+        + '<div class="person-name">'+esc(s.name)+'</div>'
+        + '<div class="person-role">'+esc(s.position)+'</div>'
+        + '<div class="person-func">'+esc(s.functions)+'</div>'
+        + '<div class="kpi-bar"><div class="kpi-bar-fill" data-kpi="'+Math.min(s.kpiPct,130)+'" style="width:0"></div></div>'
+        + '<div style="font-size:12px;color:var(--ink-2)">КПЭ: <b class="num">'+s.kpiPct+'%</b></div>'
+        + (s.violation?('<div class="person-violation">⚠ '+esc(s.violation)+'</div>'):'')
+        + '</div>';
+    }).join('');
+    var history = d.pastBest.map(function(p){ return '<span class="best-chip">'+esc(p.month)+' — '+esc(p.name)+'</span>'; }).join('');
+    return head(9,'Эффективность сотрудников HR', d.conclusion)
+    + card('Сотрудники HR-службы', '<div class="person-grid">'+cards+'</div>')
+    + card('История «Лучший сотрудник месяца»', '<div class="best-history">'+history+'</div>');
+  }
+
+  /* ---------- 10. Предложения и прочее ---------- */
+  function render_proposals(d){
+    var prioMap = {high:['Высокий','critical'], medium:['Средний','warning'], low:['Низкий','muted']};
+    var statusMap = {new:['Новое','steel'], inProgress:['В работе','warning'], done:['Выполнено','good']};
+    var grouped = {};
+    d.items.forEach(function(it){ (grouped[it.direction]=grouped[it.direction]||[]).push(it); });
+    var html = Object.keys(grouped).map(function(dir){
+      var rows = grouped[dir].map(function(it){
+        var p = prioMap[it.priority], s = statusMap[it.status];
+        return '<div class="card" style="padding:10px 12px;gap:4px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><span style="font-size:13px">'+esc(it.proposal)+'</span><span class="pill pill-'+(it.priority==='high'?'critical':it.priority==='medium'?'warning':'muted')+'">'+p[0]+'</span></div><div style="font-size:12.5px;font-weight:500;color:var(--muted);display:flex;justify-content:space-between"><span>Ответственный: '+esc(it.responsible)+'</span><span>'+s[0]+'</span></div></div>';
+      }).join('');
+      return card(dir, rows);
+    }).join('');
+    return head(10,'Предложения и прочее', d.conclusion)
+    + '<div class="grid grid-cols-2">'+html+'</div>'
+    + card('Прочее', '<p style="font-size:13.5px;color:var(--ink-2);line-height:1.5">'+esc(d.notes)+'</p>');
+  }
+
+  var RENDERERS = {
+    recruitment:render_recruitment, admin:render_admin, assessment:render_assessment,
+    discipline:render_discipline, analytics:render_analytics, departments:render_departments,
+    budget:render_budget, plan:render_plan, hrEfficiency:render_hrEfficiency, proposals:render_proposals
+  };
+
+  H.RENDERERS = RENDERERS;
+})();
+</script>
+<script>
+(function(){
+  "use strict";
+  var H = window.__HR__;
+
+  function num(v, fb){ if(v===''||v===undefined||v===null) return fb===undefined?0:fb; var n = typeof v==='number'?v:parseFloat(String(v).replace(/\s/g,'').replace(',', '.')); return isNaN(n)?(fb===undefined?0:fb):n; }
+  function str(v, fb){ return (v===undefined||v===null||v==='') ? (fb===undefined?'':fb) : String(v); }
+  function bool(v){ var s=String(v).trim().toLowerCase(); return s==='да'||s==='yes'||s==='true'||s==='1'; }
+  function boolRu(b){ return b?'да':'нет'; }
+
+  function aoa(rows){ return XLSX.utils.aoa_to_sheet(rows); }
+  function sheetFromRows(rows, cols){
+    var data=[cols.map(function(c){return c.header;})];
+    rows.forEach(function(r){ data.push(cols.map(function(c){ return r[c.key]; })); });
+    return aoa(data);
+  }
+  function rowsFromSheet(ws, cols){
+    if(!ws) return [];
+    var data = XLSX.utils.sheet_to_json(ws, {defval:''});
+    return data.map(function(row){
+      var out={};
+      cols.forEach(function(c){ out[c.key]=row[c.header]; });
+      return out;
+    });
+  }
+  function metricsSheet(pairs){ return sheetFromRows(pairs.map(function(p){return {label:p[0],value:p[1]};}), [{key:'label',header:'Показатель'},{key:'value',header:'Значение'}]); }
+  function readMetrics(ws){
+    var rows = ws ? XLSX.utils.sheet_to_json(ws,{defval:''}) : [];
+    var out={}; rows.forEach(function(r){ out[r['Показатель']]=r['Значение']; }); return out;
+  }
+  function wb(sheets){ var w=XLSX.utils.book_new(); sheets.forEach(function(s){ XLSX.utils.book_append_sheet(w,s.ws,s.name); }); return w; }
+  function ws(w,name){ return w.Sheets[name]; }
+
+  var TEMPLATES = {
+    recruitment:{
+      build:function(d){ return wb([
+        {name:'Воронка', ws:sheetFromRows(d.funnel,[{key:'stage',header:'Этап'},{key:'count',header:'Количество'}])},
+        {name:'Подразделения', ws:sheetFromRows(d.byDept,[{key:'dept',header:'Подразделение'},{key:'open',header:'Открыто вакансий'},{key:'avgDays',header:'Срок закрытия, дней'}])},
+        {name:'Показатели', ws:metricsSheet([
+          ['Срок закрытия (текущий), дн', d.avgTimeToHire.current],['Срок закрытия (прошлый), дн', d.avgTimeToHire.prev],
+          ['Адаптация: всего', d.adaptation.total],['Адаптация: успешно', d.adaptation.passed],['Адаптация: сорвались', d.adaptation.failed],['Адаптация: в процессе', d.adaptation.inProgress],
+          ['В резерве, чел', d.reserve.inReserve],['Готовы к назначению, чел', d.reserve.readyToAssign],['Назначено из резерва, чел', d.reserve.assignedFromReserve],
+          ['Закрыто из резерва % (текущий)', d.reserve.closedFromReservePct],['Закрыто из резерва % (прошлый)', d.reserve.prevClosedFromReservePct],
+          ['Вывод', d.conclusion]
+        ])}
+      ]); },
+      apply:function(d,w){
+        var funnel = rowsFromSheet(ws(w,'Воронка'),[{key:'stage',header:'Этап'},{key:'count',header:'Количество'}]).filter(function(r){return r.stage;}).map(function(r){return {stage:str(r.stage),count:num(r.count)};});
+        var byDept = rowsFromSheet(ws(w,'Подразделения'),[{key:'dept',header:'Подразделение'},{key:'open',header:'Открыто вакансий'},{key:'avgDays',header:'Срок закрытия, дней'}]).filter(function(r){return r.dept;}).map(function(r){return {dept:str(r.dept),open:num(r.open),avgDays:num(r.avgDays)};});
+        var m = readMetrics(ws(w,'Показатели'));
+        return {
+          funnel: funnel.length?funnel:d.funnel, byDept: byDept.length?byDept:d.byDept,
+          avgTimeToHire:{current:num(m['Срок закрытия (текущий), дн'],d.avgTimeToHire.current), prev:num(m['Срок закрытия (прошлый), дн'],d.avgTimeToHire.prev), unit:'дн.'},
+          adaptation:{total:num(m['Адаптация: всего'],d.adaptation.total), passed:num(m['Адаптация: успешно'],d.adaptation.passed), failed:num(m['Адаптация: сорвались'],d.adaptation.failed), inProgress:num(m['Адаптация: в процессе'],d.adaptation.inProgress), successRate:Math.round(num(m['Адаптация: успешно'],d.adaptation.passed)/Math.max(1,num(m['Адаптация: всего'],d.adaptation.total))*100), prevSuccessRate:d.adaptation.successRate},
+          reserve:{inReserve:num(m['В резерве, чел'],d.reserve.inReserve), readyToAssign:num(m['Готовы к назначению, чел'],d.reserve.readyToAssign), assignedFromReserve:num(m['Назначено из резерва, чел'],d.reserve.assignedFromReserve), closedFromReservePct:num(m['Закрыто из резерва % (текущий)'],d.reserve.closedFromReservePct), prevClosedFromReservePct:num(m['Закрыто из резерва % (прошлый)'],d.reserve.prevClosedFromReservePct)},
+          conclusion: str(m['Вывод'], d.conclusion)
+        };
+      }
+    },
+    admin:{
+      build:function(d){ return wb([
+        {name:'Документы по типам', ws:sheetFromRows(d.docsByType,[{key:'type',header:'Тип'},{key:'count',header:'Количество'},{key:'prev',header:'Прошлый месяц'}])},
+        {name:'Просроченные', ws:sheetFromRows(d.overdueList,[{key:'doc',header:'Документ'},{key:'dept',header:'Подразделение'},{key:'responsible',header:'Ответственный'},{key:'daysOverdue',header:'Дней просрочки'}])},
+        {name:'Показатели', ws:metricsSheet([
+          ['Среднее время оформления (тек.), дн', d.avgProcessingDays.current],['Среднее время оформления (пред.), дн', d.avgProcessingDays.prev],
+          ['Исполнено', d.statusBreakdown.done],['В работе', d.statusBreakdown.inProgress],['Просрочено', d.statusBreakdown.overdue],
+          ['Вывод', d.conclusion]
+        ])}
+      ]); },
+      apply:function(d,w){
+        var docsByType = rowsFromSheet(ws(w,'Документы по типам'),[{key:'type',header:'Тип'},{key:'count',header:'Количество'},{key:'prev',header:'Прошлый месяц'}]).filter(function(r){return r.type;}).map(function(r){return {type:str(r.type),count:num(r.count),prev:num(r.prev)};});
+        var overdueList = rowsFromSheet(ws(w,'Просроченные'),[{key:'doc',header:'Документ'},{key:'dept',header:'Подразделение'},{key:'responsible',header:'Ответственный'},{key:'daysOverdue',header:'Дней просрочки'}]).filter(function(r){return r.doc;}).map(function(r){return {doc:str(r.doc),dept:str(r.dept),responsible:str(r.responsible),daysOverdue:num(r.daysOverdue)};});
+        var m = readMetrics(ws(w,'Показатели'));
+        return {
+          docsByType: docsByType.length?docsByType:d.docsByType, overdueList: overdueList.length?overdueList:d.overdueList,
+          avgProcessingDays:{current:num(m['Среднее время оформления (тек.), дн'],d.avgProcessingDays.current), prev:num(m['Среднее время оформления (пред.), дн'],d.avgProcessingDays.prev)},
+          statusBreakdown:{done:num(m['Исполнено'],d.statusBreakdown.done), inProgress:num(m['В работе'],d.statusBreakdown.inProgress), overdue:num(m['Просрочено'],d.statusBreakdown.overdue)},
+          conclusion: str(m['Вывод'], d.conclusion)
+        };
+      }
+    },
+    assessment:{
+      build:function(d){ return wb([
+        {name:'Динамика балла', ws:sheetFromRows(d.avgScore.history,[{key:'month',header:'Месяц'},{key:'score',header:'Балл'}])},
+        {name:'Распределение', ws:sheetFromRows(d.resultsDistribution,[{key:'band',header:'Диапазон'},{key:'count',header:'Количество'}])},
+        {name:'Темы обучения', ws:sheetFromRows(d.topTopics,[{key:'topic',header:'Программа'},{key:'participants',header:'Участники'},{key:'avgScore',header:'Средний балл'}])},
+        {name:'Оценка 360', ws:aoa([['Компетенция','Самооценка','Оценка коллег']].concat(d.radar360.axes.map(function(a,i){return [a,d.radar360.self[i],d.radar360.peers[i]];})))},
+        {name:'Показатели', ws:metricsSheet([['Средний балл (тек.)', d.avgScore.current],['Средний балл (пред.)', d.avgScore.prev],['Вывод', d.conclusion]])}
+      ]); },
+      apply:function(d,w){
+        var history = rowsFromSheet(ws(w,'Динамика балла'),[{key:'month',header:'Месяц'},{key:'score',header:'Балл'}]).filter(function(r){return r.month;}).map(function(r){return {month:str(r.month),score:num(r.score)};});
+        var dist = rowsFromSheet(ws(w,'Распределение'),[{key:'band',header:'Диапазон'},{key:'count',header:'Количество'}]).filter(function(r){return r.band;}).map(function(r){return {band:str(r.band),count:num(r.count)};});
+        var topics = rowsFromSheet(ws(w,'Темы обучения'),[{key:'topic',header:'Программа'},{key:'participants',header:'Участники'},{key:'avgScore',header:'Средний балл'}]).filter(function(r){return r.topic;}).map(function(r){return {topic:str(r.topic),participants:num(r.participants),avgScore:num(r.avgScore)};});
+        var r360 = rowsFromSheet(ws(w,'Оценка 360'),[{key:'axis',header:'Компетенция'},{key:'self',header:'Самооценка'},{key:'peers',header:'Оценка коллег'}]).filter(function(r){return r.axis;});
+        var m = readMetrics(ws(w,'Показатели'));
+        return {
+          avgScore:{current:num(m['Средний балл (тек.)'],d.avgScore.current), prev:num(m['Средний балл (пред.)'],d.avgScore.prev), history: history.length?history:d.avgScore.history},
+          resultsDistribution: dist.length?dist:d.resultsDistribution, topTopics: topics.length?topics:d.topTopics,
+          radar360: r360.length?{axes:r360.map(function(r){return r.axis;}), self:r360.map(function(r){return num(r.self);}), peers:r360.map(function(r){return num(r.peers);})}:d.radar360,
+          movers:d.movers, conclusion: str(m['Вывод'], d.conclusion)
+        };
+      }
+    },
+    discipline:{
+      build:function(d){ return wb([
+        {name:'По типам', ws:sheetFromRows(d.byType,[{key:'type',header:'Тип'},{key:'count',header:'Количество'}])},
+        {name:'По подразделениям', ws:sheetFromRows(d.byDept,[{key:'dept',header:'Подразделение'},{key:'count',header:'Количество'}])},
+        {name:'Динамика', ws:sheetFromRows(d.history,[{key:'month',header:'Месяц'},{key:'count',header:'Количество'}])},
+        {name:'Последние случаи', ws:sheetFromRows(d.recent,[{key:'date',header:'Дата'},{key:'employee',header:'Сотрудник'},{key:'dept',header:'Подразделение'},{key:'type',header:'Тип'},{key:'status',header:'Статус'},{key:'severity',header:'Серьёзность (good/warning/serious/critical)'}])},
+        {name:'Показатели', ws:metricsSheet([['Нарушений (тек.)', d.totalViolations.current],['Нарушений (пред.)', d.totalViolations.prev],['Вывод', d.conclusion]])}
+      ]); },
+      apply:function(d,w){
+        var byType = rowsFromSheet(ws(w,'По типам'),[{key:'type',header:'Тип'},{key:'count',header:'Количество'}]).filter(function(r){return r.type;}).map(function(r){return {type:str(r.type),count:num(r.count)};});
+        var byDept = rowsFromSheet(ws(w,'По подразделениям'),[{key:'dept',header:'Подразделение'},{key:'count',header:'Количество'}]).filter(function(r){return r.dept;}).map(function(r){return {dept:str(r.dept),count:num(r.count)};});
+        var history = rowsFromSheet(ws(w,'Динамика'),[{key:'month',header:'Месяц'},{key:'count',header:'Количество'}]).filter(function(r){return r.month;}).map(function(r){return {month:str(r.month),count:num(r.count)};});
+        var recent = rowsFromSheet(ws(w,'Последние случаи'),[{key:'date',header:'Дата'},{key:'employee',header:'Сотрудник'},{key:'dept',header:'Подразделение'},{key:'type',header:'Тип'},{key:'status',header:'Статус'},{key:'severity',header:'Серьёзность (good/warning/serious/critical)'}]).filter(function(r){return r.employee;});
+        var m = readMetrics(ws(w,'Показатели'));
+        return {
+          byType: byType.length?byType:d.byType, byDept: byDept.length?byDept:d.byDept, history: history.length?history:d.history,
+          recent: recent.length?recent:d.recent,
+          totalViolations:{current:num(m['Нарушений (тек.)'],d.totalViolations.current), prev:num(m['Нарушений (пред.)'],d.totalViolations.prev)},
+          conclusion: str(m['Вывод'], d.conclusion)
+        };
+      }
+    },
+    analytics:{
+      build:function(d){ return wb([
+        {name:'Структура', ws:sheetFromRows(d.structureByDept,[{key:'dept',header:'Подразделение'},{key:'count',header:'Численность'}])},
+        {name:'Текучесть динамика', ws:sheetFromRows(d.turnoverRate.history,[{key:'month',header:'Месяц'},{key:'rate',header:'Текучесть, %'}])},
+        {name:'Показатели', ws:metricsSheet([
+          ['Численность (тек.)', d.headcount.current],['Численность (пред.)', d.headcount.prev],['Принято', d.hired],['Уволено', d.fired],
+          ['Текучесть % (тек.)', d.turnoverRate.current],['Текучесть % (пред.)', d.turnoverRate.prev],['HR ratio, %', d.hrRatio],
+          ['Внутреннее закрытие % (тек.)', d.internalFillRate.current],['Внутреннее закрытие % (пред.)', d.internalFillRate.prev],['Вывод', d.conclusion]
+        ])}
+      ]); },
+      apply:function(d,w){
+        var structure = rowsFromSheet(ws(w,'Структура'),[{key:'dept',header:'Подразделение'},{key:'count',header:'Численность'}]).filter(function(r){return r.dept;}).map(function(r){return {dept:str(r.dept),count:num(r.count)};});
+        var history = rowsFromSheet(ws(w,'Текучесть динамика'),[{key:'month',header:'Месяц'},{key:'rate',header:'Текучесть, %'}]).filter(function(r){return r.month;}).map(function(r){return {month:str(r.month),rate:num(r.rate)};});
+        var m = readMetrics(ws(w,'Показатели'));
+        return {
+          structureByDept: structure.length?structure:d.structureByDept,
+          headcount:{current:num(m['Численность (тек.)'],d.headcount.current), prev:num(m['Численность (пред.)'],d.headcount.prev)},
+          hired:num(m['Принято'],d.hired), fired:num(m['Уволено'],d.fired),
+          turnoverRate:{current:num(m['Текучесть % (тек.)'],d.turnoverRate.current), prev:num(m['Текучесть % (пред.)'],d.turnoverRate.prev), history: history.length?history:d.turnoverRate.history},
+          hrRatio:num(m['HR ratio, %'],d.hrRatio),
+          internalFillRate:{current:num(m['Внутреннее закрытие % (тек.)'],d.internalFillRate.current), prev:num(m['Внутреннее закрытие % (пред.)'],d.internalFillRate.prev)},
+          conclusion: str(m['Вывод'], d.conclusion)
+        };
+      }
+    },
+    departments:{
+      build:function(d){ return wb([
+        {name:'Рейтинг отделов', ws:sheetFromRows(d.rows,[{key:'dept',header:'Подразделение'},{key:'interaction',header:'Взаимодействие (0-10)'},{key:'execution',header:'Исполнение поручений (0-10)'},{key:'hrWork',header:'Кадровая работа (0-10)'},{key:'kpi',header:'KPI (0-100)'},{key:'total',header:'Итоговый балл'}])},
+        {name:'Показатели', ws:metricsSheet([['Вывод', d.conclusion]])}
+      ]); },
+      apply:function(d,w){
+        var rows = rowsFromSheet(ws(w,'Рейтинг отделов'),[{key:'dept',header:'Подразделение'},{key:'interaction',header:'Взаимодействие (0-10)'},{key:'execution',header:'Исполнение поручений (0-10)'},{key:'hrWork',header:'Кадровая работа (0-10)'},{key:'kpi',header:'KPI (0-100)'},{key:'total',header:'Итоговый балл'}]).filter(function(r){return r.dept;}).map(function(r){
+          var interaction=num(r.interaction),execution=num(r.execution),hrWork=num(r.hrWork),kpi=num(r.kpi);
+          var total = r.total!==''&&r.total!==undefined?num(r.total):Math.round((interaction+execution+hrWork+kpi/10)/4*10)/10;
+          return {dept:str(r.dept),interaction:interaction,execution:execution,hrWork:hrWork,kpi:kpi,total:total};
+        });
+        var m = readMetrics(ws(w,'Показатели'));
+        return { rows: rows.length?rows:d.rows, conclusion: str(m['Вывод'], d.conclusion) };
+      }
+    },
+    budget:{
+      build:function(d){ return wb([
+        {name:'По статьям', ws:sheetFromRows(d.byLine,[{key:'line',header:'Статья'},{key:'plan',header:'План'},{key:'fact',header:'Факт'},{key:'nextPlan',header:'План след. месяца'},{key:'note',header:'Комментарий'}])},
+        {name:'Динамика', ws:sheetFromRows(d.history,[{key:'month',header:'Месяц'},{key:'plan',header:'План'},{key:'fact',header:'Факт'}])},
+        {name:'Показатели', ws:metricsSheet([['Вывод', d.conclusion]])}
+      ]); },
+      apply:function(d,w){
+        var byLine = rowsFromSheet(ws(w,'По статьям'),[{key:'line',header:'Статья'},{key:'plan',header:'План'},{key:'fact',header:'Факт'},{key:'nextPlan',header:'План след. месяца'},{key:'note',header:'Комментарий'}]).filter(function(r){return r.line;}).map(function(r){return {line:str(r.line),plan:num(r.plan),fact:num(r.fact),nextPlan:num(r.nextPlan),note:str(r.note)};});
+        var history = rowsFromSheet(ws(w,'Динамика'),[{key:'month',header:'Месяц'},{key:'plan',header:'План'},{key:'fact',header:'Факт'}]).filter(function(r){return r.month;}).map(function(r){return {month:str(r.month),plan:num(r.plan),fact:num(r.fact)};});
+        var m = readMetrics(ws(w,'Показатели'));
+        return { byLine: byLine.length?byLine:d.byLine, history: history.length?history:d.history, conclusion: str(m['Вывод'], d.conclusion) };
+      }
+    },
+    plan:{
+      build:function(d){ return wb([
+        {name:'Факт vs план', ws:sheetFromRows(d.factVsPlan,[{key:'item',header:'Пункт'},{key:'status',header:'Статус (done/inProgress/postponed/notDone)'},{key:'comment',header:'Комментарий'}])},
+        {name:'План след. месяца', ws:sheetFromRows(d.nextPlan,[{key:'item',header:'Пункт'},{key:'description',header:'Описание'}])},
+        {name:'Текущие поручения', ws:sheetFromRows(d.currentTasks,[{key:'task',header:'Поручение'},{key:'responsible',header:'Ответственный'},{key:'deadline',header:'Срок'},{key:'status',header:'Статус (done/inProgress/postponed/notDone)'}])},
+        {name:'Протокол динамика', ws:sheetFromRows(d.protocolHistory,[{key:'month',header:'Месяц'},{key:'done',header:'Исполнено'},{key:'postponed',header:'Отложено'},{key:'notDone',header:'Не выполнено'},{key:'inProgress',header:'В работе'}])},
+        {name:'Показатели', ws:metricsSheet([['Протокол: исполнено',d.protocolStatus.done],['Протокол: в работе',d.protocolStatus.inProgress],['Протокол: отложено',d.protocolStatus.postponed],['Протокол: не выполнено',d.protocolStatus.notDone],['Вывод', d.conclusion]])}
+      ]); },
+      apply:function(d,w){
+        var factVsPlan = rowsFromSheet(ws(w,'Факт vs план'),[{key:'item',header:'Пункт'},{key:'status',header:'Статус (done/inProgress/postponed/notDone)'},{key:'comment',header:'Комментарий'}]).filter(function(r){return r.item;});
+        var nextPlan = rowsFromSheet(ws(w,'План след. месяца'),[{key:'item',header:'Пункт'},{key:'description',header:'Описание'}]).filter(function(r){return r.item;});
+        var currentTasks = rowsFromSheet(ws(w,'Текущие поручения'),[{key:'task',header:'Поручение'},{key:'responsible',header:'Ответственный'},{key:'deadline',header:'Срок'},{key:'status',header:'Статус (done/inProgress/postponed/notDone)'}]).filter(function(r){return r.task;});
+        var protocolHistory = rowsFromSheet(ws(w,'Протокол динамика'),[{key:'month',header:'Месяц'},{key:'done',header:'Исполнено'},{key:'postponed',header:'Отложено'},{key:'notDone',header:'Не выполнено'},{key:'inProgress',header:'В работе'}]).filter(function(r){return r.month;}).map(function(r){return {month:str(r.month),done:num(r.done),postponed:num(r.postponed),notDone:num(r.notDone),inProgress:num(r.inProgress)};});
+        var m = readMetrics(ws(w,'Показатели'));
+        return {
+          factVsPlan: factVsPlan.length?factVsPlan:d.factVsPlan, nextPlan: nextPlan.length?nextPlan:d.nextPlan,
+          currentTasks: currentTasks.length?currentTasks:d.currentTasks, protocolHistory: protocolHistory.length?protocolHistory:d.protocolHistory,
+          protocolStatus:{done:num(m['Протокол: исполнено'],d.protocolStatus.done), inProgress:num(m['Протокол: в работе'],d.protocolStatus.inProgress), postponed:num(m['Протокол: отложено'],d.protocolStatus.postponed), notDone:num(m['Протокол: не выполнено'],d.protocolStatus.notDone)},
+          conclusion: str(m['Вывод'], d.conclusion)
+        };
+      }
+    },
+    hrEfficiency:{
+      build:function(d){ return wb([
+        {name:'Сотрудники HR', ws:sheetFromRows(d.staff.map(function(s){return {name:s.name,position:s.position,functions:s.functions,kpiPct:s.kpiPct,isBestThisMonth:boolRu(s.isBestThisMonth), violation:s.violation||''};}),[{key:'name',header:'ФИО'},{key:'position',header:'Должность'},{key:'functions',header:'Функции'},{key:'kpiPct',header:'КПЭ, %'},{key:'isBestThisMonth',header:'Лучший в этом месяце (да/нет)'},{key:'violation',header:'Нарушение (если было)'}])},
+        {name:'История лучших', ws:sheetFromRows(d.pastBest,[{key:'month',header:'Месяц'},{key:'name',header:'ФИО'}])},
+        {name:'Показатели', ws:metricsSheet([['Вывод', d.conclusion]])}
+      ]); },
+      apply:function(d,w){
+        var staff = rowsFromSheet(ws(w,'Сотрудники HR'),[{key:'name',header:'ФИО'},{key:'position',header:'Должность'},{key:'functions',header:'Функции'},{key:'kpiPct',header:'КПЭ, %'},{key:'isBestThisMonth',header:'Лучший в этом месяце (да/нет)'},{key:'violation',header:'Нарушение (если было)'}]).filter(function(r){return r.name;}).map(function(r){return {name:str(r.name),position:str(r.position),functions:str(r.functions),kpiPct:num(r.kpiPct),isBestThisMonth:bool(r.isBestThisMonth),violation: str(r.violation)||null};});
+        var pastBest = rowsFromSheet(ws(w,'История лучших'),[{key:'month',header:'Месяц'},{key:'name',header:'ФИО'}]).filter(function(r){return r.name;}).map(function(r){return {month:str(r.month),name:str(r.name)};});
+        var m = readMetrics(ws(w,'Показатели'));
+        return { staff: staff.length?staff:d.staff, pastBest: pastBest.length?pastBest:d.pastBest, conclusion: str(m['Вывод'], d.conclusion) };
+      }
+    },
+    proposals:{
+      build:function(d){ return wb([
+        {name:'Предложения', ws:sheetFromRows(d.items,[{key:'direction',header:'Направление'},{key:'proposal',header:'Предложение'},{key:'responsible',header:'Ответственный'},{key:'priority',header:'Приоритет (high/medium/low)'},{key:'status',header:'Статус (new/inProgress/done)'}])},
+        {name:'Показатели', ws:metricsSheet([['Прочее', d.notes],['Вывод', d.conclusion]])}
+      ]); },
+      apply:function(d,w){
+        var items = rowsFromSheet(ws(w,'Предложения'),[{key:'direction',header:'Направление'},{key:'proposal',header:'Предложение'},{key:'responsible',header:'Ответственный'},{key:'priority',header:'Приоритет (high/medium/low)'},{key:'status',header:'Статус (new/inProgress/done)'}]).filter(function(r){return r.proposal;});
+        var m = readMetrics(ws(w,'Показатели'));
+        return { items: items.length?items:d.items, notes: str(m['Прочее'], d.notes), conclusion: str(m['Вывод'], d.conclusion) };
+      }
+    }
+  };
+
+  H.TEMPLATES = TEMPLATES;
+  H.uploadHelpers = {num:num, str:str};
+})();
+</script>
+<script>
+(function(){
+  "use strict";
+  var H = window.__HR__, C = H.charts;
+  var BLOCKS = H.BLOCKS, SLIDE_COUNT = H.SLIDE_COUNT;
+  var esc = C.esc;
+
+  var state = { data: JSON.parse(JSON.stringify(H.DEMO)) };
+  var currentIndex = 0;
+  var exporting = false;
+  var claudeDb = null, claudeDownloads = null;
+  var hasClaude = !!(window.claude && typeof window.claude.use === 'function');
+
+  var slide0, slide1, slideView, viewBody, tipEl, toastEl, toastTimer=null;
+
+  /* ---------------- helpers ---------------- */
+  function fmtLocal(n,d){ if(isNaN(n)) return '—'; return Number(n).toLocaleString('ru-RU',{minimumFractionDigits:d,maximumFractionDigits:d}); }
+  function toast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(function(){ toastEl.classList.remove('show'); }, 3400); }
+  function reduceMotion(){ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+
+  function runCountUps(root){
+    var els = root.querySelectorAll('[data-countup]');
+    els.forEach(function(el){
+      var target = parseFloat(el.getAttribute('data-target'));
+      var digits = parseInt(el.getAttribute('data-digits')||'0',10);
+      if(isNaN(target)) return;
+      if(reduceMotion() || exporting){ el.childNodes[0].nodeValue = fmtLocal(target,digits); return; }
+      var start=null, dur=850;
+      function frame(ts){
+        if(!start) start=ts;
+        var p = Math.min(1,(ts-start)/dur);
+        var eased = 1-Math.pow(1-p,3);
+        el.childNodes[0].nodeValue = fmtLocal(target*eased, digits);
+        if(p<1) requestAnimationFrame(frame); else el.childNodes[0].nodeValue = fmtLocal(target,digits);
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+  function runKpiBars(root){
+    root.querySelectorAll('.kpi-bar-fill[data-kpi]').forEach(function(el){
+      var v = parseFloat(el.getAttribute('data-kpi'));
+      if(exporting || reduceMotion()){ el.style.width = Math.min(100,v)+'%'; return; }
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ el.style.width = Math.min(100,v)+'%'; }); });
+    });
+  }
+  function flipContent(){
+    if(exporting) return;
+    viewBody.style.transition = 'none';
+    viewBody.style.opacity = 0; viewBody.style.transform = 'translateY(6px)';
+    requestAnimationFrame(function(){
+      viewBody.style.transition = 'opacity .22s ease, transform .22s ease';
+      viewBody.style.opacity = 1; viewBody.style.transform = 'translateY(0)';
+    });
+  }
+
+  /* ---------------- meta / TOC ---------------- */
+  function updateMeta(){
+    var m = state.data.meta;
+    document.getElementById('title-period').textContent = m.period;
+    document.getElementById('title-company').textContent = m.company;
+    document.getElementById('topbar-period').textContent = m.period;
+  }
+  function renderTOC(){
+    var el = document.getElementById('toc-grid');
+    el.innerHTML = BLOCKS.map(function(b,i){
+      var d = state.data[b.key];
+      var n = i+1;
+      return '<button class="toc-card hoverable" data-goto="'+(i+2)+'"><span class="toc-num">'+(n<10?'0'+n:n)+'</span><span class="toc-title">'+esc(b.short)+'</span><span class="toc-conclusion">'+esc(d.conclusion)+'</span></button>';
+    }).join('');
+    refreshScrollHint(slide1);
+  }
+  function renderBlockView(key){
+    var data = state.data[key];
+    var fn = H.RENDERERS[key];
+    viewBody.innerHTML = fn(data);
+    runCountUps(viewBody); runKpiBars(viewBody);
+    flipContent();
+    if(key==='departments') wireDepartmentRadar(viewBody, data);
+    refreshScrollHint(slideView);
+  }
+  function wireDepartmentRadar(root, data){
+    var rows = data.rows;
+    var avg = {};
+    ['interaction','execution','hrWork','kpi'].forEach(function(k){ avg[k] = rows.reduce(function(a,r){return a+r[k];},0)/rows.length; });
+    root.querySelectorAll('.dept-row').forEach(function(row){
+      row.addEventListener('click', function(){
+        var dept = row.getAttribute('data-dept');
+        var r = rows.filter(function(x){return x.dept===dept;})[0];
+        var target = document.getElementById('dept-radar');
+        if(target && r){
+          target.innerHTML = C.radarChart({axes:['Взаимод.','Поручения','Кадр. работа','KPI'], maxValue:10,
+            series:[{name:r.dept,values:[r.interaction,r.execution,r.hrWork,r.kpi/10],color:'var(--accent)'},
+                    {name:'Средний по компании',values:[avg.interaction,avg.execution,avg.hrWork,avg.kpi/10],color:'var(--steel)'}]});
+        }
+      });
+    });
+  }
+
+  /* ---------------- navigation ---------------- */
+  function elFor(i){ return i===0?slide0:(i===1?slide1:slideView); }
+  function goToSlide(i, opts){
+    opts = opts||{};
+    i = Math.max(0, Math.min(SLIDE_COUNT-1, i));
+    if(i===currentIndex && !opts.force) { updateNavUI(); return; }
+    currentIndex = i;
+    [slide0,slide1,slideView].forEach(function(el){ el.classList.remove('is-active'); });
+    var el = elFor(i);
+    el.classList.add('is-active');
+    if(i>=2){ renderBlockView(BLOCKS[i-2].key); }
+    updateNavUI();
+    refreshScrollHint(el);
+  }
+  /* ---------------- scroll overflow hint ---------------- */
+  function refreshScrollHint(slideEl){
+    if(!slideEl) return;
+    var inner = slideEl.querySelector('.slide-inner');
+    if(!inner) return;
+    requestAnimationFrame(function(){
+      var overflow = (inner.scrollHeight - inner.clientHeight) > 6;
+      slideEl.classList.toggle('has-overflow', overflow);
+      var atBottom = (inner.scrollTop + inner.clientHeight) >= (inner.scrollHeight - 6);
+      slideEl.classList.toggle('at-bottom', atBottom);
+    });
+  }
+  function wireScrollHints(){
+    [slide1, slideView].forEach(function(slideEl){
+      var inner = slideEl.querySelector('.slide-inner');
+      if(!inner) return;
+      inner.addEventListener('scroll', function(){ refreshScrollHint(slideEl); }, {passive:true});
+    });
+    window.addEventListener('resize', function(){ refreshScrollHint(elFor(currentIndex)); });
+  }
+  function updateNavUI(){
+    document.getElementById('slide-cur').textContent = currentIndex+1;
+    document.getElementById('slide-total').textContent = SLIDE_COUNT;
+    document.getElementById('btn-prev').disabled = currentIndex===0;
+    document.getElementById('btn-next').disabled = currentIndex===SLIDE_COUNT-1;
+  }
+  function wireNav(){
+    document.getElementById('btn-prev').addEventListener('click', function(){ goToSlide(currentIndex-1); });
+    document.getElementById('btn-next').addEventListener('click', function(){ goToSlide(currentIndex+1); });
+    document.getElementById('toc-grid').addEventListener('click', function(e){
+      var b = e.target.closest('[data-goto]'); if(b) goToSlide(parseInt(b.getAttribute('data-goto'),10));
+    });
+    document.addEventListener('keydown', function(e){
+      var tag = e.target && e.target.tagName;
+      if(tag==='INPUT'||tag==='SELECT'||tag==='TEXTAREA') return;
+      if(e.key==='ArrowRight') goToSlide(currentIndex+1);
+      else if(e.key==='ArrowLeft') goToSlide(currentIndex-1);
+      else if(e.key==='Escape') closeModal();
+    });
+  }
+
+  /* ---------------- tooltip ---------------- */
+  function wireTooltip(){
+    var visible=false;
+    document.addEventListener('mouseover', function(e){
+      var t = e.target.closest ? e.target.closest('[data-tip]') : null;
+      if(t){ tipEl.innerHTML = t.getAttribute('data-tip'); tipEl.classList.add('show'); visible=true; }
+    });
+    document.addEventListener('mousemove', function(e){
+      if(visible){ tipEl.style.left = e.clientX+'px'; tipEl.style.top = (e.clientY-10)+'px'; }
+    });
+    document.addEventListener('mouseout', function(e){
+      var t = e.target.closest ? e.target.closest('[data-tip]') : null;
+      if(t){ tipEl.classList.remove('show'); visible=false; }
+    });
+  }
+
+  /* ---------------- db persistence ---------------- */
+  function updateDataBadge(isLive){
+    var badge = document.getElementById('data-badge');
+    if(isLive){ badge.textContent='● Данные обновлены пользователем'; badge.classList.add('is-live'); }
+    else { badge.textContent='● Демонстрационные данные'; badge.classList.remove('is-live'); }
+  }
+  async function initCapabilities(){
+    if(!hasClaude){ updateDataBadge(false); return; }
+    try{ claudeDb = await window.claude.use('db'); }catch(e){ claudeDb=null; }
+    try{ claudeDownloads = await window.claude.use('downloads'); }catch(e){ claudeDownloads=null; }
+    if(claudeDb){ await loadFromDb(); subscribeDb(); }
+    else { updateDataBadge(false); }
+  }
+  async function loadFromDb(){
+    var any=false;
+    for(var i=0;i<BLOCKS.length;i++){
+      var key = BLOCKS[i].key;
+      try{
+        var snap = await claudeDb.doc('hr/'+key).get();
+        if(snap.exists && snap.data()){ state.data[key] = snap.data(); any=true; }
+      }catch(e){ /* keep demo fallback */ }
+    }
+    try{
+      var metaSnap = await claudeDb.doc('hr/meta').get();
+      if(metaSnap.exists && metaSnap.data()) state.data.meta = metaSnap.data();
+    }catch(e){}
+    updateMeta(); renderTOC();
+    if(currentIndex>=2) renderBlockView(BLOCKS[currentIndex-2].key);
+    updateDataBadge(any);
+  }
+  function subscribeDb(){
+    BLOCKS.forEach(function(b){
+      try{
+        claudeDb.doc('hr/'+b.key).onSnapshot(function(snap){
+          if(snap.exists && snap.data()){
+            state.data[b.key] = snap.data();
+            renderTOC();
+            if(currentIndex>=2 && BLOCKS[currentIndex-2].key===b.key) renderBlockView(b.key);
+            updateDataBadge(true);
+          }
+        }, function(err){ /* ignore transient */ });
+      }catch(e){}
+    });
+  }
+  async function saveBlockData(key){
+    if(!claudeDb){ toast('Сохранение недоступно вне просмотра артефакта — изменения видны только вам сейчас'); return false; }
+    try{ await claudeDb.doc('hr/'+key).set(state.data[key]); updateDataBadge(true); return true; }
+    catch(e){ toast('Не удалось сохранить данные: '+(e&&e.message?e.message:e)); return false; }
+  }
+
+  /* ---------------- upload modal ---------------- */
+  var modal, selectEl;
+  function wireModal(){
+    modal = document.getElementById('upload-modal');
+    selectEl = document.getElementById('upload-block-select');
+    BLOCKS.forEach(function(b){ var opt=document.createElement('option'); opt.value=b.key; opt.textContent=b.short; selectEl.appendChild(opt); });
+    document.getElementById('btn-upload').addEventListener('click', function(){
+      var cur = currentIndex>=2 ? BLOCKS[currentIndex-2].key : BLOCKS[0].key;
+      openModal(cur);
+    });
+    document.getElementById('btn-modal-close').addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e){ if(e.target===modal) closeModal(); });
+    document.getElementById('btn-download-template').addEventListener('click', function(){
+      var key = selectEl.value, tmpl = H.TEMPLATES[key];
+      if(!tmpl) return;
+      var workbook = tmpl.build(state.data[key]);
+      var out = XLSX.write(workbook, {bookType:'xlsx', type:'array'});
+      var blob = new Blob([out], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+      offerDownload(blob, 'Шаблон_'+key+'.xlsx');
+    });
+    document.getElementById('file-drop').addEventListener('click', function(){ document.getElementById('file-input').click(); });
+    document.getElementById('file-input').addEventListener('change', async function(e){
+      var file = e.target.files[0]; if(!file) return;
+      var key = selectEl.value;
+      var statusEl = document.getElementById('upload-status');
+      statusEl.innerHTML = '<div class="modal-status">Обработка файла…</div>';
+      try{
+        var buf = await file.arrayBuffer();
+        var workbook = XLSX.read(buf, {type:'array'});
+        var tmpl = H.TEMPLATES[key];
+        var newData = tmpl.apply(state.data[key], workbook);
+        state.data[key] = Object.assign({}, state.data[key], newData);
+        renderTOC();
+        if(currentIndex>=2 && BLOCKS[currentIndex-2].key===key) renderBlockView(key);
+        var saved = await saveBlockData(key);
+        var shortName = BLOCKS.filter(function(b){return b.key===key;})[0].short;
+        statusEl.innerHTML = '<div class="modal-status ok">Готово! Раздел «'+esc(shortName)+'» обновлён'+(saved?' и сохранён — увидят все, кто откроет отчёт.':' (только в этом окне: сохранение сейчас недоступно).')+'</div>';
+      }catch(err){
+        statusEl.innerHTML = '<div class="modal-status err">Не удалось прочитать файл: '+esc(err&&err.message?err.message:String(err))+'</div>';
+      }
+      e.target.value='';
+    });
+  }
+  function openModal(defaultKey){ if(defaultKey) selectEl.value=defaultKey; document.getElementById('upload-status').innerHTML=''; modal.style.display='flex'; }
+  function closeModal(){ if(modal) modal.style.display='none'; }
+
+  async function offerDownload(blob, filename){
+    if(!hasClaude || !claudeDownloads){ toast('Скачивание файлов доступно только при открытии этого отчёта как артефакта Claude'); return; }
+    try{ await claudeDownloads.save({filename:filename, data:blob}); toast('Файл «'+filename+'» готов'); }
+    catch(e){
+      if(e && e.code==='declined'){ /* user declined, no toast needed */ }
+      else { toast('Не удалось подготовить файл: '+(e&&e.message?e.message:e)); }
+    }
+  }
+
+  /* ---------------- PDF export ---------------- */
+  async function exportPDF(){
+    if(exporting) return;
+    if(typeof html2canvas==='undefined' || !window.jspdf){ toast('Библиотеки экспорта не загрузились — проверьте соединение и попробуйте снова'); return; }
+    exporting = true;
+    var appEl = document.getElementById('app');
+    appEl.classList.add('exporting');
+    var savedIndex = currentIndex;
+    var deck = document.getElementById('deck');
+    var rect = deck.getBoundingClientRect();
+    var jsPDFctor = window.jspdf.jsPDF;
+    var pdf = new jsPDFctor({orientation:'landscape', unit:'pt', format:[rect.width, rect.height]});
+    toast('Готовим PDF — это займёт несколько секунд…');
+    try{
+      for(var i=0;i<SLIDE_COUNT;i++){
+        goToSlide(i, {force:true});
+        await new Promise(function(r){ setTimeout(r, 90); });
+        var canvas = await html2canvas(deck, {scale:2, backgroundColor:null, useCORS:true});
+        var img = canvas.toDataURL('image/png');
+        if(i>0) pdf.addPage([rect.width, rect.height], 'landscape');
+        pdf.addImage(img, 'PNG', 0, 0, rect.width, rect.height);
+      }
+      var blob = pdf.output('blob');
+      var fname = 'HR_отчет_'+String(state.data.meta.period||'').replace(/\s+/g,'_')+'.pdf';
+      await offerDownload(blob, fname);
+    }catch(err){
+      toast('Не удалось собрать PDF: '+(err&&err.message?err.message:err));
+    }finally{
+      appEl.classList.remove('exporting');
+      goToSlide(savedIndex, {force:true});
+      exporting = false;
+    }
+  }
+
+  /* ---------------- Word export (minimal OOXML) ---------------- */
+  function escXml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function wPara(text, opts){
+    opts = opts||{};
+    var rpr='';
+    if(opts.bold) rpr+='<w:b/>';
+    if(opts.size) rpr+='<w:sz w:val="'+(opts.size*2)+'"/>';
+    if(opts.color) rpr+='<w:color w:val="'+opts.color+'"/>';
+    var pPr = opts.spacingAfter!==undefined ? ('<w:pPr><w:spacing w:after="'+opts.spacingAfter+'"/></w:pPr>') : '';
+    return '<w:p>'+pPr+'<w:r>'+(rpr?('<w:rPr>'+rpr+'</w:rPr>'):'')+'<w:t xml:space="preserve">'+escXml(text)+'</w:t></w:r></w:p>';
+  }
+  var KEYFACTS = {
+    recruitment: function(d){ return 'Срок закрытия вакансии: '+d.avgTimeToHire.current+' дн. (было '+d.avgTimeToHire.prev+'). Успешность адаптации: '+d.adaptation.successRate+'%.'; },
+    admin: function(d){ return 'Среднее время оформления документа: '+d.avgProcessingDays.current+' дн. Просрочено документов: '+d.statusBreakdown.overdue+'.'; },
+    assessment: function(d){ return 'Средний балл аттестаций: '+d.avgScore.current+' (было '+d.avgScore.prev+').'; },
+    discipline: function(d){ return 'Нарушений дисциплины: '+d.totalViolations.current+' (было '+d.totalViolations.prev+').'; },
+    analytics: function(d){ return 'Численность: '+d.headcount.current+' чел. Текучесть: '+d.turnoverRate.current+'%.'; },
+    departments: function(d){ var s=d.rows.slice().sort(function(a,b){return b.total-a.total;}); return 'Лидер рейтинга: '+s[0].dept+' ('+s[0].total+'). Антирейтинг: '+s[s.length-1].dept+' ('+s[s.length-1].total+').'; },
+    budget: function(d){ var tp=d.byLine.reduce(function(a,x){return a+x.plan;},0), tf=d.byLine.reduce(function(a,x){return a+x.fact;},0); return 'Освоение бюджета: '+(Math.round(tf/tp*1000)/10)+'% от плана.'; },
+    plan: function(d){ var t=d.protocolStatus; return 'Протокольные поручения исполнено: '+t.done+' из '+(t.done+t.inProgress+t.postponed+t.notDone)+'.'; },
+    hrEfficiency: function(d){ var best=d.staff.filter(function(s){return s.isBestThisMonth;})[0]; return 'Лучший сотрудник месяца: '+(best?best.name+' ('+best.kpiPct+'% КПЭ)':'—')+'.'; },
+    proposals: function(d){ return d.items.length+' предложений на рассмотрении.'; }
+  };
+  async function exportWord(){
+    if(typeof JSZip==='undefined'){ toast('Библиотека экспорта не загрузилась — попробуйте снова'); return; }
+    var m = state.data.meta;
+    var paras = [];
+    paras.push(wPara('Ежемесячный отчёт управления человеческими ресурсами', {bold:true,size:26,spacingAfter:80}));
+    paras.push(wPara(m.company+' · '+m.period, {size:12,color:'8A8D93',spacingAfter:260}));
+    BLOCKS.forEach(function(b){
+      var d = state.data[b.key];
+      paras.push(wPara(b.title, {bold:true,size:14,color:'8C2F3E',spacingAfter:60}));
+      paras.push(wPara('Вывод: '+d.conclusion, {size:11,spacingAfter:30}));
+      var kf = KEYFACTS[b.key];
+      if(kf){ paras.push(wPara(kf(d), {size:10,color:'52514E',spacingAfter:220})); }
+    });
+    var bodyXml = paras.join('') + '<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134"/></w:sectPr>';
+    var documentXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>'+bodyXml+'</w:body></w:document>';
+    var contentTypes = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>';
+    var rootRels = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>';
+    try{
+      var zip = new JSZip();
+      zip.file('[Content_Types].xml', contentTypes);
+      zip.folder('_rels').file('.rels', rootRels);
+      zip.folder('word').file('document.xml', documentXml);
+      var blob = await zip.generateAsync({type:'blob', mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+      await offerDownload(blob, 'HR_сводка_'+String(m.period||'').replace(/\s+/g,'_')+'.docx');
+    }catch(err){ toast('Не удалось собрать Word-файл: '+(err&&err.message?err.message:err)); }
+  }
+
+  /* ---------------- boot ---------------- */
+  function boot(){
+    slide0 = document.getElementById('slide-0');
+    slide1 = document.getElementById('slide-1');
+    slideView = document.getElementById('slide-view');
+    viewBody = document.getElementById('view-body');
+    tipEl = document.getElementById('chart-tip');
+    toastEl = document.getElementById('toast');
+
+    updateMeta();
+    renderTOC();
+    slide0.classList.add('is-active');
+    updateNavUI();
+    wireNav();
+    wireScrollHints();
+    wireModal();
+    wireTooltip();
+    document.getElementById('btn-export-pdf').addEventListener('click', exportPDF);
+    document.getElementById('btn-export-word').addEventListener('click', exportWord);
+    initCapabilities();
+  }
+
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', boot); } else { boot(); }
+})();
+</script>
