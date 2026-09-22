@@ -617,6 +617,7 @@
   };
 
   var BLOCKS = [
+    {key:'composition', title:'Состав компании', short:'Состав компании'},
     {key:'recruitment', title:'Подбор, найм, адаптация, резерв кадров', short:'Подбор и адаптация'},
     {key:'admin', title:'Кадровое администрирование', short:'Администрирование'},
     {key:'assessment', title:'Оценка и обучение', short:'Оценка и обучение'},
@@ -636,6 +637,13 @@
 <script>
 window.__HR__.DEMO = {
   meta:{ period:'Сентябрь 2026', prevPeriod:'Август 2026', company:'ОсОО «Альфа Ойл»' },
+
+  composition:{
+    headcountHistory:[{month:'Апр',count:385},{month:'Май',count:391},{month:'Июн',count:397},{month:'Июл',count:401},{month:'Авг',count:405},{month:'Сен',count:412}],
+    gender:{male:298, female:114},
+    hired:14, fired:7,
+    conclusion:'Численность выросла до 412 человек (+7 за месяц): принято 14, уволено 7; в штате 72% мужчин и 28% женщин.'
+  },
 
   recruitment:{
     funnel:[{stage:'Заявки',count:186},{stage:'Скрининг',count:124},{stage:'Собеседование',count:71},{stage:'Оффер',count:34},{stage:'Выход на работу',count:27}],
@@ -978,16 +986,37 @@ window.__HR__.DEMO = {
 
   function head(n, title, conclusion, extraRight){
     return '<div class="slide-head">'
-      + '<div><div class="slide-eyebrow">Раздел '+n+' из 10</div><h2 class="slide-title">'+esc(title)+'</h2></div>'
+      + '<div><div class="slide-eyebrow">Раздел '+n+' из '+H.BLOCKS.length+'</div><h2 class="slide-title">'+esc(title)+'</h2></div>'
       + (extraRight||'')
       + '</div>'
       + '<div class="slide-conclusion"><b>Вывод: </b>'+esc(conclusion)+'</div>';
   }
   function card(title, inner, cls){ return '<div class="card hoverable'+(cls?(' '+cls):'')+'"><div class="card-title">'+esc(title)+'</div>'+inner+'</div>'; }
 
-  /* ---------- 1. Подбор ---------- */
+  /* ---------- 1. Состав компании ---------- */
+  function render_composition(d){
+    var hist = d.headcountHistory;
+    var current = hist[hist.length-1].count;
+    var prev = hist[hist.length-2].count;
+    var total = d.gender.male + d.gender.female;
+    return head(1,'Состав компании', d.conclusion)
+    + '<div class="grid grid-cols-3">'
+      + card('Численность', C.statTile({label:'сотрудников, на конец месяца',value:current,delta:current-prev,deltaGood:true,deltaUnit:' чел.'}))
+      + card('Принято за месяц', C.statTile({label:'новых сотрудников',value:d.hired}))
+      + card('Уволено за месяц', C.statTile({label:'сотрудников',value:d.fired}))
+    + '</div>'
+    + '<div class="grid grid-cols-2">'
+      + card('Численность, динамика 6 месяцев', C.lineChart({labels:hist.map(function(h){return h.month;}), series:[{name:'Численность',values:hist.map(function(h){return h.count;}),color:'var(--accent)'}]}))
+      + card('Состав по полу', C.donutChart({segments:[
+          {label:'Мужчины',value:d.gender.male,color:'var(--steel)'},
+          {label:'Женщины',value:d.gender.female,color:'var(--accent)'}
+        ], centerLabel:'сотрудников', centerValue:total}))
+    + '</div>';
+  }
+
+  /* ---------- 2. Подбор ---------- */
   function render_recruitment(d){
-    return head(1,'Подбор, найм, адаптация, резерв кадров', d.conclusion)
+    return head(2,'Подбор, найм, адаптация, резерв кадров', d.conclusion)
     + '<div class="grid grid-cols-3">'
       + card('Воронка найма', C.funnelChart({stages:d.funnel}))
       + card('Среднее время закрытия вакансии', C.statTile({label:'дней на закрытие', value:d.avgTimeToHire.current, unit:' '+d.avgTimeToHire.unit, delta:d.avgTimeToHire.current-d.avgTimeToHire.prev, deltaGood:false, deltaUnit:' дн.'})
@@ -1005,12 +1034,12 @@ window.__HR__.DEMO = {
     + '</div>';
   }
 
-  /* ---------- 2. Кадровое администрирование ---------- */
+  /* ---------- 3. Кадровое администрирование ---------- */
   function render_admin(d){
     var overdueRows = d.overdueList.map(function(o){
       return '<tr class="row-hover"><td>'+esc(o.doc)+'</td><td>'+esc(o.dept)+'</td><td>'+esc(o.responsible)+'</td><td class="num">'+C.statusPill(o.daysOverdue+' дн.','critical')+'</td></tr>';
     }).join('');
-    return head(2,'Кадровое администрирование', d.conclusion)
+    return head(3,'Кадровое администрирование', d.conclusion)
     + '<div class="grid grid-cols-3">'
       + card('Среднее время оформления', C.statTile({label:'дней на документ',value:d.avgProcessingDays.current,digits:1,delta:d.avgProcessingDays.current-d.avgProcessingDays.prev,deltaGood:false,deltaUnit:' дн.',deltaDigits:1}))
       + card('Статус исполнения', C.donutChart({segments:[
@@ -1023,7 +1052,7 @@ window.__HR__.DEMO = {
     + card('Просроченные документы', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Документ</th><th>Подразделение</th><th>Ответственный</th><th class="num">Просрочка</th></tr></thead><tbody>'+overdueRows+'</tbody></table></div>');
   }
 
-  /* ---------- 3. Оценка и обучение ---------- */
+  /* ---------- 4. Оценка и обучение ---------- */
   function render_assessment(d){
     var seqColors=['var(--critical)','var(--serious)','var(--warning)','var(--good)'];
     var distSegs = d.resultsDistribution.map(function(x,i){ return {label:x.band,value:x.count,color:seqColors[seqColors.length-1-i]||'var(--accent)'}; });
@@ -1032,7 +1061,7 @@ window.__HR__.DEMO = {
       var good=m.direction==='up';
       return '<div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:6px 0;border-top:1px solid var(--border)"><span>'+esc(m.name)+'</span><span class="stat-delta '+(good?'up-good':'up-bad')+'">'+(good?'↑':'↓')+' '+Math.abs(m.delta)+'</span></div>';
     }).join('');
-    return head(3,'Оценка и обучение', d.conclusion)
+    return head(4,'Оценка и обучение', d.conclusion)
     + '<div class="grid grid-cols-3">'
       + card('Средний балл аттестаций, динамика', C.lineChart({labels:d.avgScore.history.map(function(h){return h.month;}), series:[{name:'Средний балл',values:d.avgScore.history.map(function(h){return h.score;}),color:'var(--accent)'}]}))
       + card('Распределение результатов', C.donutChart({segments:distSegs, centerLabel:'аттестовано', centerValue:d.resultsDistribution.reduce(function(a,x){return a+x.count;},0)}))
@@ -1044,12 +1073,12 @@ window.__HR__.DEMO = {
     + '</div>';
   }
 
-  /* ---------- 4. Дисциплина труда ---------- */
+  /* ---------- 5. Дисциплина труда ---------- */
   function render_discipline(d){
     var rows = d.recent.map(function(r){
       return '<tr class="row-hover"><td>'+r.date+'</td><td>'+esc(r.employee)+'</td><td>'+esc(r.dept)+'</td><td>'+esc(r.type)+'</td><td>'+C.statusPill(r.status,r.severity)+'</td></tr>';
     }).join('');
-    return head(4,'Дисциплина труда', d.conclusion)
+    return head(5,'Дисциплина труда', d.conclusion)
     + '<div class="grid grid-cols-3">'
       + card('Нарушения за месяц', C.statTile({label:'случаев',value:d.totalViolations.current,delta:d.totalViolations.current-d.totalViolations.prev,deltaGood:false}))
       + card('По типам', C.barChartH({items:d.byType.map(function(x){return {label:x.type,value:x.count,color:'var(--serious)'};})}))
@@ -1061,9 +1090,9 @@ window.__HR__.DEMO = {
     + '</div>';
   }
 
-  /* ---------- 5. HR-аналитика ---------- */
+  /* ---------- 6. HR-аналитика ---------- */
   function render_analytics(d){
-    return head(5,'HR-аналитика по компании и процессам', d.conclusion)
+    return head(6,'HR-аналитика по компании и процессам', d.conclusion)
     + '<div class="grid grid-cols-4">'
       + card('Численность', C.statTile({label:'сотрудников',value:d.headcount.current,delta:d.headcount.current-d.headcount.prev,deltaGood:true}))
       + card('Принято / уволено', C.statTile({label:'принято в этом месяце',value:d.hired})+'<p style="font-size:12px;color:var(--ink-2)">Уволено: <b class="num">'+d.fired+'</b></p>')
@@ -1076,7 +1105,7 @@ window.__HR__.DEMO = {
     + '</div>';
   }
 
-  /* ---------- 6. Результативность отделов ---------- */
+  /* ---------- 7. Результативность отделов ---------- */
   function render_departments(d){
     var rows = d.rows.slice().sort(function(a,b){return b.total-a.total;});
     var trs = rows.map(function(r,i){
@@ -1084,14 +1113,14 @@ window.__HR__.DEMO = {
       return '<tr class="row-hover dept-row" data-dept="'+esc(r.dept)+'" style="cursor:pointer"><td>'+C.statusPill('#'+(i+1),i===0?'good':(i===rows.length-1?'critical':'muted'))+' '+esc(r.dept)+'</td>'
         + '<td class="num">'+fmt(r.interaction,1)+'</td><td class="num">'+fmt(r.execution,1)+'</td><td class="num">'+fmt(r.hrWork,1)+'</td><td class="num">'+r.kpi+'</td><td class="num"><b>'+fmt(r.total,1)+'</b></td></tr>';
     }).join('');
-    return head(6,'Результативность отделов', d.conclusion)
+    return head(7,'Результативность отделов', d.conclusion)
     + '<div class="grid grid-cols-2">'
       + card('Сводный рейтинг (клик по строке — детали справа)', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Подразделение</th><th class="num">Взаимод.</th><th class="num">Исполнение</th><th class="num">Кадр. работа</th><th class="num">KPI</th><th class="num">Итог</th></tr></thead><tbody>'+trs+'</tbody></table></div>')
       + card('Детали подразделения', '<div id="dept-radar">'+C.radarChart({axes:['Взаимод.','Поручения','Кадр. работа','KPI'], maxValue:10, series:[{name:rows[0].dept,values:[rows[0].interaction,rows[0].execution,rows[0].hrWork,rows[0].kpi/10],color:'var(--accent)'},{name:'Средний по компании',values:['interaction','execution','hrWork','kpi'].map(function(k){return rows.reduce(function(a,r){return a+(k==='kpi'?r.kpi/10:r[k]);},0)/rows.length;}),color:'var(--steel)'}]})+'</div>')
     + '</div>';
   }
 
-  /* ---------- 7. Бюджет ---------- */
+  /* ---------- 8. Бюджет ---------- */
   function render_budget(d){
     var totalPlan = d.byLine.reduce(function(a,x){return a+x.plan;},0);
     var totalFact = d.byLine.reduce(function(a,x){return a+x.fact;},0);
@@ -1101,7 +1130,7 @@ window.__HR__.DEMO = {
       var over = l.fact>l.plan;
       return '<tr class="row-hover"><td>'+esc(l.line)+'</td><td class="num">'+C.fmtMoney(l.plan)+'</td><td class="num">'+C.fmtMoney(l.fact)+'</td><td class="num">'+C.statusPill(p+'%', over?'serious':'good')+'</td><td class="num">'+C.fmtMoney(l.nextPlan)+'</td><td style="font-size:12px;color:var(--ink-2)">'+esc(l.note||'—')+'</td></tr>';
     }).join('');
-    return head(7,'Бюджет', d.conclusion)
+    return head(8,'Бюджет', d.conclusion)
     + '<div class="grid grid-cols-3">'
       + card('Освоено за месяц', C.statTile({label:'от плана',value:pct,unit:'%',digits:1}))
       + card('План на месяц', C.statTile({label:'тыс. KGS' ,value:Math.round(totalPlan/1000)}))
@@ -1111,13 +1140,13 @@ window.__HR__.DEMO = {
     + card('Динамика освоения бюджета', C.lineChart({labels:d.history.map(function(h){return h.month;}), series:[{name:'План',values:d.history.map(function(h){return h.plan;}),color:'var(--steel)',area:false},{name:'Факт',values:d.history.map(function(h){return h.fact;}),color:'var(--accent)'}], yFmt:function(v){return fmt(v/1000000,1)+' млн KGS';}}));
   }
 
-  /* ---------- 8. План и поручения ---------- */
+  /* ---------- 9. План и поручения ---------- */
   function render_plan(d){
     var statusMap = {done:['Выполнено','good'], inProgress:['В работе','warning'], postponed:['Отложено','muted'], notDone:['Не выполнено','critical']};
     var factRows = d.factVsPlan.map(function(x){ var s=statusMap[x.status]; return '<div class="card" style="padding:10px 12px;gap:4px"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:13px">'+esc(x.item)+'</span>'+C.statusPill(s[0],s[1])+'</div><div style="font-size:12.5px;font-weight:500;color:var(--muted)">'+esc(x.comment)+'</div></div>'; }).join('');
     var nextRows = d.nextPlan.map(function(x){ return '<div class="card" style="padding:10px 12px;gap:2px"><div style="font-size:13px;font-weight:600">'+esc(x.item)+'</div><div style="font-size:12.5px;font-weight:500;color:var(--muted)">'+esc(x.description)+'</div></div>'; }).join('');
     var taskRows = d.currentTasks.map(function(t){ var s=statusMap[t.status]; return '<tr class="row-hover"><td>'+esc(t.task)+'</td><td>'+esc(t.responsible)+'</td><td class="num">'+t.deadline+'</td><td class="num">'+C.statusPill(s[0],s[1])+'</td></tr>'; }).join('');
-    return head(8,'План работы и протокольные поручения', d.conclusion)
+    return head(9,'План работы и протокольные поручения', d.conclusion)
     + '<div class="grid grid-cols-2">'
       + card('Факт vs план за прошедший месяц', factRows)
       + card('План на следующий месяц', nextRows)
@@ -1136,7 +1165,7 @@ window.__HR__.DEMO = {
     + '</div>';
   }
 
-  /* ---------- 9. Эффективность сотрудников HR ---------- */
+  /* ---------- 10. Эффективность сотрудников HR ---------- */
   function render_hrEfficiency(d){
     var cards = d.staff.map(function(s){
       var cls = (s.violation?'is-flag':(s.isBestThisMonth?'is-best':''));
@@ -1151,12 +1180,12 @@ window.__HR__.DEMO = {
         + '</div>';
     }).join('');
     var history = d.pastBest.map(function(p){ return '<span class="best-chip">'+esc(p.month)+' — '+esc(p.name)+'</span>'; }).join('');
-    return head(9,'Эффективность сотрудников HR', d.conclusion)
+    return head(10,'Эффективность сотрудников HR', d.conclusion)
     + card('Сотрудники HR-службы', '<div class="person-grid">'+cards+'</div>')
     + card('История «Лучший сотрудник месяца»', '<div class="best-history">'+history+'</div>');
   }
 
-  /* ---------- 10. Предложения и прочее ---------- */
+  /* ---------- 11. Предложения и прочее ---------- */
   function render_proposals(d){
     var prioMap = {high:['Высокий','critical'], medium:['Средний','warning'], low:['Низкий','muted']};
     var statusMap = {new:['Новое','steel'], inProgress:['В работе','warning'], done:['Выполнено','good']};
@@ -1169,12 +1198,13 @@ window.__HR__.DEMO = {
       }).join('');
       return card(dir, rows);
     }).join('');
-    return head(10,'Предложения и прочее', d.conclusion)
+    return head(11,'Предложения и прочее', d.conclusion)
     + '<div class="grid grid-cols-2">'+html+'</div>'
     + card('Прочее', '<p style="font-size:13.5px;color:var(--ink-2);line-height:1.5">'+esc(d.notes)+'</p>');
   }
 
   var RENDERERS = {
+    composition:render_composition,
     recruitment:render_recruitment, admin:render_admin, assessment:render_assessment,
     discipline:render_discipline, analytics:render_analytics, departments:render_departments,
     budget:render_budget, plan:render_plan, hrEfficiency:render_hrEfficiency, proposals:render_proposals
@@ -1217,6 +1247,26 @@ window.__HR__.DEMO = {
   function ws(w,name){ return w.Sheets[name]; }
 
   var TEMPLATES = {
+    composition:{
+      build:function(d){ return wb([
+        {name:'Численность', ws:sheetFromRows(d.headcountHistory,[{key:'month',header:'Месяц'},{key:'count',header:'Численность'}])},
+        {name:'Показатели', ws:metricsSheet([
+          ['Мужчины, чел', d.gender.male],['Женщины, чел', d.gender.female],
+          ['Принято за месяц', d.hired],['Уволено за месяц', d.fired],
+          ['Вывод', d.conclusion]
+        ])}
+      ]); },
+      apply:function(d,w){
+        var history = rowsFromSheet(ws(w,'Численность'),[{key:'month',header:'Месяц'},{key:'count',header:'Численность'}]).filter(function(r){return r.month;}).map(function(r){return {month:str(r.month),count:num(r.count)};});
+        var m = readMetrics(ws(w,'Показатели'));
+        return {
+          headcountHistory: history.length?history:d.headcountHistory,
+          gender:{male:num(m['Мужчины, чел'],d.gender.male), female:num(m['Женщины, чел'],d.gender.female)},
+          hired:num(m['Принято за месяц'],d.hired), fired:num(m['Уволено за месяц'],d.fired),
+          conclusion: str(m['Вывод'], d.conclusion)
+        };
+      }
+    },
     recruitment:{
       build:function(d){ return wb([
         {name:'Воронка', ws:sheetFromRows(d.funnel,[{key:'stage',header:'Этап'},{key:'count',header:'Количество'}])},
@@ -1748,6 +1798,7 @@ window.__HR__.DEMO = {
     return '<w:p>'+pPr+'<w:r>'+(rpr?('<w:rPr>'+rpr+'</w:rPr>'):'')+'<w:t xml:space="preserve">'+escXml(text)+'</w:t></w:r></w:p>';
   }
   var KEYFACTS = {
+    composition: function(d){ var h=d.headcountHistory; return 'Численность: '+h[h.length-1].count+' чел. (принято '+d.hired+', уволено '+d.fired+' за месяц). Мужчин: '+d.gender.male+', женщин: '+d.gender.female+'.'; },
     recruitment: function(d){ return 'Срок закрытия вакансии: '+d.avgTimeToHire.current+' дн. (было '+d.avgTimeToHire.prev+'). Успешность адаптации: '+d.adaptation.successRate+'%.'; },
     admin: function(d){ return 'Среднее время оформления документа: '+d.avgProcessingDays.current+' дн. Просрочено документов: '+d.statusBreakdown.overdue+'.'; },
     assessment: function(d){ return 'Средний балл аттестаций: '+d.avgScore.current+' (было '+d.avgScore.prev+').'; },
