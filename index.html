@@ -133,6 +133,20 @@
     max-width:none; max-height:none;
     border-radius:0; box-shadow:none; border:none;
   }
+  body.is-presenting .slide-inner{
+    /* Every size in the deck (fonts, gaps, padding, chart SVGs) is authored
+       against the normal-mode reference box (~1280x720 — .deck's own
+       width:min(100%,1280px)/aspect-ratio:16/9 cap). In presentation mode
+       .deck can be much bigger than that (fills the real viewport, e.g. a
+       2560x1080 ultrawide), so the reference-sized content would otherwise
+       look tiny/sparse inside the now-bigger box even though the box itself
+       has no more bars. --present-scale is computed in JS from the deck's
+       actual size vs. that 1280x720 reference and applied here with `zoom`
+       (not transform: scale) so it's a real layout resize — text, spacing
+       AND viewBox-scaled chart SVGs all grow together, and the existing
+       overflow-y:auto still scrolls correctly for anything that doesn't fit. */
+    zoom:var(--present-scale, 1);
+  }
   #btn-exit-present{ display:none; }
   body.is-presenting #btn-exit-present{
     display:inline-flex; position:fixed; top:14px; right:14px; z-index:50;
@@ -1700,11 +1714,23 @@ window.__HR__.DEMO = {
   }
 
   /* ---------------- presentation mode (full-bleed for screen share) ---------------- */
+  var PRESENT_REF_W = 1280, PRESENT_REF_H = 720; // .deck's normal-mode design size (width:min(100%,1280px), aspect-ratio:16/9)
+  function updatePresentScale(){
+    if(!document.body.classList.contains('is-presenting')) return;
+    var deck = document.getElementById('deck');
+    if(!deck) return;
+    var r = deck.getBoundingClientRect();
+    if(!r.width || !r.height) return;
+    var scale = Math.min(r.width / PRESENT_REF_W, r.height / PRESENT_REF_H);
+    scale = Math.max(1, Math.min(scale, 2.2));
+    document.documentElement.style.setProperty('--present-scale', scale.toFixed(3));
+  }
   function setPresentMode(on){
     document.body.classList.toggle('is-presenting', on);
     if(on){
+      updatePresentScale();
       if(document.documentElement.requestFullscreen){
-        document.documentElement.requestFullscreen().catch(function(){ /* denied/unsupported — CSS-only mode still fills the viewport */ });
+        document.documentElement.requestFullscreen().then(updatePresentScale).catch(function(){ /* denied/unsupported — CSS-only mode still fills the viewport */ updatePresentScale(); });
       }
     } else if(document.fullscreenElement && document.exitFullscreen){
       document.exitFullscreen().catch(function(){});
@@ -1717,7 +1743,9 @@ window.__HR__.DEMO = {
     if(exitBtn) exitBtn.addEventListener('click', function(){ setPresentMode(false); });
     document.addEventListener('fullscreenchange', function(){
       if(!document.fullscreenElement) document.body.classList.remove('is-presenting');
+      else updatePresentScale();
     });
+    window.addEventListener('resize', updatePresentScale);
     document.addEventListener('keydown', function(e){
       var tag = e.target && e.target.tagName;
       if(tag==='INPUT'||tag==='SELECT'||tag==='TEXTAREA') return;
