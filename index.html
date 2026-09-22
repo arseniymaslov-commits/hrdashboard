@@ -374,6 +374,7 @@
     <span class="badge-demo" id="data-badge">● Демонстрационные данные</span>
     <div class="topbar-group">
       <select id="period-select" class="icon-btn" style="font-weight:600" title="Выбрать период"></select>
+      <button class="icon-btn" id="btn-new-period" title="Начать новый отчётный месяц">+ Новый месяц</button>
     </div>
     <div class="topbar-group">
       <button class="icon-btn" id="btn-prev" title="Предыдущий слайд (←)">←</button>
@@ -1722,6 +1723,20 @@ window.__HR__.DEMO = {
     else { updateDataBadge('live'); }
     var uploadBtn = document.getElementById('btn-upload');
     if(uploadBtn) uploadBtn.disabled = isArchive;
+    var newPeriodBtn = document.getElementById('btn-new-period');
+    if(newPeriodBtn) newPeriodBtn.disabled = isArchive;
+  }
+  var RU_MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  function nextPeriodLabel(label){
+    // best-effort client-side preview for the confirm dialog only — the
+    // server derives and validates the real next period independently.
+    var m = String(label).trim().match(/^([А-Яа-яЁё]+)\s+(\d{4})$/);
+    if(!m) return null;
+    var idx = RU_MONTHS.findIndex(function(x){ return x.toLowerCase()===m[1].toLowerCase(); });
+    if(idx===-1) return null;
+    var year = parseInt(m[2],10);
+    idx++; if(idx>11){ idx=0; year++; }
+    return RU_MONTHS[idx]+' '+year;
   }
   var loadInFlight = false;
   var lastLoadAt = 0;
@@ -1731,6 +1746,7 @@ window.__HR__.DEMO = {
     populatePeriodSelect();
     wireAutoRefresh();
     wirePeriodSelect();
+    wireNewPeriodButton();
   }
   async function loadPeriods(){
     try{
@@ -1754,6 +1770,27 @@ window.__HR__.DEMO = {
     var sel = document.getElementById('period-select');
     if(!sel) return;
     sel.addEventListener('change', function(){ switchPeriod(sel.value); });
+  }
+  function wireNewPeriodButton(){
+    var btn = document.getElementById('btn-new-period');
+    if(!btn) return;
+    btn.addEventListener('click', async function(){
+      var curLabel = (state.data.meta && state.data.meta.period) || state.latestPeriod || 'текущий месяц';
+      var nextLabel = nextPeriodLabel(curLabel) || 'следующий месяц';
+      var ok = confirm('Начать новый отчётный период «'+nextLabel+'»?\n\nТекущие данные («'+curLabel+'») будут скопированы как отправная точка нового месяца и станут архивом только для чтения. После этого разделы нужно будет обновить через «Обновить данные».');
+      if(!ok) return;
+      btn.disabled = true;
+      try{
+        var res = await fetch(API_BASE+'/new-period', { method:'POST', headers:{'X-Edit-Token': getEditToken()} });
+        if(res.status===401){ toast('Неверный или отсутствующий ключ редактирования — введите его в окне «Обновить данные»'); return; }
+        if(!res.ok) throw new Error('HTTP '+res.status);
+        var payload = await res.json();
+        toast(payload.alreadyExisted ? ('Период «'+(payload.label||payload.period)+'» уже существует — переключаюсь на него.') : ('Период «'+(payload.label||payload.period)+'» создан.'));
+        await loadPeriods();
+        await loadFromApi(payload.period);
+      }catch(e){ toast('Не удалось создать новый период: '+(e&&e.message?e.message:e)); }
+      finally{ btn.disabled = !!(state.currentPeriod && state.latestPeriod && state.currentPeriod!==state.latestPeriod); }
+    });
   }
   async function switchPeriod(period){
     if(!period || period===state.currentPeriod) return;
