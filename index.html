@@ -373,6 +373,9 @@
     </div>
     <span class="badge-demo" id="data-badge">● Демонстрационные данные</span>
     <div class="topbar-group">
+      <select id="period-select" class="icon-btn" style="font-weight:600" title="Выбрать период"></select>
+    </div>
+    <div class="topbar-group">
       <button class="icon-btn" id="btn-prev" title="Предыдущий слайд (←)">←</button>
       <span class="slide-index"><span id="slide-cur">1</span> / <span id="slide-total">12</span></span>
       <button class="icon-btn" id="btn-next" title="Следующий слайд (→)">→</button>
@@ -1540,7 +1543,7 @@ window.__HR__.DEMO = {
   var BLOCKS = H.BLOCKS, SLIDE_COUNT = H.SLIDE_COUNT;
   var esc = C.esc;
 
-  var state = { data: JSON.parse(JSON.stringify(H.DEMO)) };
+  var state = { data: JSON.parse(JSON.stringify(H.DEMO)), currentPeriod:null, latestPeriod:null, periods:[] };
   var currentIndex = 0;
   var exporting = false;
   var API_BASE = '/api/hr';
@@ -1704,23 +1707,64 @@ window.__HR__.DEMO = {
   }
 
   /* ---------------- server persistence (Vercel API + Neon) ---------------- */
-  function updateDataBadge(isLive){
+  function updateDataBadge(status, label){
+    // status: 'live' | 'offline' | 'archive'
     var badge = document.getElementById('data-badge');
-    if(isLive){ badge.textContent='● Данные из базы'; badge.classList.add('is-live'); }
-    else { badge.textContent='● Демонстрационные данные (офлайн)'; badge.classList.remove('is-live'); }
+    badge.classList.remove('is-live');
+    if(status==='live'){ badge.textContent='● Данные из базы'; badge.classList.add('is-live'); }
+    else if(status==='archive'){ badge.textContent='● Архив: '+label; }
+    else { badge.textContent='● Демонстрационные данные (офлайн)'; }
+  }
+  function applyBadgeAndEditState(loadOk){
+    var isArchive = !!(state.currentPeriod && state.latestPeriod && state.currentPeriod!==state.latestPeriod);
+    if(!loadOk){ updateDataBadge('offline'); }
+    else if(isArchive){ updateDataBadge('archive', (state.data.meta&&state.data.meta.period)||state.currentPeriod); }
+    else { updateDataBadge('live'); }
+    var uploadBtn = document.getElementById('btn-upload');
+    if(uploadBtn) uploadBtn.disabled = isArchive;
   }
   var loadInFlight = false;
   var lastLoadAt = 0;
   var MIN_REFRESH_MS = 15000; // guards against visibilitychange firing repeatedly (some browsers/automation fire it far more often than an actual tab switch)
   async function initCapabilities(){
-    await loadFromApi();
+    await Promise.all([loadPeriods(), loadFromApi()]);
+    populatePeriodSelect();
     wireAutoRefresh();
+    wirePeriodSelect();
   }
-  async function loadFromApi(){
+  async function loadPeriods(){
+    try{
+      var res = await fetch(API_BASE+'/periods', {cache:'no-store'});
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      var payload = await res.json();
+      state.periods = (payload && payload.periods) || [];
+      state.latestPeriod = payload && payload.latest;
+    }catch(e){ /* select just won't populate — not fatal */ }
+  }
+  function populatePeriodSelect(){
+    var sel = document.getElementById('period-select');
+    if(!sel || !state.periods.length) return;
+    sel.innerHTML = state.periods.map(function(p){
+      var suffix = p.period===state.latestPeriod ? ' (текущий)' : '';
+      return '<option value="'+esc(p.period)+'">'+esc(p.label+suffix)+'</option>';
+    }).join('');
+    if(state.currentPeriod) sel.value = state.currentPeriod;
+  }
+  function wirePeriodSelect(){
+    var sel = document.getElementById('period-select');
+    if(!sel) return;
+    sel.addEventListener('change', function(){ switchPeriod(sel.value); });
+  }
+  async function switchPeriod(period){
+    if(!period || period===state.currentPeriod) return;
+    await loadFromApi(period);
+  }
+  async function loadFromApi(period){
     if(loadInFlight) return false; // never run two overlapping loads — concurrent renderBlockView calls race and can leave the slide blank
     loadInFlight = true;
     try{
-      var res = await fetch(API_BASE, {cache:'no-store'});
+      var url = API_BASE + (period ? ('?period='+encodeURIComponent(period)) : '');
+      var res = await fetch(url, {cache:'no-store'});
       if(!res.ok) throw new Error('HTTP '+res.status);
       var payload = await res.json();
       var data = payload && payload.data;
@@ -1729,12 +1773,15 @@ window.__HR__.DEMO = {
         BLOCKS.forEach(function(b){ if(data[b.key]){ state.data[b.key]=data[b.key]; any=true; } });
         if(data.meta){ state.data.meta = data.meta; any=true; }
       }
+      if(payload && payload.period) state.currentPeriod = payload.period;
+      if(!period && payload && payload.period) state.latestPeriod = payload.period;
+      populatePeriodSelect();
       updateMeta(); renderTOC();
       if(currentIndex>=2) renderBlockView(BLOCKS[currentIndex-2].key);
-      updateDataBadge(any);
+      applyBadgeAndEditState(any);
       return any;
     }catch(e){
-      updateDataBadge(false);
+      applyBadgeAndEditState(false);
       return false;
     }finally{
       loadInFlight = false;
@@ -1745,19 +1792,22 @@ window.__HR__.DEMO = {
     document.addEventListener('visibilitychange', function(){
       if(document.visibilityState!=='visible') return;
       if(loadInFlight || (Date.now()-lastLoadAt) < MIN_REFRESH_MS) return;
-      loadFromApi();
+      loadFromApi(state.currentPeriod);
     });
   }
   async function saveBlockData(key){
     try{
-      var res = await fetch(API_BASE+'/'+encodeURIComponent(key), {
+      var period = state.latestPeriod || state.currentPeriod;
+      var url = API_BASE+'/'+encodeURIComponent(key)+(period?('?period='+encodeURIComponent(period)):'');
+      var res = await fetch(url, {
         method:'PUT',
         headers:{'Content-Type':'application/json', 'X-Edit-Token': getEditToken()},
         body: JSON.stringify(state.data[key])
       });
       if(res.status===401){ toast('Неверный или отсутствующий ключ редактирования — введите его в окне «Обновить данные»'); return false; }
+      if(res.status===403){ toast('Редактирование доступно только для текущего периода — вернитесь к нему в выпадающем списке месяцев'); return false; }
       if(!res.ok) throw new Error('HTTP '+res.status);
-      updateDataBadge(true);
+      applyBadgeAndEditState(true);
       return true;
     }catch(e){ toast('Не удалось сохранить данные: '+(e&&e.message?e.message:e)); return false; }
   }
