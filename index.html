@@ -642,7 +642,13 @@ window.__HR__.DEMO = {
     headcountHistory:[{month:'Апр',count:385},{month:'Май',count:391},{month:'Июн',count:397},{month:'Июл',count:401},{month:'Авг',count:405},{month:'Сен',count:412}],
     gender:{male:298, female:114},
     hired:14, fired:7,
-    conclusion:'Численность выросла до 412 человек (+7 за месяц): принято 14, уволено 7; в штате 72% мужчин и 28% женщин.'
+    turnoverRate:{current:1.7,prev:2.1, history:[{month:'Апр',rate:2.4},{month:'Май',rate:2.2},{month:'Июн',rate:2.6},{month:'Июл',rate:2.0},{month:'Авг',rate:2.1},{month:'Сен',rate:1.7}]},
+    departmentTurnover:[
+      {dept:'МАЗС', history:[{month:'Апр',rate:4.2},{month:'Май',rate:3.9},{month:'Июн',rate:4.4},{month:'Июл',rate:3.7},{month:'Авг',rate:3.5},{month:'Сен',rate:3.1}]},
+      {dept:'ОРП', history:[{month:'Апр',rate:3.0},{month:'Май',rate:2.8},{month:'Июн',rate:3.2},{month:'Июл',rate:2.6},{month:'Авг',rate:2.4},{month:'Сен',rate:2.2}]},
+      {dept:'Ред Маркет', history:[{month:'Апр',rate:2.6},{month:'Май',rate:2.5},{month:'Июн',rate:2.7},{month:'Июл',rate:2.3},{month:'Авг',rate:2.1},{month:'Сен',rate:1.9}]}
+    ],
+    conclusion:'Численность выросла до 412 человек (+7 за месяц): принято 14, уволено 7; в штате 72% мужчин и 28% женщин; текучесть кадров — 1,7% (−0,4 п.п. к прошлому месяцу), самая высокая — на МАЗС (3,1%).'
   },
 
   recruitment:{
@@ -1042,10 +1048,11 @@ window.__HR__.DEMO = {
     var current = hist[hist.length-1].count;
     var prev = hist[hist.length-2].count;
     return head(1,'Состав компании', d.conclusion)
-    + '<div class="grid grid-cols-3">'
+    + '<div class="grid grid-cols-4">'
       + card('Численность', C.statTile({label:'сотрудников, на конец месяца',value:current,delta:current-prev,deltaGood:true,deltaUnit:' чел.'}))
       + card('Принято за месяц', C.statTile({label:'новых сотрудников',value:d.hired}))
       + card('Уволено за месяц', C.statTile({label:'сотрудников',value:d.fired}))
+      + card('Текучесть кадров', C.statTile({label:'% в месяц',value:d.turnoverRate.current,digits:1,unit:'%',delta:d.turnoverRate.current-d.turnoverRate.prev,deltaGood:false,deltaUnit:' п.п.',deltaDigits:1}))
     + '</div>'
     + '<div class="grid grid-cols-2">'
       + card('Численность, динамика 6 месяцев', C.lineChart({labels:hist.map(function(h){return h.month;}), series:[{name:'Численность',values:hist.map(function(h){return h.count;}),color:'var(--accent)'}]}))
@@ -1053,7 +1060,15 @@ window.__HR__.DEMO = {
           {label:'Мужчины',value:d.gender.male,color:'var(--steel)',icon:'male'},
           {label:'Женщины',value:d.gender.female,color:'var(--accent)',icon:'female'}
         ], unitsTotal:50, cols:10}))
-    + '</div>';
+    + '</div>'
+    + card('Топ подразделений по текучести, динамика 6 месяцев', C.lineChart({
+        labels:d.departmentTurnover[0].history.map(function(h){return h.month;}),
+        series:d.departmentTurnover.map(function(dt,i){
+          var colors=['var(--critical)','var(--serious)','var(--warning)'];
+          return {name:dt.dept, values:dt.history.map(function(h){return h.rate;}), color:colors[i%colors.length]};
+        }),
+        yFmt:function(v){return fmt(v,1)+'%';}
+      }));
   }
 
   /* ---------- 2. Подбор ---------- */
@@ -1292,19 +1307,32 @@ window.__HR__.DEMO = {
     composition:{
       build:function(d){ return wb([
         {name:'Численность', ws:sheetFromRows(d.headcountHistory,[{key:'month',header:'Месяц'},{key:'count',header:'Численность'}])},
+        {name:'Текучесть динамика', ws:sheetFromRows(d.turnoverRate.history,[{key:'month',header:'Месяц'},{key:'rate',header:'Текучесть, %'}])},
+        {name:'Текучесть по отделам', ws:aoa([['Подразделение','Апр','Май','Июн','Июл','Авг','Сен']].concat(d.departmentTurnover.map(function(dt){
+          return [dt.dept].concat(dt.history.map(function(h){return h.rate;}));
+        })))},
         {name:'Показатели', ws:metricsSheet([
           ['Мужчины, чел', d.gender.male],['Женщины, чел', d.gender.female],
           ['Принято за месяц', d.hired],['Уволено за месяц', d.fired],
+          ['Текучесть % (тек.)', d.turnoverRate.current],['Текучесть % (пред.)', d.turnoverRate.prev],
           ['Вывод', d.conclusion]
         ])}
       ]); },
       apply:function(d,w){
         var history = rowsFromSheet(ws(w,'Численность'),[{key:'month',header:'Месяц'},{key:'count',header:'Численность'}]).filter(function(r){return r.month;}).map(function(r){return {month:str(r.month),count:num(r.count)};});
+        var turnoverHistory = rowsFromSheet(ws(w,'Текучесть динамика'),[{key:'month',header:'Месяц'},{key:'rate',header:'Текучесть, %'}]).filter(function(r){return r.month;}).map(function(r){return {month:str(r.month),rate:num(r.rate)};});
+        var monthLabels=['Апр','Май','Июн','Июл','Авг','Сен'];
+        var deptRows = rowsFromSheet(ws(w,'Текучесть по отделам'),[{key:'dept',header:'Подразделение'}].concat(monthLabels.map(function(mo,i){return {key:'m'+(i+1),header:mo};}))).filter(function(r){return r.dept;});
+        var deptTurnover = deptRows.map(function(r){
+          return {dept:str(r.dept), history: monthLabels.map(function(mo,i){ return {month:mo, rate:num(r['m'+(i+1)])}; })};
+        });
         var m = readMetrics(ws(w,'Показатели'));
         return {
           headcountHistory: history.length?history:d.headcountHistory,
           gender:{male:num(m['Мужчины, чел'],d.gender.male), female:num(m['Женщины, чел'],d.gender.female)},
           hired:num(m['Принято за месяц'],d.hired), fired:num(m['Уволено за месяц'],d.fired),
+          turnoverRate:{current:num(m['Текучесть % (тек.)'],d.turnoverRate.current), prev:num(m['Текучесть % (пред.)'],d.turnoverRate.prev), history: turnoverHistory.length?turnoverHistory:d.turnoverRate.history},
+          departmentTurnover: deptTurnover.length?deptTurnover:d.departmentTurnover,
           conclusion: str(m['Вывод'], d.conclusion)
         };
       }
@@ -1840,7 +1868,7 @@ window.__HR__.DEMO = {
     return '<w:p>'+pPr+'<w:r>'+(rpr?('<w:rPr>'+rpr+'</w:rPr>'):'')+'<w:t xml:space="preserve">'+escXml(text)+'</w:t></w:r></w:p>';
   }
   var KEYFACTS = {
-    composition: function(d){ var h=d.headcountHistory; return 'Численность: '+h[h.length-1].count+' чел. (принято '+d.hired+', уволено '+d.fired+' за месяц). Мужчин: '+d.gender.male+', женщин: '+d.gender.female+'.'; },
+    composition: function(d){ var h=d.headcountHistory; return 'Численность: '+h[h.length-1].count+' чел. (принято '+d.hired+', уволено '+d.fired+' за месяц). Мужчин: '+d.gender.male+', женщин: '+d.gender.female+'. Текучесть: '+d.turnoverRate.current+'%.'; },
     recruitment: function(d){ return 'Срок закрытия вакансии: '+d.avgTimeToHire.current+' дн. (было '+d.avgTimeToHire.prev+'). Успешность адаптации: '+d.adaptation.successRate+'%.'; },
     admin: function(d){ return 'Среднее время оформления документа: '+d.avgProcessingDays.current+' дн. Просрочено документов: '+d.statusBreakdown.overdue+'.'; },
     assessment: function(d){ return 'Средний балл аттестаций: '+d.avgScore.current+' (было '+d.avgScore.prev+').'; },
