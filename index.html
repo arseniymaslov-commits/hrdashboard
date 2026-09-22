@@ -626,7 +626,6 @@
     {key:'admin', title:'Кадровое администрирование', short:'Администрирование'},
     {key:'assessment', title:'Оценка и обучение', short:'Оценка и обучение'},
     {key:'discipline', title:'Дисциплина труда', short:'Дисциплина труда'},
-    {key:'analytics', title:'HR-аналитика по компании и процессам', short:'HR-аналитика'},
     {key:'departments', title:'Результативность отделов', short:'Результативность отделов'},
     {key:'budget', title:'Бюджет', short:'Бюджет'},
     {key:'plan', title:'План работы и протокольные поручения', short:'План и поручения'},
@@ -647,6 +646,9 @@ window.__HR__.DEMO = {
     gender:{male:298, female:114},
     hired:14, fired:7,
     turnoverRate:{current:1.7,prev:2.1, history:[{month:'Апр',rate:2.4},{month:'Май',rate:2.2},{month:'Июн',rate:2.6},{month:'Июл',rate:2.0},{month:'Авг',rate:2.1},{month:'Сен',rate:1.7}]},
+    structureByDept:[{dept:'МАЗС',count:158},{dept:'САУП',count:74},{dept:'Ред Маркет',count:63},{dept:'ОРП',count:51},{dept:'Али Гарант',count:38},{dept:'ДИТ',count:28}],
+    hrRatio:1.5,
+    internalFillRate:{current:19,prev:14},
     departmentTurnover:[
       {dept:'МАЗС', history:[{month:'Апр',rate:4.2},{month:'Май',rate:3.9},{month:'Июн',rate:4.4},{month:'Июл',rate:3.7},{month:'Авг',rate:3.5},{month:'Сен',rate:3.1}]},
       {dept:'ОРП', history:[{month:'Апр',rate:3.0},{month:'Май',rate:2.8},{month:'Июн',rate:3.2},{month:'Июл',rate:2.6},{month:'Авг',rate:2.4},{month:'Сен',rate:2.2}]},
@@ -688,16 +690,6 @@ window.__HR__.DEMO = {
     history:[{month:'Апр',count:19},{month:'Май',count:17},{month:'Июн',count:21},{month:'Июл',count:18},{month:'Авг',count:16},{month:'Сен',count:11}],
     recent:[{date:'12.09',employee:'Р. Асанов',dept:'МАЗС',type:'Опоздание',status:'Замечание',severity:'warning'},{date:'09.09',employee:'К. Оморова',dept:'САУП',type:'Нарушение регламента',status:'Выговор',severity:'serious'},{date:'03.09',employee:'Е. Волков',dept:'ОРП',type:'Прогул',status:'На рассмотрении',severity:'critical'},{date:'01.09',employee:'Ж. Абдыкадырова',dept:'МАЗС',type:'Опоздание',status:'Замечание',severity:'warning'}],
     conclusion:'Нарушения снизились до 11 случаев (−5 к прошлому месяцу), третий месяц подряд устойчивое снижение; основной вклад — опоздания на МАЗС.'
-  },
-
-  analytics:{
-    headcount:{current:412,prev:405},
-    hired:14, fired:7,
-    turnoverRate:{current:1.7,prev:2.1, history:[{month:'Апр',rate:2.4},{month:'Май',rate:2.2},{month:'Июн',rate:2.6},{month:'Июл',rate:2.0},{month:'Авг',rate:2.1},{month:'Сен',rate:1.7}]},
-    structureByDept:[{dept:'МАЗС',count:158},{dept:'САУП',count:74},{dept:'Ред Маркет',count:63},{dept:'ОРП',count:51},{dept:'Али Гарант',count:38},{dept:'ДИТ',count:28}],
-    hrRatio:1.5,
-    internalFillRate:{current:19,prev:14},
-    conclusion:'Численность выросла до 412 человек, текучесть снизилась до 1,7% — минимум за полгода; доля закрытия вакансий внутренними кандидатами — 19%.'
   },
 
   departments:{
@@ -1065,6 +1057,12 @@ window.__HR__.DEMO = {
           {label:'Женщины',value:d.gender.female,color:'var(--accent)',icon:'female'}
         ], unitsTotal:50, cols:10}))
     + '</div>'
+    + '<div class="grid grid-cols-2">'
+      + card('Структура персонала по подразделениям', C.barChartH({items:d.structureByDept.map(function(x){return {label:x.dept,value:x.count};})}))
+      + card('Внутреннее закрытие вакансий и HR ratio', ''
+          + C.statTile({label:'закрыто внутренними кандидатами, %',value:d.internalFillRate.current,unit:'%',delta:d.internalFillRate.current-d.internalFillRate.prev,deltaGood:true,deltaUnit:' п.п.'})
+          + '<p style="font-size:12px;color:var(--ink-2);margin-top:6px">HR ratio: <b class="num">'+fmt(d.hrRatio,1)+'%</b> (специалистов HR на 100 сотрудников)</p>')
+    + '</div>'
     + card('Топ подразделений по текучести, динамика 6 месяцев', C.lineChart({
         labels:d.departmentTurnover[0].history.map(function(h){return h.month;}),
         series:d.departmentTurnover.map(function(dt,i){
@@ -1151,22 +1149,7 @@ window.__HR__.DEMO = {
     + '</div>';
   }
 
-  /* ---------- 6. HR-аналитика ---------- */
-  function render_analytics(d){
-    return head(6,'HR-аналитика по компании и процессам', d.conclusion)
-    + '<div class="grid grid-cols-4">'
-      + card('Численность', C.statTile({label:'сотрудников',value:d.headcount.current,delta:d.headcount.current-d.headcount.prev,deltaGood:true}))
-      + card('Принято / уволено', C.statTile({label:'принято в этом месяце',value:d.hired})+'<p style="font-size:12px;color:var(--ink-2)">Уволено: <b class="num">'+d.fired+'</b></p>')
-      + card('Текучесть кадров', C.statTile({label:'% в месяц',value:d.turnoverRate.current,digits:1,unit:'%',delta:d.turnoverRate.current-d.turnoverRate.prev,deltaGood:false,deltaUnit:' п.п.',deltaDigits:1}))
-      + card('Внутреннее закрытие вакансий', C.statTile({label:'% от закрытых',value:d.internalFillRate.current,unit:'%',delta:d.internalFillRate.current-d.internalFillRate.prev,deltaGood:true,deltaUnit:' п.п.'}))
-    + '</div>'
-    + '<div class="grid grid-cols-2">'
-      + card('Текучесть, динамика 6 месяцев', C.lineChart({labels:d.turnoverRate.history.map(function(h){return h.month;}), series:[{name:'Текучесть, %',values:d.turnoverRate.history.map(function(h){return h.rate;}),color:'var(--accent)'}], yFmt:function(v){return fmt(v,1)+'%';}}))
-      + card('Структура персонала по подразделениям', C.barChartH({items:d.structureByDept.map(function(x){return {label:x.dept,value:x.count};})}))
-    + '</div>';
-  }
-
-  /* ---------- 7. Результативность отделов ---------- */
+  /* ---------- 6. Результативность отделов ---------- */
   function render_departments(d){
     var rows = d.rows.slice().sort(function(a,b){return b.total-a.total;});
     var trs = rows.map(function(r,i){
@@ -1174,14 +1157,14 @@ window.__HR__.DEMO = {
       return '<tr class="row-hover dept-row" data-dept="'+esc(r.dept)+'" style="cursor:pointer"><td>'+C.statusPill('#'+(i+1),i===0?'good':(i===rows.length-1?'critical':'muted'))+' '+esc(r.dept)+'</td>'
         + '<td class="num">'+fmt(r.interaction,1)+'</td><td class="num">'+fmt(r.execution,1)+'</td><td class="num">'+fmt(r.hrWork,1)+'</td><td class="num">'+r.kpi+'</td><td class="num"><b>'+fmt(r.total,1)+'</b></td></tr>';
     }).join('');
-    return head(7,'Результативность отделов', d.conclusion)
+    return head(6,'Результативность отделов', d.conclusion)
     + '<div class="grid grid-cols-2">'
       + card('Сводный рейтинг (клик по строке — детали справа)', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Подразделение</th><th class="num">Взаимод.</th><th class="num">Исполнение</th><th class="num">Кадр. работа</th><th class="num">KPI</th><th class="num">Итог</th></tr></thead><tbody>'+trs+'</tbody></table></div>')
       + card('Детали подразделения', '<div id="dept-radar">'+C.radarChart({axes:['Взаимод.','Поручения','Кадр. работа','KPI'], maxValue:10, series:[{name:rows[0].dept,values:[rows[0].interaction,rows[0].execution,rows[0].hrWork,rows[0].kpi/10],color:'var(--accent)'},{name:'Средний по компании',values:['interaction','execution','hrWork','kpi'].map(function(k){return rows.reduce(function(a,r){return a+(k==='kpi'?r.kpi/10:r[k]);},0)/rows.length;}),color:'var(--steel)'}]})+'</div>')
     + '</div>';
   }
 
-  /* ---------- 8. Бюджет ---------- */
+  /* ---------- 7. Бюджет ---------- */
   function render_budget(d){
     var totalPlan = d.byLine.reduce(function(a,x){return a+x.plan;},0);
     var totalFact = d.byLine.reduce(function(a,x){return a+x.fact;},0);
@@ -1191,7 +1174,7 @@ window.__HR__.DEMO = {
       var over = l.fact>l.plan;
       return '<tr class="row-hover"><td>'+esc(l.line)+'</td><td class="num">'+C.fmtMoney(l.plan)+'</td><td class="num">'+C.fmtMoney(l.fact)+'</td><td class="num">'+C.statusPill(p+'%', over?'serious':'good')+'</td><td class="num">'+C.fmtMoney(l.nextPlan)+'</td><td style="font-size:12px;color:var(--ink-2)">'+esc(l.note||'—')+'</td></tr>';
     }).join('');
-    return head(8,'Бюджет', d.conclusion)
+    return head(7,'Бюджет', d.conclusion)
     + '<div class="grid grid-cols-3">'
       + card('Освоено за месяц', C.statTile({label:'от плана',value:pct,unit:'%',digits:1}))
       + card('План на месяц', C.statTile({label:'тыс. KGS' ,value:Math.round(totalPlan/1000)}))
@@ -1201,13 +1184,13 @@ window.__HR__.DEMO = {
     + card('Динамика освоения бюджета', C.lineChart({labels:d.history.map(function(h){return h.month;}), series:[{name:'План',values:d.history.map(function(h){return h.plan;}),color:'var(--steel)',area:false},{name:'Факт',values:d.history.map(function(h){return h.fact;}),color:'var(--accent)'}], yFmt:function(v){return fmt(v/1000000,1)+' млн KGS';}}));
   }
 
-  /* ---------- 9. План и поручения ---------- */
+  /* ---------- 8. План и поручения ---------- */
   function render_plan(d){
     var statusMap = {done:['Выполнено','good'], inProgress:['В работе','warning'], postponed:['Отложено','muted'], notDone:['Не выполнено','critical']};
     var factRows = d.factVsPlan.map(function(x){ var s=statusMap[x.status]; return '<div class="card" style="padding:10px 12px;gap:4px"><div style="display:flex;justify-content:space-between;gap:8px"><span style="font-size:13px">'+esc(x.item)+'</span>'+C.statusPill(s[0],s[1])+'</div><div style="font-size:12.5px;font-weight:500;color:var(--muted)">'+esc(x.comment)+'</div></div>'; }).join('');
     var nextRows = d.nextPlan.map(function(x){ return '<div class="card" style="padding:10px 12px;gap:2px"><div style="font-size:13px;font-weight:600">'+esc(x.item)+'</div><div style="font-size:12.5px;font-weight:500;color:var(--muted)">'+esc(x.description)+'</div></div>'; }).join('');
     var taskRows = d.currentTasks.map(function(t){ var s=statusMap[t.status]; return '<tr class="row-hover"><td>'+esc(t.task)+'</td><td>'+esc(t.responsible)+'</td><td class="num">'+t.deadline+'</td><td class="num">'+C.statusPill(s[0],s[1])+'</td></tr>'; }).join('');
-    return head(9,'План работы и протокольные поручения', d.conclusion)
+    return head(8,'План работы и протокольные поручения', d.conclusion)
     + '<div class="grid grid-cols-2">'
       + card('Факт vs план за прошедший месяц', factRows)
       + card('План на следующий месяц', nextRows)
@@ -1226,7 +1209,7 @@ window.__HR__.DEMO = {
     + '</div>';
   }
 
-  /* ---------- 10. Эффективность сотрудников HR ---------- */
+  /* ---------- 9. Эффективность сотрудников HR ---------- */
   function render_hrEfficiency(d){
     var cards = d.staff.map(function(s){
       var cls = (s.violation?'is-flag':(s.isBestThisMonth?'is-best':''));
@@ -1241,12 +1224,12 @@ window.__HR__.DEMO = {
         + '</div>';
     }).join('');
     var history = d.pastBest.map(function(p){ return '<span class="best-chip">'+esc(p.month)+' — '+esc(p.name)+'</span>'; }).join('');
-    return head(10,'Эффективность сотрудников HR', d.conclusion)
+    return head(9,'Эффективность сотрудников HR', d.conclusion)
     + card('Сотрудники HR-службы', '<div class="person-grid">'+cards+'</div>')
     + card('История «Лучший сотрудник месяца»', '<div class="best-history">'+history+'</div>');
   }
 
-  /* ---------- 11. Предложения и прочее ---------- */
+  /* ---------- 10. Предложения и прочее ---------- */
   function render_proposals(d){
     var prioMap = {high:['Высокий','critical'], medium:['Средний','warning'], low:['Низкий','muted']};
     var statusMap = {new:['Новое','steel'], inProgress:['В работе','warning'], done:['Выполнено','good']};
@@ -1259,7 +1242,7 @@ window.__HR__.DEMO = {
       }).join('');
       return card(dir, rows);
     }).join('');
-    return head(11,'Предложения и прочее', d.conclusion)
+    return head(10,'Предложения и прочее', d.conclusion)
     + '<div class="grid grid-cols-2">'+html+'</div>'
     + card('Прочее', '<p style="font-size:13.5px;color:var(--ink-2);line-height:1.5">'+esc(d.notes)+'</p>');
   }
@@ -1267,7 +1250,7 @@ window.__HR__.DEMO = {
   var RENDERERS = {
     composition:render_composition,
     recruitment:render_recruitment, admin:render_admin, assessment:render_assessment,
-    discipline:render_discipline, analytics:render_analytics, departments:render_departments,
+    discipline:render_discipline, departments:render_departments,
     budget:render_budget, plan:render_plan, hrEfficiency:render_hrEfficiency, proposals:render_proposals
   };
 
@@ -1315,10 +1298,13 @@ window.__HR__.DEMO = {
         {name:'Текучесть по отделам', ws:aoa([['Подразделение','Апр','Май','Июн','Июл','Авг','Сен']].concat(d.departmentTurnover.map(function(dt){
           return [dt.dept].concat(dt.history.map(function(h){return h.rate;}));
         })))},
+        {name:'Структура по отделам', ws:sheetFromRows(d.structureByDept,[{key:'dept',header:'Подразделение'},{key:'count',header:'Численность'}])},
         {name:'Показатели', ws:metricsSheet([
           ['Мужчины, чел', d.gender.male],['Женщины, чел', d.gender.female],
           ['Принято за месяц', d.hired],['Уволено за месяц', d.fired],
           ['Текучесть % (тек.)', d.turnoverRate.current],['Текучесть % (пред.)', d.turnoverRate.prev],
+          ['HR ratio, %', d.hrRatio],
+          ['Внутреннее закрытие % (тек.)', d.internalFillRate.current],['Внутреннее закрытие % (пред.)', d.internalFillRate.prev],
           ['Вывод', d.conclusion]
         ])}
       ]); },
@@ -1330,6 +1316,7 @@ window.__HR__.DEMO = {
         var deptTurnover = deptRows.map(function(r){
           return {dept:str(r.dept), history: monthLabels.map(function(mo,i){ return {month:mo, rate:num(r['m'+(i+1)])}; })};
         });
+        var structureByDept = rowsFromSheet(ws(w,'Структура по отделам'),[{key:'dept',header:'Подразделение'},{key:'count',header:'Численность'}]).filter(function(r){return r.dept;}).map(function(r){return {dept:str(r.dept),count:num(r.count)};});
         var m = readMetrics(ws(w,'Показатели'));
         return {
           headcountHistory: history.length?history:d.headcountHistory,
@@ -1337,6 +1324,9 @@ window.__HR__.DEMO = {
           hired:num(m['Принято за месяц'],d.hired), fired:num(m['Уволено за месяц'],d.fired),
           turnoverRate:{current:num(m['Текучесть % (тек.)'],d.turnoverRate.current), prev:num(m['Текучесть % (пред.)'],d.turnoverRate.prev), history: turnoverHistory.length?turnoverHistory:d.turnoverRate.history},
           departmentTurnover: deptTurnover.length?deptTurnover:d.departmentTurnover,
+          structureByDept: structureByDept.length?structureByDept:d.structureByDept,
+          hrRatio: num(m['HR ratio, %'], d.hrRatio),
+          internalFillRate:{current:num(m['Внутреннее закрытие % (тек.)'],d.internalFillRate.current), prev:num(m['Внутреннее закрытие % (пред.)'],d.internalFillRate.prev)},
           conclusion: str(m['Вывод'], d.conclusion)
         };
       }
@@ -1428,31 +1418,6 @@ window.__HR__.DEMO = {
           byType: byType.length?byType:d.byType, byDept: byDept.length?byDept:d.byDept, history: history.length?history:d.history,
           recent: recent.length?recent:d.recent,
           totalViolations:{current:num(m['Нарушений (тек.)'],d.totalViolations.current), prev:num(m['Нарушений (пред.)'],d.totalViolations.prev)},
-          conclusion: str(m['Вывод'], d.conclusion)
-        };
-      }
-    },
-    analytics:{
-      build:function(d){ return wb([
-        {name:'Структура', ws:sheetFromRows(d.structureByDept,[{key:'dept',header:'Подразделение'},{key:'count',header:'Численность'}])},
-        {name:'Текучесть динамика', ws:sheetFromRows(d.turnoverRate.history,[{key:'month',header:'Месяц'},{key:'rate',header:'Текучесть, %'}])},
-        {name:'Показатели', ws:metricsSheet([
-          ['Численность (тек.)', d.headcount.current],['Численность (пред.)', d.headcount.prev],['Принято', d.hired],['Уволено', d.fired],
-          ['Текучесть % (тек.)', d.turnoverRate.current],['Текучесть % (пред.)', d.turnoverRate.prev],['HR ratio, %', d.hrRatio],
-          ['Внутреннее закрытие % (тек.)', d.internalFillRate.current],['Внутреннее закрытие % (пред.)', d.internalFillRate.prev],['Вывод', d.conclusion]
-        ])}
-      ]); },
-      apply:function(d,w){
-        var structure = rowsFromSheet(ws(w,'Структура'),[{key:'dept',header:'Подразделение'},{key:'count',header:'Численность'}]).filter(function(r){return r.dept;}).map(function(r){return {dept:str(r.dept),count:num(r.count)};});
-        var history = rowsFromSheet(ws(w,'Текучесть динамика'),[{key:'month',header:'Месяц'},{key:'rate',header:'Текучесть, %'}]).filter(function(r){return r.month;}).map(function(r){return {month:str(r.month),rate:num(r.rate)};});
-        var m = readMetrics(ws(w,'Показатели'));
-        return {
-          structureByDept: structure.length?structure:d.structureByDept,
-          headcount:{current:num(m['Численность (тек.)'],d.headcount.current), prev:num(m['Численность (пред.)'],d.headcount.prev)},
-          hired:num(m['Принято'],d.hired), fired:num(m['Уволено'],d.fired),
-          turnoverRate:{current:num(m['Текучесть % (тек.)'],d.turnoverRate.current), prev:num(m['Текучесть % (пред.)'],d.turnoverRate.prev), history: history.length?history:d.turnoverRate.history},
-          hrRatio:num(m['HR ratio, %'],d.hrRatio),
-          internalFillRate:{current:num(m['Внутреннее закрытие % (тек.)'],d.internalFillRate.current), prev:num(m['Внутреннее закрытие % (пред.)'],d.internalFillRate.prev)},
           conclusion: str(m['Вывод'], d.conclusion)
         };
       }
@@ -1955,12 +1920,11 @@ window.__HR__.DEMO = {
     return '<w:p>'+pPr+'<w:r>'+(rpr?('<w:rPr>'+rpr+'</w:rPr>'):'')+'<w:t xml:space="preserve">'+escXml(text)+'</w:t></w:r></w:p>';
   }
   var KEYFACTS = {
-    composition: function(d){ var h=d.headcountHistory; return 'Численность: '+h[h.length-1].count+' чел. (принято '+d.hired+', уволено '+d.fired+' за месяц). Мужчин: '+d.gender.male+', женщин: '+d.gender.female+'. Текучесть: '+d.turnoverRate.current+'%.'; },
+    composition: function(d){ var h=d.headcountHistory; return 'Численность: '+h[h.length-1].count+' чел. (принято '+d.hired+', уволено '+d.fired+' за месяц). Мужчин: '+d.gender.male+', женщин: '+d.gender.female+'. Текучесть: '+d.turnoverRate.current+'%. Внутреннее закрытие вакансий: '+d.internalFillRate.current+'%.'; },
     recruitment: function(d){ return 'Срок закрытия вакансии: '+d.avgTimeToHire.current+' дн. (было '+d.avgTimeToHire.prev+'). Успешность адаптации: '+d.adaptation.successRate+'%.'; },
     admin: function(d){ return 'Среднее время оформления документа: '+d.avgProcessingDays.current+' дн. Просрочено документов: '+d.statusBreakdown.overdue+'.'; },
     assessment: function(d){ return 'Средний балл аттестаций: '+d.avgScore.current+' (было '+d.avgScore.prev+').'; },
     discipline: function(d){ return 'Нарушений дисциплины: '+d.totalViolations.current+' (было '+d.totalViolations.prev+').'; },
-    analytics: function(d){ return 'Численность: '+d.headcount.current+' чел. Текучесть: '+d.turnoverRate.current+'%.'; },
     departments: function(d){ var s=d.rows.slice().sort(function(a,b){return b.total-a.total;}); return 'Лидер рейтинга: '+s[0].dept+' ('+s[0].total+'). Антирейтинг: '+s[s.length-1].dept+' ('+s[s.length-1].total+').'; },
     budget: function(d){ var tp=d.byLine.reduce(function(a,x){return a+x.plan;},0), tf=d.byLine.reduce(function(a,x){return a+x.fact;},0); return 'Освоение бюджета: '+(Math.round(tf/tp*1000)/10)+'% от плана.'; },
     plan: function(d){ var t=d.protocolStatus; return 'Протокольные поручения исполнено: '+t.done+' из '+(t.done+t.inProgress+t.postponed+t.notDone)+'.'; },

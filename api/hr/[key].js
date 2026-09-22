@@ -2,7 +2,7 @@ const { neon } = require('@neondatabase/serverless');
 
 // One row per report block, matching BLOCKS in index.html plus 'meta'.
 const ALLOWED_KEYS = new Set([
-  'meta', 'composition', 'recruitment', 'admin', 'assessment', 'discipline', 'analytics',
+  'meta', 'composition', 'recruitment', 'admin', 'assessment', 'discipline',
   'departments', 'budget', 'plan', 'hrEfficiency', 'proposals',
 ]);
 
