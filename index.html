@@ -583,6 +583,9 @@
     <h3>Обновить данные раздела</h3>
     <p>Скачайте шаблон Excel с текущими значениями, отредактируйте его в своей системе и загрузите обратно — данные обновятся для всех, кто открывает этот отчёт. Можно также загрузить CSV одной таблицы.</p>
     <div class="row">
+      <input type="password" id="edit-token-input" class="icon-btn" style="flex:1" placeholder="Ключ редактирования (для сохранения)" autocomplete="off">
+    </div>
+    <div class="row">
       <select id="upload-block-select" class="icon-btn" style="flex:1;min-width:180px"></select>
     </div>
     <div class="row">
@@ -1420,8 +1423,9 @@ window.__HR__.DEMO = {
   var state = { data: JSON.parse(JSON.stringify(H.DEMO)) };
   var currentIndex = 0;
   var exporting = false;
-  var claudeDb = null, claudeDownloads = null;
-  var hasClaude = !!(window.claude && typeof window.claude.use === 'function');
+  var API_BASE = '/api/hr';
+  function getEditToken(){ try{ return localStorage.getItem('hr_edit_token')||''; }catch(e){ return ''; } }
+  function setEditToken(v){ try{ localStorage.setItem('hr_edit_token', v||''); }catch(e){} }
 
   var slide0, slide1, slideView, viewBody, tipEl, toastEl, toastTimer=null;
 
@@ -1579,54 +1583,53 @@ window.__HR__.DEMO = {
     });
   }
 
-  /* ---------------- db persistence ---------------- */
+  /* ---------------- server persistence (Vercel API + Neon) ---------------- */
   function updateDataBadge(isLive){
     var badge = document.getElementById('data-badge');
-    if(isLive){ badge.textContent='● Данные обновлены пользователем'; badge.classList.add('is-live'); }
-    else { badge.textContent='● Демонстрационные данные'; badge.classList.remove('is-live'); }
+    if(isLive){ badge.textContent='● Данные из базы'; badge.classList.add('is-live'); }
+    else { badge.textContent='● Демонстрационные данные (офлайн)'; badge.classList.remove('is-live'); }
   }
   async function initCapabilities(){
-    if(!hasClaude){ updateDataBadge(false); return; }
-    try{ claudeDb = await window.claude.use('db'); }catch(e){ claudeDb=null; }
-    try{ claudeDownloads = await window.claude.use('downloads'); }catch(e){ claudeDownloads=null; }
-    if(claudeDb){ await loadFromDb(); subscribeDb(); }
-    else { updateDataBadge(false); }
+    await loadFromApi();
+    wireAutoRefresh();
   }
-  async function loadFromDb(){
-    var any=false;
-    for(var i=0;i<BLOCKS.length;i++){
-      var key = BLOCKS[i].key;
-      try{
-        var snap = await claudeDb.doc('hr/'+key).get();
-        if(snap.exists && snap.data()){ state.data[key] = snap.data(); any=true; }
-      }catch(e){ /* keep demo fallback */ }
-    }
+  async function loadFromApi(){
     try{
-      var metaSnap = await claudeDb.doc('hr/meta').get();
-      if(metaSnap.exists && metaSnap.data()) state.data.meta = metaSnap.data();
-    }catch(e){}
-    updateMeta(); renderTOC();
-    if(currentIndex>=2) renderBlockView(BLOCKS[currentIndex-2].key);
-    updateDataBadge(any);
+      var res = await fetch(API_BASE, {cache:'no-store'});
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      var payload = await res.json();
+      var data = payload && payload.data;
+      var any=false;
+      if(data){
+        BLOCKS.forEach(function(b){ if(data[b.key]){ state.data[b.key]=data[b.key]; any=true; } });
+        if(data.meta){ state.data.meta = data.meta; any=true; }
+      }
+      updateMeta(); renderTOC();
+      if(currentIndex>=2) renderBlockView(BLOCKS[currentIndex-2].key);
+      updateDataBadge(any);
+      return any;
+    }catch(e){
+      updateDataBadge(false);
+      return false;
+    }
   }
-  function subscribeDb(){
-    BLOCKS.forEach(function(b){
-      try{
-        claudeDb.doc('hr/'+b.key).onSnapshot(function(snap){
-          if(snap.exists && snap.data()){
-            state.data[b.key] = snap.data();
-            renderTOC();
-            if(currentIndex>=2 && BLOCKS[currentIndex-2].key===b.key) renderBlockView(b.key);
-            updateDataBadge(true);
-          }
-        }, function(err){ /* ignore transient */ });
-      }catch(e){}
+  function wireAutoRefresh(){
+    document.addEventListener('visibilitychange', function(){
+      if(document.visibilityState==='visible') loadFromApi();
     });
   }
   async function saveBlockData(key){
-    if(!claudeDb){ toast('Сохранение недоступно вне просмотра артефакта — изменения видны только вам сейчас'); return false; }
-    try{ await claudeDb.doc('hr/'+key).set(state.data[key]); updateDataBadge(true); return true; }
-    catch(e){ toast('Не удалось сохранить данные: '+(e&&e.message?e.message:e)); return false; }
+    try{
+      var res = await fetch(API_BASE+'/'+encodeURIComponent(key), {
+        method:'PUT',
+        headers:{'Content-Type':'application/json', 'X-Edit-Token': getEditToken()},
+        body: JSON.stringify(state.data[key])
+      });
+      if(res.status===401){ toast('Неверный или отсутствующий ключ редактирования — введите его в окне «Обновить данные»'); return false; }
+      if(!res.ok) throw new Error('HTTP '+res.status);
+      updateDataBadge(true);
+      return true;
+    }catch(e){ toast('Не удалось сохранить данные: '+(e&&e.message?e.message:e)); return false; }
   }
 
   /* ---------------- upload modal ---------------- */
@@ -1635,6 +1638,9 @@ window.__HR__.DEMO = {
     modal = document.getElementById('upload-modal');
     selectEl = document.getElementById('upload-block-select');
     BLOCKS.forEach(function(b){ var opt=document.createElement('option'); opt.value=b.key; opt.textContent=b.short; selectEl.appendChild(opt); });
+    var tokenInput = document.getElementById('edit-token-input');
+    tokenInput.value = getEditToken();
+    tokenInput.addEventListener('input', function(){ setEditToken(tokenInput.value); });
     document.getElementById('btn-upload').addEventListener('click', function(){
       var cur = currentIndex>=2 ? BLOCKS[currentIndex-2].key : BLOCKS[0].key;
       openModal(cur);
@@ -1676,12 +1682,14 @@ window.__HR__.DEMO = {
   function closeModal(){ if(modal) modal.style.display='none'; }
 
   async function offerDownload(blob, filename){
-    if(!hasClaude || !claudeDownloads){ toast('Скачивание файлов доступно только при открытии этого отчёта как артефакта Claude'); return; }
-    try{ await claudeDownloads.save({filename:filename, data:blob}); toast('Файл «'+filename+'» готов'); }
-    catch(e){
-      if(e && e.code==='declined'){ /* user declined, no toast needed */ }
-      else { toast('Не удалось подготовить файл: '+(e&&e.message?e.message:e)); }
-    }
+    try{
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      toast('Файл «'+filename+'» готов');
+    }catch(e){ toast('Не удалось подготовить файл: '+(e&&e.message?e.message:e)); }
   }
 
   /* ---------------- PDF export ---------------- */
