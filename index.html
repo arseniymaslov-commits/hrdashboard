@@ -116,14 +116,20 @@
   }
 
   /* ---------- Presentation mode (fills the screen for Meet/Zoom tab-share) ---------- */
+  body.is-presenting{ margin:0; } /* body has no margin:0 reset elsewhere — the browser default 8px was adding a stray 16px of vertical scroll */
   body.is-presenting .topbar{ display:none; }
   body.is-presenting .footer-hint{ display:none; }
-  body.is-presenting .deck-wrap{ padding:0; }
-  body.is-presenting .app{ min-height:100vh; }
+  body.is-presenting .deck-wrap{ padding:0; min-height:0; }
+  body.is-presenting .app{ min-height:100vh; height:100vh; }
   body.is-presenting .deck{
-    /* contain-fit a 16:9 box into the viewport — whichever dimension binds first */
-    width:min(100vw, 177.78vh);
-    height:min(100vh, 56.25vw);
+    /* fill the viewport exactly — no 16:9 cap, so ultrawide/portrait monitors
+       get zero letterbox/pillarbox bars instead of a boxed-in 16:9 island.
+       min-height:0 overrides the flex-item default of min-height:auto, which
+       otherwise refuses to shrink below the slide content's intrinsic height
+       and blows the box out past the viewport (the classic flexbox overflow trap). */
+    width:100%;
+    height:100%;
+    min-height:0; min-width:0;
     max-width:none; max-height:none;
     border-radius:0; box-shadow:none; border:none;
   }
