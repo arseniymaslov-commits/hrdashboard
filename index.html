@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HR-панель Ред Петролеум</title>
+<title>HR-панель ОсОО «Альфа Ойл»</title>
 <meta name="description" content="Ежемесячный отчёт управления человеческими ресурсами">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;800&family=Golos+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     color-scheme: light;
@@ -23,8 +23,8 @@
     --shadow-md: 0 8px 24px rgba(15,17,21,.10), 0 2px 6px rgba(15,17,21,.06);
     --shadow-lg: 0 20px 48px rgba(15,17,21,.16), 0 4px 12px rgba(15,17,21,.08);
     --radius: 16px; --radius-sm: 10px;
-    --font-display: 'Unbounded', system-ui, sans-serif;
-    --font-body: 'Golos Text', system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-display: 'IBM Plex Sans', system-ui, sans-serif;
+    --font-body: 'IBM Plex Sans', system-ui, -apple-system, "Segoe UI", sans-serif;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
@@ -190,13 +190,13 @@
   .chart-wrap svg{ width:100%; height:auto; display:block; overflow:visible; }
   .mark{ transition:opacity .12s ease; cursor:pointer; }
   .mark:hover{ opacity:.78; }
-  .axis-label{ font-size:12px; font-weight:500; fill:var(--muted); font-family:var(--font-body); }
-  .value-label{ font-size:12.5px; font-weight:600; fill:var(--ink-2); font-family:var(--font-body); font-variant-numeric:tabular-nums; }
+  .axis-label{ font-size:13.5px; font-weight:500; fill:var(--muted); font-family:var(--font-body); }
+  .value-label{ font-size:14px; font-weight:600; fill:var(--ink-2); font-family:var(--font-body); font-variant-numeric:tabular-nums; }
   .gridline{ stroke:var(--grid); stroke-width:1; }
   .baseline{ stroke:var(--border-strong); stroke-width:1; }
   .legend{ display:flex; gap:14px; flex-wrap:wrap; margin-top:2px; }
-  .legend-item{ display:flex; align-items:center; gap:6px; font-size:12px; color:var(--ink-2); }
-  .legend-swatch{ width:10px; height:10px; border-radius:3px; flex:none; }
+  .legend-item{ display:flex; align-items:center; gap:6px; font-size:13.5px; font-weight:500; color:var(--ink-2); }
+  .legend-swatch{ width:11px; height:11px; border-radius:3px; flex:none; }
 
   /* ---------- Tables ---------- */
   .tbl-wrap{ overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius-sm); }
@@ -216,17 +216,17 @@
   .pill-muted{ background:var(--surface-3); color:var(--muted); font-weight:700; }
 
   /* ---------- TOC ---------- */
-  .toc-grid{ display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+  .toc-grid{ display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:1fr; gap:16px; flex:1; min-height:0; }
   @media (max-width:900px){ .toc-grid{ grid-template-columns:repeat(3,1fr);} }
   @media (max-width:640px){ .toc-grid{ grid-template-columns:repeat(2,1fr);} }
   .toc-card{
     text-align:left; background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius);
-    padding:14px; cursor:pointer; display:flex; flex-direction:column; gap:8px; height:100%;
+    padding:20px; cursor:pointer; display:flex; flex-direction:column; gap:12px; height:100%;
     color:inherit; font:inherit;
   }
-  .toc-num{ font-family:var(--font-display); font-size:12px; color:var(--accent); font-weight:700; }
-  .toc-title{ font-size:13.5px; font-weight:600; line-height:1.25; }
-  .toc-conclusion{ font-size:12.5px; font-weight:500; color:var(--muted); line-height:1.4; }
+  .toc-num{ font-family:var(--font-display); font-size:16px; color:var(--accent); font-weight:700; }
+  .toc-title{ font-size:18px; font-weight:600; line-height:1.25; }
+  .toc-conclusion{ font-size:14.5px; font-weight:500; color:var(--muted); line-height:1.45; }
 
   /* ---------- Title slide ---------- */
   .title-slide{
@@ -368,7 +368,7 @@
 <div class="app" id="app">
   <div class="topbar">
     <div class="brand">
-      <span class="brand-name">HR · Ред Петролеум</span>
+      <span class="brand-name">HR · ОсОО «Альфа Ойл»</span>
       <span class="brand-sub" id="topbar-period">—</span>
     </div>
     <span class="badge-demo" id="data-badge">● Демонстрационные данные</span>
@@ -391,7 +391,7 @@
           <div class="title-kicker">Ежемесячный отчёт · HR</div>
           <h1 class="title-heading">Отчёт управления человеческими ресурсами</h1>
           <div class="title-meta">
-            <span id="title-company">Ред Петролеум</span><span class="sep"></span><span id="title-period">—</span>
+            <span id="title-company">ОсОО «Альфа Ойл»</span><span class="sep"></span><span id="title-period">—</span>
           </div>
           <div class="title-city" aria-hidden="true">
             <svg viewBox="0 0 1600 130" preserveAspectRatio="none">
@@ -547,7 +547,7 @@
                 <path class="city-ln-thin city-bird-wing" d="M-13,0 Q-6.5,-8 0,0 Q6.5,-8 13,0" />
               </g>
             </svg>
-            <div class="title-city-label">Red Petroleum</div>
+            <div class="title-city-label">Альфа Ойл</div>
           </div>
         </div>
       </section>
@@ -605,7 +605,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 /* =========================================================================
-   HR-панель Ред Петролеум — конфигурация, данные, рендер, интерактивность
+   HR-панель ОсОО «Альфа Ойл» — конфигурация, данные, рендер, интерактивность
    ========================================================================= */
 (function(){
   "use strict";
@@ -635,7 +635,7 @@
 </script>
 <script>
 window.__HR__.DEMO = {
-  meta:{ period:'Сентябрь 2026', prevPeriod:'Август 2026', company:'Ред Петролеум' },
+  meta:{ period:'Сентябрь 2026', prevPeriod:'Август 2026', company:'ОсОО «Альфа Ойл»' },
 
   recruitment:{
     funnel:[{stage:'Заявки',count:186},{stage:'Скрининг',count:124},{stage:'Собеседование',count:71},{stage:'Оффер',count:34},{stage:'Выход на работу',count:27}],
@@ -760,7 +760,7 @@ window.__HR__.DEMO = {
     var d = digits===undefined?0:digits;
     return Number(n).toLocaleString('ru-RU', {minimumFractionDigits:d, maximumFractionDigits:d});
   }
-  function fmtMoney(n){ return fmt(Math.round(n/1000)) + ' тыс. с'; }
+  function fmtMoney(n){ return fmt(Math.round(n/1000)) + ' тыс. KGS'; }
   function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
   function tip(html){ return ' data-tip="'+esc(html).replace(/"/g,'&quot;')+'"'; }
 
@@ -1104,11 +1104,11 @@ window.__HR__.DEMO = {
     return head(7,'Бюджет', d.conclusion)
     + '<div class="grid grid-cols-3">'
       + card('Освоено за месяц', C.statTile({label:'от плана',value:pct,unit:'%',digits:1}))
-      + card('План на месяц', C.statTile({label:'тыс. сомони' ,value:Math.round(totalPlan/1000)}))
-      + card('Факт за месяц', C.statTile({label:'тыс. сомони',value:Math.round(totalFact/1000)}))
+      + card('План на месяц', C.statTile({label:'тыс. KGS' ,value:Math.round(totalPlan/1000)}))
+      + card('Факт за месяц', C.statTile({label:'тыс. KGS',value:Math.round(totalFact/1000)}))
     + '</div>'
     + card('Освоение по статьям', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Статья</th><th class="num">План</th><th class="num">Факт</th><th class="num">%</th><th class="num">План след. мес.</th><th>Комментарий</th></tr></thead><tbody>'+rows+'</tbody></table></div>')
-    + card('Динамика освоения бюджета', C.lineChart({labels:d.history.map(function(h){return h.month;}), series:[{name:'План',values:d.history.map(function(h){return h.plan;}),color:'var(--steel)',area:false},{name:'Факт',values:d.history.map(function(h){return h.fact;}),color:'var(--accent)'}], yFmt:function(v){return fmt(v/1000000,1)+' млн';}}));
+    + card('Динамика освоения бюджета', C.lineChart({labels:d.history.map(function(h){return h.month;}), series:[{name:'План',values:d.history.map(function(h){return h.plan;}),color:'var(--steel)',area:false},{name:'Факт',values:d.history.map(function(h){return h.fact;}),color:'var(--accent)'}], yFmt:function(v){return fmt(v/1000000,1)+' млн KGS';}}));
   }
 
   /* ---------- 8. План и поручения ---------- */
@@ -1589,11 +1589,16 @@ window.__HR__.DEMO = {
     if(isLive){ badge.textContent='● Данные из базы'; badge.classList.add('is-live'); }
     else { badge.textContent='● Демонстрационные данные (офлайн)'; badge.classList.remove('is-live'); }
   }
+  var loadInFlight = false;
+  var lastLoadAt = 0;
+  var MIN_REFRESH_MS = 15000; // guards against visibilitychange firing repeatedly (some browsers/automation fire it far more often than an actual tab switch)
   async function initCapabilities(){
     await loadFromApi();
     wireAutoRefresh();
   }
   async function loadFromApi(){
+    if(loadInFlight) return false; // never run two overlapping loads — concurrent renderBlockView calls race and can leave the slide blank
+    loadInFlight = true;
     try{
       var res = await fetch(API_BASE, {cache:'no-store'});
       if(!res.ok) throw new Error('HTTP '+res.status);
@@ -1611,11 +1616,16 @@ window.__HR__.DEMO = {
     }catch(e){
       updateDataBadge(false);
       return false;
+    }finally{
+      loadInFlight = false;
+      lastLoadAt = Date.now();
     }
   }
   function wireAutoRefresh(){
     document.addEventListener('visibilitychange', function(){
-      if(document.visibilityState==='visible') loadFromApi();
+      if(document.visibilityState!=='visible') return;
+      if(loadInFlight || (Date.now()-lastLoadAt) < MIN_REFRESH_MS) return;
+      loadFromApi();
     });
   }
   async function saveBlockData(key){
