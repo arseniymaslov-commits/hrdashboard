@@ -887,6 +887,42 @@ window.__HR__.DEMO = {
     return svgWrap(W,H_, paths+center) + legendHTML(segs.map(function(s){return {label:s.label+' · '+fmt(s.value),color:s.color};}));
   }
 
+  /* ---------------- Pictogram (person icons, e.g. gender split) ---------------- */
+  function personIconMarkup(kind, color){
+    // local coordinate box: 0..16 wide, 0..32 tall
+    if(kind==='female'){
+      return '<circle cx="8" cy="5" r="4.6" style="fill:'+color+'"></circle>'
+        + '<path d="M5,11 L11,11 L15,32 L1,32 Z" style="fill:'+color+'"></path>';
+    }
+    return '<circle cx="8" cy="5" r="4.6" style="fill:'+color+'"></circle>'
+      + '<rect x="2.4" y="11" width="11.2" height="13" rx="2.4" style="fill:'+color+'"></rect>'
+      + '<rect x="2.8" y="23" width="4.4" height="9" rx="1.8" style="fill:'+color+'"></rect>'
+      + '<rect x="8.8" y="23" width="4.4" height="9" rx="1.8" style="fill:'+color+'"></rect>';
+  }
+  function pictogramChart(opts){
+    var segs = opts.segments, total = segs.reduce(function(a,s){return a+s.value;},0) || 1;
+    var units = opts.unitsTotal || 50, cols = opts.cols || 10;
+    var rows = Math.ceil(units/cols);
+    var iconW=16, cellW=30, cellH=38, padT=4;
+    var W = cols*cellW, H_ = rows*cellH + padT;
+    var counts=[], acc=0;
+    segs.forEach(function(s,i){
+      var c = (i===segs.length-1) ? Math.max(0, units-acc) : Math.round(s.value/total*units);
+      counts.push(c); acc += c;
+    });
+    var flat=[];
+    counts.forEach(function(c,i){ for(var k=0;k<c;k++) flat.push(segs[i]); });
+    var icons = flat.map(function(seg,idx){
+      var col = idx%cols, row = Math.floor(idx/cols);
+      var x = cellW*col + (cellW-iconW)/2, y = cellH*row + padT;
+      return '<g class="mark" transform="translate('+x+','+y+')"'+tip('<b>'+esc(seg.label)+'</b>')+'>'+personIconMarkup(seg.icon, seg.color)+'</g>';
+    }).join('');
+    var perIcon = total/units;
+    var caption = '<div style="font-size:11.5px;color:var(--muted);margin-top:4px">1 значок ≈ '+(perIcon<1?fmt(perIcon,1):fmt(Math.round(perIcon)))+' чел. (из '+units+')</div>';
+    var legend = legendHTML(segs.map(function(s){ return {label:s.label+' · '+fmt(s.value)+' ('+Math.round(s.value/total*100)+'%)', color:s.color}; }));
+    return svgWrap(W,H_, icons) + caption + legend;
+  }
+
   /* ---------------- Funnel chart ---------------- */
   function funnelChart(opts){
     var stages = opts.stages;
@@ -974,7 +1010,7 @@ window.__HR__.DEMO = {
   }
 
   H.charts = { esc:esc, fmt:fmt, fmtMoney:fmtMoney, barChartH:barChartH, barChartV:barChartV, lineChart:lineChart,
-    donutChart:donutChart, funnelChart:funnelChart, radarChart:radarChart, stackedBarChart:stackedBarChart,
+    donutChart:donutChart, pictogramChart:pictogramChart, funnelChart:funnelChart, radarChart:radarChart, stackedBarChart:stackedBarChart,
     statTile:statTile, statusPill:statusPill, legendHTML:legendHTML };
 })();
 </script>
@@ -998,7 +1034,6 @@ window.__HR__.DEMO = {
     var hist = d.headcountHistory;
     var current = hist[hist.length-1].count;
     var prev = hist[hist.length-2].count;
-    var total = d.gender.male + d.gender.female;
     return head(1,'Состав компании', d.conclusion)
     + '<div class="grid grid-cols-3">'
       + card('Численность', C.statTile({label:'сотрудников, на конец месяца',value:current,delta:current-prev,deltaGood:true,deltaUnit:' чел.'}))
@@ -1007,10 +1042,10 @@ window.__HR__.DEMO = {
     + '</div>'
     + '<div class="grid grid-cols-2">'
       + card('Численность, динамика 6 месяцев', C.lineChart({labels:hist.map(function(h){return h.month;}), series:[{name:'Численность',values:hist.map(function(h){return h.count;}),color:'var(--accent)'}]}))
-      + card('Состав по полу', C.donutChart({segments:[
-          {label:'Мужчины',value:d.gender.male,color:'var(--steel)'},
-          {label:'Женщины',value:d.gender.female,color:'var(--accent)'}
-        ], centerLabel:'сотрудников', centerValue:total}))
+      + card('Состав по полу', C.pictogramChart({segments:[
+          {label:'Мужчины',value:d.gender.male,color:'var(--steel)',icon:'male'},
+          {label:'Женщины',value:d.gender.female,color:'var(--accent)',icon:'female'}
+        ], unitsTotal:50, cols:10}))
     + '</div>';
   }
 
