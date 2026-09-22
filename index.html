@@ -114,6 +114,25 @@
   @media (max-width:700px){
     .deck{ aspect-ratio:auto; height:auto; min-height:min(560px, 78vh); max-height:82vh; }
   }
+
+  /* ---------- Presentation mode (fills the screen for Meet/Zoom tab-share) ---------- */
+  body.is-presenting .topbar{ display:none; }
+  body.is-presenting .footer-hint{ display:none; }
+  body.is-presenting .deck-wrap{ padding:0; }
+  body.is-presenting .app{ min-height:100vh; }
+  body.is-presenting .deck{
+    /* contain-fit a 16:9 box into the viewport — whichever dimension binds first */
+    width:min(100vw, 177.78vh);
+    height:min(100vh, 56.25vw);
+    max-width:none; max-height:none;
+    border-radius:0; box-shadow:none; border:none;
+  }
+  #btn-exit-present{ display:none; }
+  body.is-presenting #btn-exit-present{
+    display:inline-flex; position:fixed; top:14px; right:14px; z-index:50;
+    opacity:.35; transition:opacity .15s ease;
+  }
+  #btn-exit-present:hover{ opacity:1; }
   .slide{
     position:absolute; inset:0; display:flex; flex-direction:column; background:var(--surface);
     opacity:0; transform:translateX(28px); pointer-events:none;
@@ -385,8 +404,10 @@
       <button class="icon-btn" id="btn-upload">⇪ Обновить данные</button>
       <button class="icon-btn" id="btn-export-pdf">PDF</button>
       <button class="icon-btn primary" id="btn-export-word">Сводка Word</button>
+      <button class="icon-btn" id="btn-present" title="Во весь экран для показа в Meet/Zoom (клавиша F, выход — Esc)">⛶ Презентация</button>
     </div>
   </div>
+  <button id="btn-exit-present" class="icon-btn" title="Выйти из режима презентации (Esc)">✕</button>
 
   <div class="deck-wrap">
     <div class="deck" id="deck">
@@ -1672,6 +1693,33 @@ window.__HR__.DEMO = {
     });
   }
 
+  /* ---------------- presentation mode (full-bleed for screen share) ---------------- */
+  function setPresentMode(on){
+    document.body.classList.toggle('is-presenting', on);
+    if(on){
+      if(document.documentElement.requestFullscreen){
+        document.documentElement.requestFullscreen().catch(function(){ /* denied/unsupported — CSS-only mode still fills the viewport */ });
+      }
+    } else if(document.fullscreenElement && document.exitFullscreen){
+      document.exitFullscreen().catch(function(){});
+    }
+  }
+  function wirePresentMode(){
+    var btn = document.getElementById('btn-present');
+    var exitBtn = document.getElementById('btn-exit-present');
+    if(btn) btn.addEventListener('click', function(){ setPresentMode(true); });
+    if(exitBtn) exitBtn.addEventListener('click', function(){ setPresentMode(false); });
+    document.addEventListener('fullscreenchange', function(){
+      if(!document.fullscreenElement) document.body.classList.remove('is-presenting');
+    });
+    document.addEventListener('keydown', function(e){
+      var tag = e.target && e.target.tagName;
+      if(tag==='INPUT'||tag==='SELECT'||tag==='TEXTAREA') return;
+      if(e.key==='f' || e.key==='F') setPresentMode(!document.body.classList.contains('is-presenting'));
+      else if(e.key==='Escape') setPresentMode(false);
+    });
+  }
+
   /* ---------------- server persistence (Vercel API + Neon) ---------------- */
   function updateDataBadge(status, label){
     // status: 'live' | 'offline' | 'archive'
@@ -1975,6 +2023,7 @@ window.__HR__.DEMO = {
     wireScrollHints();
     wireModal();
     wireTooltip();
+    wirePresentMode();
     document.getElementById('btn-export-pdf').addEventListener('click', exportPDF);
     document.getElementById('btn-export-word').addEventListener('click', exportWord);
     initCapabilities();
