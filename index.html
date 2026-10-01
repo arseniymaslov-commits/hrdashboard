@@ -1188,6 +1188,19 @@ window.__HR__.DEMO = {
   function render_assessment(d){
     var seqColors=['var(--critical)','var(--serious)','var(--warning)','var(--good)'];
     var distSegs = d.resultsDistribution.map(function(x,i){ return {label:x.band,value:x.count,color:seqColors[seqColors.length-1-i]||'var(--accent)'}; });
+    var radarRows = d.radar360.axes.map(function(a,i){
+      return '<tr><td style="font-size:12px">'+esc(a)+'</td><td class="num" style="font-size:12px">'+fmt(d.radar360.self[i],1)+'</td><td class="num" style="font-size:12px">'+fmt(d.radar360.peers[i],1)+'</td></tr>';
+    }).join('');
+    var gapIdx = 0, gapMax = -1;
+    d.radar360.axes.forEach(function(a,i){ var g=Math.abs(d.radar360.self[i]-d.radar360.peers[i]); if(g>gapMax){gapMax=g; gapIdx=i;} });
+    var gapSelf = d.radar360.self[gapIdx], gapPeers = d.radar360.peers[gapIdx];
+    var gapNote = gapMax>0.05
+      ? ('Наибольший разрыв — «'+esc(d.radar360.axes[gapIdx])+'»: самооценка '+fmt(gapSelf,1)+(gapSelf>gapPeers?' выше':' ниже')+' оценки коллег ('+fmt(gapPeers,1)+', '+(gapSelf>gapPeers?'+':'')+fmt(gapSelf-gapPeers,1)+')')
+      : 'Самооценка и оценка коллег совпадают по всем критериям';
+    var radar360Extra = '<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">'
+      + '<p style="font-size:12px;color:var(--ink-2);margin-bottom:6px">'+gapNote+'</p>'
+      + '<table class="tbl" style="font-size:12px"><thead><tr><th>Критерий</th><th class="num">Я</th><th class="num">Коллеги</th></tr></thead><tbody>'+radarRows+'</tbody></table>'
+      + '</div>';
     var topicRows = d.topTopics.map(function(t){ return '<tr class="row-hover"><td>'+esc(t.topic)+'</td><td class="num">'+t.participants+'</td><td class="num">'+t.avgScore+'</td></tr>'; }).join('');
     var moversHtml = d.movers.map(function(m){
       var good=m.direction==='up';
@@ -1197,7 +1210,7 @@ window.__HR__.DEMO = {
     + '<div class="grid grid-cols-3">'
       + card('Средний балл аттестаций, динамика', C.lineChart({labels:d.avgScore.history.map(function(h){return h.month;}), series:[{name:'Средний балл',values:d.avgScore.history.map(function(h){return h.score;}),color:'var(--accent)'}]}))
       + card('Распределение результатов', C.donutChart({segments:distSegs, centerLabel:'аттестовано', centerValue:d.resultsDistribution.reduce(function(a,x){return a+x.count;},0)}))
-      + card('Оценка 360: я vs коллеги', C.radarChart({axes:d.radar360.axes, maxValue:10, series:[{name:'Самооценка',values:d.radar360.self,color:'var(--accent)'},{name:'Оценка коллег',values:d.radar360.peers,color:'var(--steel)'}]}))
+      + card('Оценка 360: я vs коллеги', C.radarChart({axes:d.radar360.axes, maxValue:10, series:[{name:'Самооценка',values:d.radar360.self,color:'var(--accent)'},{name:'Оценка коллег',values:d.radar360.peers,color:'var(--steel)'}]})+radar360Extra)
     + '</div>'
     + '<div class="grid grid-cols-2">'
       + card('Топ программ обучения', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Программа</th><th class="num">Участники</th><th class="num">Ср. балл</th></tr></thead><tbody>'+topicRows+'</tbody></table></div>')
