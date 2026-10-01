@@ -1286,7 +1286,7 @@ window.__HR__.DEMO = {
   /* ---------- 9. Эффективность сотрудников УЧР ---------- */
   function render_hrEfficiency(d){
     var cards = d.staff.map(function(s){
-      var cls = (s.violation?'is-flag':(s.isBestThisMonth?'is-best':''));
+      var cls = (s.kpiPct<100?'is-flag':(s.isBestThisMonth?'is-best':''));
       return '<div class="person-card '+cls+'">'
         + (s.isBestThisMonth?'<span class="person-star" title="Лучший сотрудник месяца">★</span>':'')
         + '<div class="person-name">'+esc(s.name)+'</div>'
