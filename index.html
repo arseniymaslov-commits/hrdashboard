@@ -162,6 +162,11 @@
   .slide.is-active{ opacity:1; transform:translateX(0); pointer-events:auto; z-index:2; }
   .slide.is-prev{ transform:translateX(-28px); }
   .exporting .slide{ transition:none; }
+  /* html2canvas can't parse color-mix()/oklab — swap those 3 rules for
+     plain equivalents only while exporting (live UI keeps color-mix). */
+  .exporting .topbar{ background:var(--bg); backdrop-filter:none; }
+  .exporting .title-slide{ background-image:linear-gradient(160deg, var(--surface) 0%, var(--surface-2) 100%); }
+  .exporting .person-card.is-flag{ background:var(--critical-soft); }
   @media (prefers-reduced-motion: reduce){ .slide{ transition:opacity .12s linear; transform:none !important; } }
 
   .slide-inner{
