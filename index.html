@@ -1239,9 +1239,9 @@ window.__HR__.DEMO = {
 
   /* ---------- 7. Бюджет ---------- */
   function render_budget(d){
-    var totalPlan = d.byLine.reduce(function(a,x){return a+x.plan;},0);
     var totalFact = d.byLine.reduce(function(a,x){return a+x.fact;},0);
-    var pct = Math.round(totalFact/totalPlan*1000)/10;
+    var totalNextPlan = d.byLine.reduce(function(a,x){return a+x.nextPlan;},0);
+    var pctNextVsFact = Math.round(totalNextPlan/totalFact*1000)/10;
     var rows = d.byLine.map(function(l){
       var hasPlan = l.plan>0;
       var p = hasPlan ? Math.round(l.fact/l.plan*1000)/10 : 0;
@@ -1250,9 +1250,9 @@ window.__HR__.DEMO = {
     }).join('');
     return head(7,'Бюджет', d.conclusion)
     + '<div class="grid grid-cols-3">'
-      + card('Освоено за месяц', C.statTile({label:'от плана',value:pct,unit:'%',digits:1}))
-      + card('План на месяц', C.statTile({label:'тыс. KGS' ,value:Math.round(totalPlan/1000)}))
-      + card('Факт за месяц', C.statTile({label:'тыс. KGS',value:Math.round(totalFact/1000)}))
+      + card('Факт за сентябрь', C.statTile({label:'тыс. KGS',value:Math.round(totalFact/1000)}))
+      + card('План на октябрь', C.statTile({label:'тыс. KGS' ,value:Math.round(totalNextPlan/1000)}))
+      + card('План октября к факту сентября', C.statTile({label:'от факта сентября',value:pctNextVsFact,unit:'%',digits:1}))
     + '</div>'
     + card('Освоение по статьям', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Статья</th><th class="num">План</th><th class="num">Факт</th><th class="num">%</th><th class="num">План след. мес.</th><th>Комментарий</th></tr></thead><tbody>'+rows+'</tbody></table></div>')
     + card('Динамика освоения бюджета', C.lineChart({labels:d.history.map(function(h){return h.month;}), series:[{name:'План',values:d.history.map(function(h){return h.plan;}),color:'var(--steel)',area:false},{name:'Факт',values:d.history.map(function(h){return h.fact;}),color:'var(--accent)'}], yFmt:function(v){return fmt(v/1000000,1)+' млн KGS';}}));
