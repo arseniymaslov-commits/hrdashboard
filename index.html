@@ -1136,6 +1136,16 @@ window.__HR__.DEMO = {
 
   /* ---------- 2. Подбор ---------- */
   function render_recruitment(d){
+    var prioPill = {'высокий':'critical','средний':'warning','низкий':'muted'};
+    var statusPillMap = {'Открыта':'muted','В подборе':'muted','Оффер':'warning','оффер принят':'good',
+      'резерв':'warning','с внутреннего резерва':'warning','в подборе + на резерв':'warning'};
+    var activeList = d.activeList||[];
+    var activeHeadcount = activeList.reduce(function(a,x){return a+x.count;},0);
+    var activeRows = activeList.map(function(x){
+      return '<tr class="row-hover"><td>'+esc(x.position)+'</td><td>'+esc(x.dept)+'</td><td class="num">'+x.count+'</td>'
+        + '<td>'+(x.priority?C.statusPill(x.priority,prioPill[x.priority]||'muted'):'—')+'</td>'
+        + '<td>'+C.statusPill(x.status,statusPillMap[x.status]||'muted')+'</td><td>'+esc(x.recruiter)+'</td></tr>';
+    }).join('');
     return head(2,'Подбор, найм, адаптация, резерв кадров', d.conclusion)
     + '<div class="grid grid-cols-3">'
       + card('Воронка найма', C.funnelChart({stages:d.funnel}))
@@ -1151,7 +1161,9 @@ window.__HR__.DEMO = {
     + '<div class="grid grid-cols-2">'
       + card('Открытые вакансии по подразделениям', C.barChartH({items:d.byDept.map(function(x){return {label:x.dept,value:x.open,sub:x.avgDays+' дн.'};})}))
       + card('Срок закрытия по подразделениям, дней', C.barChartH({items:d.byDept.slice().sort(function(a,b){return b.avgDays-a.avgDays;}).map(function(x){return {label:x.dept,value:x.avgDays,color:'var(--steel)'};})}))
-    + '</div>';
+    + '</div>'
+    + (activeList.length ? card('Все вакансии в активном поиске ('+activeList.length+' · '+activeHeadcount+' чел.)',
+        '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Должность</th><th>Отдел</th><th class="num">Кол-во</th><th>Приоритет</th><th>Статус</th><th>Рекрутер</th></tr></thead><tbody>'+activeRows+'</tbody></table></div>') : '');
   }
 
   /* ---------- 3. Кадровое администрирование ---------- */
