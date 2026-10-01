@@ -1191,7 +1191,7 @@ window.__HR__.DEMO = {
     var topicRows = d.topTopics.map(function(t){ return '<tr class="row-hover"><td>'+esc(t.topic)+'</td><td class="num">'+t.participants+'</td><td class="num">'+t.avgScore+'</td></tr>'; }).join('');
     var moversHtml = d.movers.map(function(m){
       var good=m.direction==='up';
-      return '<div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:6px 0;border-top:1px solid var(--border)"><span>'+esc(m.name)+'</span><span class="stat-delta '+(good?'up-good':'up-bad')+'">'+(good?'↑':'↓')+' '+Math.abs(m.delta)+'</span></div>';
+      return '<div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:6px 0;border-top:1px solid var(--border)"><span><div>'+esc(m.name)+'</div>'+(m.position?'<div style="font-size:11px;font-weight:500;color:var(--muted)">'+esc(m.position)+'</div>':'')+'</span><span class="stat-delta '+(good?'up-good':'up-bad')+'">'+(good?'↑':'↓')+' '+Math.abs(m.delta)+'</span></div>';
     }).join('');
     return head(4,'Оценка и обучение', d.conclusion)
     + '<div class="grid grid-cols-3">'
