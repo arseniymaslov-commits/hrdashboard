@@ -739,7 +739,7 @@ window.__HR__.DEMO = {
     avgScore:{current:78,prev:74,history:[{month:'Апр',score:71},{month:'Май',score:73},{month:'Июн',score:75},{month:'Июл',score:74},{month:'Авг',score:76},{month:'Сен',score:78}]},
     resultsDistribution:[{band:'90–100',count:18},{band:'75–89',count:41},{band:'60–74',count:27},{band:'<60',count:9}],
     topTopics:[{topic:'Охрана труда — обновление',participants:64,avgScore:82},{topic:'Клиентский сервис МАЗС',participants:38,avgScore:76},{topic:'1С: Документооборот',participants:22,avgScore:71},{topic:'Управленческие навыки (резерв)',participants:14,avgScore:85}],
-    radar360:{axes:['Коммуникация','Результативность','Лидерство','Клиентоориентир.','Дисциплина'],self:[7,8,6,8,9],peers:[6,7,7,7,8]},
+    radar360:{axes:['Коммуникация','Результативность','Лидерство','Клиентоориентир.','Дисциплина'],self:[3.5,4,3,4,4.5],peers:[3,3.5,3.5,3.5,4]},
     movers:[{name:'Д. Керимбеков',delta:14,direction:'up'},{name:'А. Молдалиева',delta:11,direction:'up'},{name:'С. Турсунов',delta:-9,direction:'down'}],
     conclusion:'Средний балл аттестаций вырос до 78 (+4); лучшая динамика — по программе «Управленческие навыки» для кадрового резерва.'
   },
@@ -1210,7 +1210,7 @@ window.__HR__.DEMO = {
     + '<div class="grid grid-cols-3">'
       + card('Средний балл аттестаций, динамика', C.lineChart({labels:d.avgScore.history.map(function(h){return h.month;}), series:[{name:'Средний балл',values:d.avgScore.history.map(function(h){return h.score;}),color:'var(--accent)'}]}))
       + card('Распределение результатов', C.donutChart({segments:distSegs, centerLabel:'аттестовано', centerValue:d.resultsDistribution.reduce(function(a,x){return a+x.count;},0)}))
-      + card('Оценка 360: я vs коллеги', C.radarChart({axes:d.radar360.axes, maxValue:10, series:[{name:'Самооценка',values:d.radar360.self,color:'var(--accent)'},{name:'Оценка коллег',values:d.radar360.peers,color:'var(--steel)'}]})+radar360Extra)
+      + card('Оценка 360: я vs коллеги', C.radarChart({axes:d.radar360.axes, maxValue:5, series:[{name:'Самооценка',values:d.radar360.self,color:'var(--accent)'},{name:'Оценка коллег',values:d.radar360.peers,color:'var(--steel)'}]})+radar360Extra)
     + '</div>'
     + '<div class="grid grid-cols-2">'
       + card('Топ программ обучения', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Программа</th><th class="num">Участники</th><th class="num">Ср. балл</th></tr></thead><tbody>'+topicRows+'</tbody></table></div>')
