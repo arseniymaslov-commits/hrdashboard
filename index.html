@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>HR-панель ОсОО «Альфа Ойл»</title>
+<title>УЧР-панель ОсОО «Альфа Ойл»</title>
 <meta name="description" content="Ежемесячный отчёт управления человеческими ресурсами">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -422,7 +422,7 @@
 <div class="app" id="app">
   <div class="topbar">
     <div class="brand">
-      <span class="brand-name">HR · ОсОО «Альфа Ойл»</span>
+      <span class="brand-name">УЧР · ОсОО «Альфа Ойл»</span>
       <span class="brand-sub" id="topbar-period">—</span>
     </div>
     <span class="badge-demo" id="data-badge">● Демонстрационные данные</span>
@@ -448,7 +448,7 @@
     <div class="deck" id="deck">
       <section class="slide" data-slide="0" id="slide-0">
         <div class="title-slide">
-          <div class="title-kicker">Ежемесячный отчёт · HR</div>
+          <div class="title-kicker">Ежемесячный отчёт · УЧР</div>
           <h1 class="title-heading">Отчёт управления человеческими ресурсами</h1>
           <div class="title-meta">
             <span id="title-company">ОсОО «Альфа Ойл»</span><span class="sep"></span><span id="title-period">—</span>
@@ -665,7 +665,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 /* =========================================================================
-   HR-панель ОсОО «Альфа Ойл» — конфигурация, данные, рендер, интерактивность
+   УЧР-панель ОсОО «Альфа Ойл» — конфигурация, данные, рендер, интерактивность
    ========================================================================= */
 (function(){
   "use strict";
@@ -685,7 +685,7 @@
     {key:'departments', title:'Результативность отделов', short:'Результативность отделов'},
     {key:'budget', title:'Бюджет', short:'Бюджет'},
     {key:'plan', title:'План работы и протокольные поручения', short:'План и поручения'},
-    {key:'hrEfficiency', title:'Эффективность сотрудников HR', short:'Эффективность HR'},
+    {key:'hrEfficiency', title:'Эффективность сотрудников УЧР', short:'Эффективность УЧР'},
     {key:'proposals', title:'Предложения и прочее', short:'Предложения'}
   ];
   var SLIDE_COUNT = BLOCKS.length + 2; // title + toc + blocks
@@ -763,7 +763,7 @@ window.__HR__.DEMO = {
   budget:{
     byLine:[
       {line:'Фонд оплаты труда',plan:18400000,fact:18100000,nextPlan:18600000,note:'Плановый рост окладов с октября'},
-      {line:'Подбор и HR-маркетинг',plan:620000,fact:705000,nextPlan:600000,note:'Перерасход из-за срочного подбора на МАЗС'},
+      {line:'Подбор и УЧР-маркетинг',plan:620000,fact:705000,nextPlan:600000,note:'Перерасход из-за срочного подбора на МАЗС'},
       {line:'Обучение и развитие',plan:540000,fact:410000,nextPlan:650000,note:'Часть программ перенесена на октябрь'},
       {line:'Кадровое администрирование',plan:180000,fact:171000,nextPlan:180000,note:''},
       {line:'Корпоративные мероприятия',plan:260000,fact:258000,nextPlan:150000,note:''}
@@ -1115,9 +1115,9 @@ window.__HR__.DEMO = {
     + '</div>'
     + '<div class="grid grid-cols-2">'
       + card('Структура персонала по подразделениям', C.barChartH({items:d.structureByDept.map(function(x){return {label:x.dept,value:x.count};})}))
-      + card('Внутреннее закрытие вакансий и HR ratio', ''
+      + card('Внутреннее закрытие вакансий и УЧР ratio', ''
           + C.statTile({label:'закрыто внутренними кандидатами, %',value:d.internalFillRate.current,unit:'%',delta:d.internalFillRate.current-d.internalFillRate.prev,deltaGood:true,deltaUnit:' п.п.'})
-          + '<p style="font-size:12px;color:var(--ink-2);margin-top:6px">HR ratio: <b class="num">'+fmt(d.hrRatio,1)+'%</b> (специалистов HR на 100 сотрудников)</p>')
+          + '<p style="font-size:12px;color:var(--ink-2);margin-top:6px">УЧР ratio: <b class="num">'+fmt(d.hrRatio,1)+'%</b> (специалистов УЧР на 100 сотрудников)</p>')
     + '</div>'
     + card('Топ подразделений по текучести, динамика 6 месяцев', C.lineChart({
         labels:d.departmentTurnover[0].history.map(function(h){return h.month;}),
@@ -1265,7 +1265,7 @@ window.__HR__.DEMO = {
     + '</div>';
   }
 
-  /* ---------- 9. Эффективность сотрудников HR ---------- */
+  /* ---------- 9. Эффективность сотрудников УЧР ---------- */
   function render_hrEfficiency(d){
     var cards = d.staff.map(function(s){
       var cls = (s.violation?'is-flag':(s.isBestThisMonth?'is-best':''));
@@ -1295,8 +1295,8 @@ window.__HR__.DEMO = {
       }).join('');
       return card(team.team+(team.progress?(' · '+team.progress):''), rows);
     }).join('');
-    return head(9,'Эффективность сотрудников HR', d.conclusion)
-    + card('Сотрудники HR-службы', '<div class="person-grid">'+cards+'</div>')
+    return head(9,'Эффективность сотрудников УЧР', d.conclusion)
+    + card('Сотрудники УЧР-службы', '<div class="person-grid">'+cards+'</div>')
     + card('История «Лучший сотрудник месяца»', '<div class="best-history">'+history+'</div>')
     + (teamCards?('<div class="grid grid-cols-2">'+teamCards+'</div>'):'');
   }
@@ -1375,7 +1375,7 @@ window.__HR__.DEMO = {
           ['Мужчины, чел', d.gender.male],['Женщины, чел', d.gender.female],
           ['Принято за месяц', d.hired],['Уволено за месяц', d.fired],
           ['Текучесть % (тек.)', d.turnoverRate.current],['Текучесть % (пред.)', d.turnoverRate.prev],
-          ['HR ratio, %', d.hrRatio],
+          ['УЧР ratio, %', d.hrRatio],
           ['Внутреннее закрытие % (тек.)', d.internalFillRate.current],['Внутреннее закрытие % (пред.)', d.internalFillRate.prev],
           ['Вывод', d.conclusion]
         ])}
@@ -1397,7 +1397,7 @@ window.__HR__.DEMO = {
           turnoverRate:{current:num(m['Текучесть % (тек.)'],d.turnoverRate.current), prev:num(m['Текучесть % (пред.)'],d.turnoverRate.prev), history: turnoverHistory.length?turnoverHistory:d.turnoverRate.history},
           departmentTurnover: deptTurnover.length?deptTurnover:d.departmentTurnover,
           structureByDept: structureByDept.length?structureByDept:d.structureByDept,
-          hrRatio: num(m['HR ratio, %'], d.hrRatio),
+          hrRatio: num(m['УЧР ratio, %'], d.hrRatio),
           internalFillRate:{current:num(m['Внутреннее закрытие % (тек.)'],d.internalFillRate.current), prev:num(m['Внутреннее закрытие % (пред.)'],d.internalFillRate.prev)},
           conclusion: str(m['Вывод'], d.conclusion)
         };
@@ -1546,12 +1546,12 @@ window.__HR__.DEMO = {
     },
     hrEfficiency:{
       build:function(d){ return wb([
-        {name:'Сотрудники HR', ws:sheetFromRows(d.staff.map(function(s){return {name:s.name,position:s.position,functions:s.functions,kpiPct:s.kpiPct,isBestThisMonth:boolRu(s.isBestThisMonth), violation:s.violation||''};}),[{key:'name',header:'ФИО'},{key:'position',header:'Должность'},{key:'functions',header:'Функции'},{key:'kpiPct',header:'КПЭ, %'},{key:'isBestThisMonth',header:'Лучший в этом месяце (да/нет)'},{key:'violation',header:'Нарушение (если было)'}])},
+        {name:'Сотрудники УЧР', ws:sheetFromRows(d.staff.map(function(s){return {name:s.name,position:s.position,functions:s.functions,kpiPct:s.kpiPct,isBestThisMonth:boolRu(s.isBestThisMonth), violation:s.violation||''};}),[{key:'name',header:'ФИО'},{key:'position',header:'Должность'},{key:'functions',header:'Функции'},{key:'kpiPct',header:'КПЭ, %'},{key:'isBestThisMonth',header:'Лучший в этом месяце (да/нет)'},{key:'violation',header:'Нарушение (если было)'}])},
         {name:'История лучших', ws:sheetFromRows(d.pastBest,[{key:'month',header:'Месяц'},{key:'name',header:'ФИО'}])},
         {name:'Показатели', ws:metricsSheet([['Вывод', d.conclusion]])}
       ]); },
       apply:function(d,w){
-        var staff = rowsFromSheet(ws(w,'Сотрудники HR'),[{key:'name',header:'ФИО'},{key:'position',header:'Должность'},{key:'functions',header:'Функции'},{key:'kpiPct',header:'КПЭ, %'},{key:'isBestThisMonth',header:'Лучший в этом месяце (да/нет)'},{key:'violation',header:'Нарушение (если было)'}]).filter(function(r){return r.name;}).map(function(r){return {name:str(r.name),position:str(r.position),functions:str(r.functions),kpiPct:num(r.kpiPct),isBestThisMonth:bool(r.isBestThisMonth),violation: str(r.violation)||null};});
+        var staff = rowsFromSheet(ws(w,'Сотрудники УЧР'),[{key:'name',header:'ФИО'},{key:'position',header:'Должность'},{key:'functions',header:'Функции'},{key:'kpiPct',header:'КПЭ, %'},{key:'isBestThisMonth',header:'Лучший в этом месяце (да/нет)'},{key:'violation',header:'Нарушение (если было)'}]).filter(function(r){return r.name;}).map(function(r){return {name:str(r.name),position:str(r.position),functions:str(r.functions),kpiPct:num(r.kpiPct),isBestThisMonth:bool(r.isBestThisMonth),violation: str(r.violation)||null};});
         var pastBest = rowsFromSheet(ws(w,'История лучших'),[{key:'month',header:'Месяц'},{key:'name',header:'ФИО'}]).filter(function(r){return r.name;}).map(function(r){return {month:str(r.month),name:str(r.name)};});
         var m = readMetrics(ws(w,'Показатели'));
         return { staff: staff.length?staff:d.staff, pastBest: pastBest.length?pastBest:d.pastBest, conclusion: str(m['Вывод'], d.conclusion) };
@@ -2010,7 +2010,7 @@ window.__HR__.DEMO = {
         pdf.addImage(img, 'PNG', 0, 0, rect.width, rect.height);
       }
       var blob = pdf.output('blob');
-      var fname = 'HR_отчет_'+String(state.data.meta.period||'').replace(/\s+/g,'_')+'.pdf';
+      var fname = 'УЧР_отчет_'+String(state.data.meta.period||'').replace(/\s+/g,'_')+'.pdf';
       await offerDownload(blob, fname);
     }catch(err){
       toast('Не удалось собрать PDF: '+(err&&err.message?err.message:err));
@@ -2067,7 +2067,7 @@ window.__HR__.DEMO = {
       zip.folder('_rels').file('.rels', rootRels);
       zip.folder('word').file('document.xml', documentXml);
       var blob = await zip.generateAsync({type:'blob', mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
-      await offerDownload(blob, 'HR_сводка_'+String(m.period||'').replace(/\s+/g,'_')+'.docx');
+      await offerDownload(blob, 'УЧР_сводка_'+String(m.period||'').replace(/\s+/g,'_')+'.docx');
     }catch(err){ toast('Не удалось собрать Word-файл: '+(err&&err.message?err.message:err)); }
   }
 
