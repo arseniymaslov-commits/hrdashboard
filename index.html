@@ -831,7 +831,7 @@ window.__HR__.DEMO = {
     var d = digits===undefined?0:digits;
     return Number(n).toLocaleString('ru-RU', {minimumFractionDigits:d, maximumFractionDigits:d});
   }
-  function fmtMoney(n){ return fmt(Math.round(n/1000)) + ' тыс. KGS'; }
+  function fmtMoney(n){ return fmt(Math.round(n)) + ' сом'; }
   function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
   function tip(html){ return ' data-tip="'+esc(html).replace(/"/g,'&quot;')+'"'; }
 
@@ -1250,8 +1250,8 @@ window.__HR__.DEMO = {
     }).join('');
     return head(7,'Бюджет', d.conclusion)
     + '<div class="grid grid-cols-3">'
-      + card('Факт за сентябрь', C.statTile({label:'тыс. KGS',value:Math.round(totalFact/1000)}))
-      + card('План на октябрь', C.statTile({label:'тыс. KGS' ,value:Math.round(totalNextPlan/1000)}))
+      + card('Факт за сентябрь', C.statTile({label:'сом',value:Math.round(totalFact)}))
+      + card('План на октябрь', C.statTile({label:'сом' ,value:Math.round(totalNextPlan)}))
       + card('План октября к факту сентября', C.statTile({label:'от факта сентября',value:pctNextVsFact,unit:'%',digits:1}))
     + '</div>'
     + card('Освоение по статьям', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Статья</th><th class="num">План</th><th class="num">Факт</th><th class="num">%</th><th class="num">План след. мес.</th><th>Комментарий</th></tr></thead><tbody>'+rows+'</tbody></table></div>')
