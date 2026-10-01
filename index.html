@@ -1280,9 +1280,25 @@ window.__HR__.DEMO = {
         + '</div>';
     }).join('');
     var history = d.pastBest.map(function(p){ return '<span class="best-chip">'+esc(p.month)+' — '+esc(p.name)+'</span>'; }).join('');
+    var taskSeverity = {'Исполнено':'good','В работе':'warning','новая задача':'muted','постоянная задача':'muted'};
+    var teamCards = (d.teamPlans||[]).map(function(team){
+      var rows = team.tasks.map(function(t){
+        var sev = taskSeverity[t.status] || 'muted';
+        return '<div style="padding:8px 0;border-top:1px solid var(--border)">'
+          + '<div style="display:flex;justify-content:space-between;gap:10px;align-items:baseline">'
+            + '<div style="font-size:13.5px;font-weight:600">'+esc(t.task)+'</div>'
+            + C.statusPill(t.status, sev)
+          + '</div>'
+          + '<div style="font-size:12px;color:var(--muted);margin-top:2px">'+esc(t.responsible)+'</div>'
+          + (t.comment?('<div style="font-size:12px;color:var(--ink-2);margin-top:3px">'+esc(t.comment)+'</div>'):'')
+          + '</div>';
+      }).join('');
+      return card(team.team+(team.progress?(' · '+team.progress):''), rows);
+    }).join('');
     return head(9,'Эффективность сотрудников HR', d.conclusion)
     + card('Сотрудники HR-службы', '<div class="person-grid">'+cards+'</div>')
-    + card('История «Лучший сотрудник месяца»', '<div class="best-history">'+history+'</div>');
+    + card('История «Лучший сотрудник месяца»', '<div class="best-history">'+history+'</div>')
+    + (teamCards?('<div class="grid grid-cols-2">'+teamCards+'</div>'):'');
   }
 
   /* ---------- 10. Предложения и прочее ---------- */
