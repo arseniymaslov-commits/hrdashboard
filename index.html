@@ -903,7 +903,7 @@ window.__HR__.DEMO = {
   /* ---------------- Line / area chart ---------------- */
   function lineChart(opts){
     var labels = opts.labels, series = opts.series;
-    var W=560, H_=230, padL=38, padR=14, padT=16, padB=28;
+    var W=560, H_=230, padL=opts.padL||38, padR=14, padT=16, padB=28;
     var plotW=W-padL-padR, plotH=H_-padT-padB;
     var allVals = series.reduce(function(a,s){return a.concat(s.values);},[]);
     var minV = Math.min(0, Math.min.apply(null, allVals));
@@ -1268,7 +1268,7 @@ window.__HR__.DEMO = {
       + card('План октября к факту сентября', C.statTile({label:'от факта сентября',value:pctNextVsFact,unit:'%',digits:1}))
     + '</div>'
     + card('Освоение по статьям', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Статья</th><th class="num">План</th><th class="num">Факт</th><th class="num">%</th><th class="num">План след. мес.</th><th>Комментарий</th></tr></thead><tbody>'+rows+'</tbody></table></div>')
-    + card('Динамика освоения бюджета', C.lineChart({labels:d.history.map(function(h){return h.month;}), series:[{name:'План',values:d.history.map(function(h){return h.plan;}),color:'var(--steel)',area:false},{name:'Факт',values:d.history.map(function(h){return h.fact;}),color:'var(--accent)'}], yFmt:function(v){return fmt(v/1000000,1)+' млн KGS';}}));
+    + card('Динамика освоения бюджета', C.lineChart({labels:d.history.map(function(h){return h.month;}), series:[{name:'План',values:d.history.map(function(h){return h.plan;}),color:'var(--steel)',area:false},{name:'Факт',values:d.history.map(function(h){return h.fact;}),color:'var(--accent)'}], padL:110, yFmt:function(v){return fmt(v/1000000,1)+' млн KGS';}}));
   }
 
   /* ---------- 8. План и поручения ---------- */
