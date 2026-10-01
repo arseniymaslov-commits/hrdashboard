@@ -1328,7 +1328,9 @@ window.__HR__.DEMO = {
     var html = Object.keys(grouped).map(function(dir){
       var rows = grouped[dir].map(function(it){
         var p = prioMap[it.priority], s = statusMap[it.status];
-        return '<div class="card" style="padding:10px 12px;gap:4px"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><span style="font-size:13px">'+esc(it.proposal)+'</span><span class="pill pill-'+(it.priority==='high'?'critical':it.priority==='medium'?'warning':'muted')+'">'+p[0]+'</span></div><div style="font-size:12.5px;font-weight:500;color:var(--muted);display:flex;justify-content:space-between"><span>Ответственный: '+esc(it.responsible)+'</span><span>'+s[0]+'</span></div></div>';
+        return '<div class="card" style="padding:10px 12px;gap:4px">'
+          + (it.image?'<img src="'+esc(it.image)+'" alt="" style="width:100%;height:150px;object-fit:cover;border-radius:10px;margin-bottom:8px;display:block">':'')
+          + '<div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><span style="font-size:13px">'+esc(it.proposal)+'</span><span class="pill pill-'+(it.priority==='high'?'critical':it.priority==='medium'?'warning':'muted')+'">'+p[0]+'</span></div><div style="font-size:12.5px;font-weight:500;color:var(--muted);display:flex;justify-content:space-between"><span>Ответственный: '+esc(it.responsible)+'</span><span>'+s[0]+'</span></div></div>';
       }).join('');
       return card(dir, rows);
     }).join('');
