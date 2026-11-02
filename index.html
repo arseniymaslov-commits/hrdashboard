@@ -729,11 +729,9 @@ window.__HR__.DEMO = {
   },
 
   admin:{
-    docsByType:[{type:'Приказы',count:142,prev:131},{type:'Справки',count:96,prev:104},{type:'Письма',count:58,prev:52},{type:'Договоры',count:21,prev:19},{type:'Прочее',count:33,prev:30}],
-    avgProcessingDays:{current:2.1,prev:2.6},
-    statusBreakdown:{done:312,inProgress:29,overdue:9},
-    overdueList:[{doc:'Приказ о переводе №118',dept:'МАЗС',responsible:'Т. Ибраева',daysOverdue:4},{doc:'Доп. соглашение №27',dept:'САУП',responsible:'Н. Сыпабекова',daysOverdue:2},{doc:'Приказ об увольнении №94',dept:'ДИТ',responsible:'Б. Асылбеков',daysOverdue:6},{doc:'Справки 2-НДФЛ (партия)',dept:'Ред Маркет',responsible:'А. Мамбетакунова',daysOverdue:1}],
-    conclusion:'Документооборот вырос на 7%, среднее время оформления сократилось до 2,1 дня; на контроле 9 просроченных документов.'
+    months:['Июль','Август','Сентябрь','Октябрь'],
+    types:[],byCompany:[],headcount:[],
+    conclusion:'Данных по кадровому администрированию за этот период нет.'
   },
 
   assessment:{
@@ -1172,7 +1170,7 @@ window.__HR__.DEMO = {
     return head(2,'Подбор, найм, адаптация, резерв кадров', d.conclusion)
     + '<div class="grid grid-cols-3">'
       + card('Воронка найма', C.funnelChart({stages:d.funnel}))
-      + card('Среднее время закрытия вакансии', C.statTile({label:'дней на закрытие', value:d.avgTimeToHire.current, unit:' '+d.avgTimeToHire.unit, delta:d.avgTimeToHire.current-d.avgTimeToHire.prev, deltaGood:false, deltaUnit:' дн.'})
+      + card('Среднее время закрытия вакансии', d.avgTimeToHire.current==null ? '<p style="font-size:13.5px;color:var(--ink-2)">За октябрь закрытых вакансий нет</p>' : C.statTile({label:'дней на закрытие', value:d.avgTimeToHire.current, unit:' '+d.avgTimeToHire.unit, delta:d.avgTimeToHire.current-d.avgTimeToHire.prev, deltaGood:false, deltaUnit:' дн.'})
         + '<div style="margin-top:6px">'+card('Адаптация', ''+C.statTile({label:'успешно прошли испытательный срок',value:d.adaptation.successRate,unit:'%',delta:d.adaptation.successRate-d.adaptation.prevSuccessRate,deltaGood:true,deltaUnit:' п.п.'})+'<p style="font-size:13px;color:var(--ink-2)">Всего адаптируется: '+d.adaptation.total+' · завершили: '+d.adaptation.passed+' · сорвались: '+d.adaptation.failed+' · в процессе: '+d.adaptation.inProgress+'</p>')+'</div>')
       + card('Кадровый резерв', ''
           + '<div class="grid grid-cols-2" style="gap:8px">'
@@ -1192,17 +1190,31 @@ window.__HR__.DEMO = {
 
   /* ---------- 3. Кадровое администрирование ---------- */
   function render_admin(d){
-    var overdueRows = d.overdueList.map(function(o){
-      return '<tr class="row-hover"><td>'+esc(o.doc)+'</td><td>'+esc(o.dept)+'</td><td>'+esc(o.responsible)+'</td><td class="num">'+C.statusPill(o.daysOverdue+' дн.','critical')+'</td></tr>';
+    if(!d.types){ return head(3,'Кадровое администрирование', d.conclusion||'')+card('Нет данных','<p style="font-size:14.5px;color:var(--ink-2)">За этот период данные по кадровым приказам не загружены.</p>'); }
+    var M=d.months;
+    var typeRows=d.types.map(function(t){
+      return '<tr class="row-hover"><td>'+esc(t.type)+'</td>'+t.months.map(function(v,i){ return '<td class="num"'+(i===3?' style="font-weight:600"':'')+'>'+fmt(v,0)+'</td>'; }).join('')+'</tr>';
     }).join('');
+    var compRows=d.byCompany.map(function(c){
+      return '<tr class="row-hover"><td>'+esc(c.company)+'</td><td class="num">'+fmt(c.hires,0)+'</td><td class="num">'+fmt(c.fires,0)+'</td><td class="num">'+fmt(c.leave,0)+'</td><td class="num">'+fmt(c.transfer,0)+'</td><td class="num">'+fmt(c.penalty,0)+'</td><td class="num">'+fmt(c.women+c.men,0)+'</td></tr>';
+    }).join('');
+    var hc=d.headcount;
+    var last=hc[hc.length-1];
     return head(3,'Кадровое администрирование', d.conclusion)
     + '<div class="grid grid-cols-3">'
-      + card('Среднее время оформления', d.avgProcessingDays.current==null ? '<p style="font-size:13.5px;color:var(--ink-2)">В таблице сроков оформления нет</p>' : C.statTile({label:'дней на документ',value:d.avgProcessingDays.current,digits:1,delta:d.avgProcessingDays.current-d.avgProcessingDays.prev,deltaGood:false,deltaUnit:' дн.'}))
-      + card('Статус исполнения', '<p style="font-size:13.5px;color:var(--ink-2)">В таблице статусов исполнения нет</p>')
-      + card('Документооборот по типам', C.barChartV({items:d.docsByType}))
+      + card('Принято за октябрь', C.statTile({label:'приказов «О приеме»', value:d.types[0].months[3]}))
+      + card('Уволено за октябрь', C.statTile({label:'приказов «Об увольнении»', value:d.types[1].months[3]}))
+      + card('Численность на октябрь', C.statTile({label:'женщин '+fmt(last.female,0)+', мужчин '+fmt(last.male,0), value:last.total}))
     + '</div>'
-    + (d.headcount && d.headcount.length ? card('Численный состав компании', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Показатель</th>'+d.headcount.map(function(h){ return '<th class="num">'+esc(h.month)+'</th>'; }).join('')+'</tr></thead><tbody>'+'<tr><td>Женщины</td>'+d.headcount.map(function(h){ return '<td class="num">'+fmt(h.female,0)+'</td>'; }).join('')+'</tr>'+'<tr><td>Мужчины</td>'+d.headcount.map(function(h){ return '<td class="num">'+fmt(h.male,0)+'</td>'; }).join('')+'</tr>'+'<tr><td><b>Итого</b></td>'+d.headcount.map(function(h){ return '<td class="num"><b>'+fmt(h.total,0)+'</b></td>'; }).join('')+'</tr>'+'</tbody></table></div>') : '')
-    + card('Просроченные документы', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Документ</th><th>Подразделение</th><th>Ответственный</th><th class="num">Просрочка</th></tr></thead><tbody>'+overdueRows+'</tbody></table></div>');
+    + card('Кадровые приказы по типам, июль–октябрь', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Тип приказа</th>'+M.map(function(m){ return '<th class="num">'+esc(m)+'</th>'; }).join('')+'</tr></thead><tbody>'+typeRows+'</tbody></table></div>')
+    + '<div class="grid grid-cols-2">'
+      + card('По организациям за октябрь', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Организация</th><th class="num">Приём</th><th class="num">Увольн.</th><th class="num">Отпуск</th><th class="num">Перевод</th><th class="num">Взыскание</th><th class="num">Численность</th></tr></thead><tbody>'+compRows+'</tbody></table></div>')
+      + card('Численность, июль–октябрь', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Показатель</th>'+hc.map(function(h){ return '<th class="num">'+esc(h.month)+'</th>'; }).join('')+'</tr></thead><tbody>'
+        + '<tr><td>Женщины</td>'+hc.map(function(h){ return '<td class="num">'+fmt(h.female,0)+'</td>'; }).join('')+'</tr>'
+        + '<tr><td>Мужчины</td>'+hc.map(function(h){ return '<td class="num">'+fmt(h.male,0)+'</td>'; }).join('')+'</tr>'
+        + '<tr><td><b>Итого</b></td>'+hc.map(function(h){ return '<td class="num"><b>'+fmt(h.total,0)+'</b></td>'; }).join('')+'</tr>'
+        + '</tbody></table></div>')
+    + '</div>';
   }
 
   /* ---------- 4. Оценка и обучение ---------- */
@@ -1253,6 +1265,28 @@ window.__HR__.DEMO = {
       + card('Выводы и зоны риска', '<p style="font-size:14px;color:var(--ink-2);line-height:1.5;margin-bottom:8px">'+esc(o.conclusion)+'</p><ul style="font-size:13.5px;color:var(--ink-2);padding-left:18px">'+risks+'</ul>')
       + '</div>';
   }
+  function iprEmpHtml(d){
+    var e=d.iprEmployees;
+    if(!e) return '';
+    var t=e.totals;
+    var pct=Math.round(t.sent/t.staff*1000)/10;
+    var rows=e.rows.map(function(r){ return '<tr><td>'+esc(r.company)+'</td><td class="num">'+r.staff+'</td><td class="num">'+r.sent+'</td><td class="num">'+r.paused+'</td><td class="num">'+r.errors+'</td><td class="num">'+r.notSent+'</td></tr>'; }).join('');
+    return '<div class="grid grid-cols-3">'
+      + card('ИПР сотрудников, '+e.period, C.statTile({label:'сотрудников в базе', value:t.staff}))
+      + card('Отправлено ИПР', C.statTile({label:'отправлено, '+pct+'%', value:t.sent}))
+      + card('Ожидается обратная связь', C.statTile({label:'на паузе (СВКА): '+t.paused, value:t.waiting}))
+    + '</div>'
+    + '<div class="grid grid-cols-2">'
+      + card('Сегменты оценки', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Сегмент</th><th class="num">Сотрудников</th></tr></thead><tbody>'
+          + '<tr><td>A. Кадровый резерв</td><td class="num">'+t.A+'</td></tr>'
+          + '<tr><td>B. Кандидат в резерв</td><td class="num">'+t.B+'</td></tr>'
+          + '<tr><td>C. Стабильный результат</td><td class="num">'+t.C+'</td></tr>'
+          + '<tr><td>D. Усиленный контроль</td><td class="num">'+t.D+'</td></tr>'
+          + '<tr><td>E. Дооценка</td><td class="num">'+t.E+'</td></tr>'
+          + '</tbody></table></div>')
+      + card('По отделам', '<div class="tbl-wrap" style="max-height:340px;overflow:auto"><table class="tbl"><thead><tr><th>Отдел</th><th class="num">В базе</th><th class="num">Отправлено</th><th class="num">Пауза</th><th class="num">Ошибки</th><th class="num">Не отправлено</th></tr></thead><tbody>'+rows+'</tbody></table></div>')
+    + '</div>';
+  }
   function render_assessment(d){
     var seqColors=['var(--critical)','var(--serious)','var(--warning)','var(--good)'];
     var opsC = d.operatorsAttestation && d.operatorsAttestation.counts;
@@ -1290,7 +1324,8 @@ window.__HR__.DEMO = {
       + card('Наибольшая динамика результата', moversHtml)
     + '</div>'
     + driverIprHtml(d)
-    + operatorsHtml(d);
+    + operatorsHtml(d)
+    + iprEmpHtml(d);
   }
 
   /* ---------- 5. Дисциплина труда ---------- */
@@ -1356,7 +1391,9 @@ window.__HR__.DEMO = {
   function render_budget(d){
     var totalFact = d.byLine.reduce(function(a,x){return a+x.fact;},0);
     var totalNextPlan = d.byLine.reduce(function(a,x){return a+x.nextPlan;},0);
-    var pctNextVsFact = Math.round(totalNextPlan/totalFact*1000)/10;
+    var totalPlan = d.byLine.reduce(function(a,x){return a+x.plan;},0);
+    var sepHist = (d.history||[]).filter(function(h){ return h.month==='Сен'; })[0];
+    var pctOctPlanVsSepFact = sepHist && sepHist.fact ? Math.round(totalPlan/sepHist.fact*1000)/10 : null;
     var rows = d.byLine.map(function(l){
       var hasPlan = l.plan>0;
       var p = hasPlan ? Math.round(l.fact/l.plan*1000)/10 : 0;
@@ -1365,9 +1402,9 @@ window.__HR__.DEMO = {
     }).join('');
     return head(7,'Бюджет', d.conclusion)
     + '<div class="grid grid-cols-3">'
-      + card('Факт за сентябрь', C.statTile({label:'сом',value:Math.round(totalFact)}))
-      + card('План на октябрь', C.statTile({label:'сом' ,value:Math.round(totalNextPlan)}))
-      + card('План октября к факту сентября', C.statTile({label:'от факта сентября',value:pctNextVsFact,unit:'%',digits:1}))
+      + card('План октября', C.statTile({label:'сом', value:Math.round(totalPlan)}))
+      + card('Факт октября', C.statTile({label:'сом', value:Math.round(totalFact)}))
+      + card('План октября к факту сентября', C.statTile({label:'от факта сентября', value:pctOctPlanVsSepFact==null?'—':pctOctPlanVsSepFact, unit:pctOctPlanVsSepFact==null?'':'%', digits:1}))
     + '</div>'
     + card('Освоение по статьям', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Статья</th><th class="num">План</th><th class="num">Факт</th><th class="num">%</th><th class="num">План след. мес.</th><th>Комментарий</th></tr></thead><tbody>'+rows+'</tbody></table></div>')
     + card('Динамика освоения бюджета', C.lineChart({labels:d.history.map(function(h){return h.month;}), series:[{name:'План',values:d.history.map(function(h){return h.plan;}),color:'var(--steel)',area:false},{name:'Факт',values:d.history.map(function(h){return h.fact;}),color:'var(--accent)'}], padL:110, yFmt:function(v){return fmt(v/1000000,1)+' млн KGS';}}));
@@ -1442,7 +1479,7 @@ window.__HR__.DEMO = {
     var pot=d.potential.map(function(x){ return '<tr class="row-hover"><td>'+esc(x.dept)+'</td><td class="num">'+x.units+'</td></tr>'; }).join('');
     return head(7,'Функциональный анализ должностей. Потенциал к оптимизации (1 этап)', d.conclusion)
     + '<div class="grid grid-cols-3">'
-      + card('Подразделений', C.statTile({label:'без УЧР', value:t.departments}))
+      + card('Подразделений', C.statTile({label:'в анализе', value:t.departments}))
       + card('Должностей', C.statTile({label:'в анализе', value:t.positions}))
       + card('Единиц', C.statTile({label:'полнота анкет '+t.fullPct+'%', value:t.units}))
     + '</div>'
@@ -2185,8 +2222,8 @@ window.__HR__.DEMO = {
   }
   var KEYFACTS = {
     composition: function(d){ var h=d.headcountHistory; return 'Численность: '+h[h.length-1].count+' чел. (принято '+d.hired+', уволено '+d.fired+' за месяц). Мужчин: '+d.gender.male+', женщин: '+d.gender.female+'. Текучесть: '+d.turnoverRate.current+'%. Внутреннее закрытие вакансий: '+d.internalFillRate.current+'%.'; },
-    recruitment: function(d){ return 'Срок закрытия вакансии: '+d.avgTimeToHire.current+' дн. (было '+d.avgTimeToHire.prev+'). Успешность адаптации: '+d.adaptation.successRate+'%.'; },
-    admin: function(d){ return 'Среднее время оформления документа: '+d.avgProcessingDays.current+' дн. Просрочено документов: '+d.statusBreakdown.overdue+'.'; },
+    recruitment: function(d){ return (d.avgTimeToHire.current==null?'Закрытых вакансий за период нет':'Срок закрытия вакансии: '+d.avgTimeToHire.current+' дн.')+'. Успешность адаптации: '+d.adaptation.successRate+'%.'; },
+    admin: function(d){ if(!d.types) return 'Данных по кадровому администрированию за период нет.'; var h=d.headcount[d.headcount.length-1]; return 'Принято за октябрь: '+d.types[0].months[3]+' приказов, уволено: '+d.types[1].months[3]+'. Численность: '+h.total+' чел.'; },
     assessment: function(d){ return 'Средний балл аттестаций: '+d.avgScore.current+' (было '+d.avgScore.prev+').'; },
     discipline: function(d){ return 'Нарушений дисциплины: '+d.totalViolations.current+' (было '+d.totalViolations.prev+').'; },
     departments: function(d){ var s=d.rows.slice().sort(function(a,b){return b.total-a.total;}); return 'Лидер рейтинга: '+s[0].dept+' ('+s[0].total+'). Антирейтинг: '+s[s.length-1].dept+' ('+s[s.length-1].total+').'; },
