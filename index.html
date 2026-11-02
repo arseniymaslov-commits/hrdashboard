@@ -1016,7 +1016,7 @@ window.__HR__.DEMO = {
   /* ---------------- Radar chart (max 2 series) ---------------- */
   function radarChart(opts){
     var axes = opts.axes, series = opts.series, maxV = opts.maxValue||10;
-    var W=300,H_=280,cx=150,cy=136,r=100;
+    var W=340,H_=280,cx=170,cy=136,r=100;
     var n=axes.length, angleStep=(Math.PI*2)/n;
     function pt(i,v){ var a=-Math.PI/2+i*angleStep; var rad=(v/maxV)*r; return [cx+rad*Math.cos(a), cy+rad*Math.sin(a)]; }
     var rings=[0.33,0.66,1].map(function(f){
@@ -1375,7 +1375,7 @@ window.__HR__.DEMO = {
     var rows = d.rows.slice().sort(function(a,b){return b.total-a.total;});
     var trs = rows.map(function(r,i){
       var cls = i===0?'pill-good':(i===rows.length-1?'pill-critical':'pill-muted');
-      return '<tr class="row-hover dept-row" data-dept="'+esc(r.dept)+'" style="cursor:pointer"><td>'+C.statusPill('#'+(i+1),i===0?'good':(i===rows.length-1?'critical':'muted'))+' '+esc(r.dept)+'</td>'
+      return '<tr class="row-hover dept-row" data-dept="'+esc(r.dept)+'" style="cursor:pointer"><td>'+C.statusPill('#'+(i+1),i===0?'good':(i===rows.length-1?'critical':'muted'))+' <span style="white-space:nowrap">'+esc(r.dept)+'</span></td>'
         + '<td class="num">'+fmt(r.interaction,1)+'</td><td class="num">'+fmt(r.execution,1)+'</td><td class="num">'+fmt(r.hrWork,1)+'</td><td class="num">'+fmt(r.kpi,0)+'</td><td class="num"><b>'+fmt(r.total,1)+'</b></td></tr>';
     }).join('');
     return head(6,'Результативность отделов', d.conclusion)
