@@ -688,10 +688,11 @@
     {key:'assessment', title:'Оценка и обучение', short:'Оценка и обучение'},
     {key:'discipline', title:'Дисциплина труда', short:'Дисциплина труда'},
     {key:'departments', title:'Результативность отделов', short:'Результативность отделов'},
+    {key:'functionAnalysis', title:'Функциональный анализ должностей. Потенциал к оптимизации (1 этап)', short:'Функциональный анализ'},
     {key:'budget', title:'Бюджет', short:'Бюджет'},
     {key:'plan', title:'План работы и протокольные поручения', short:'План и поручения'},
     {key:'hrEfficiency', title:'Эффективность сотрудников УЧР', short:'Эффективность УЧР'},
-    {key:'proposals', title:'Предложения и прочее', short:'Предложения'}
+    {key:'uchrInteraction', title:'Взаимодействие отдела УЧР', short:'Взаимодействие УЧР'}
   ];
   var SLIDE_COUNT = BLOCKS.length + 2; // title + toc + blocks
 
@@ -808,15 +809,16 @@ window.__HR__.DEMO = {
     conclusion:'Лучший сотрудник месяца — Н. Сыпабекова (104% КПЭ); зафиксировано системное нарушение сроков у С. Турсунова.'
   },
 
-  proposals:{
-    items:[
-      {direction:'Подбор',proposal:'Расширить резерв на позиции МАЗС за счёт стажёрской программы',responsible:'Н. Сыпабекова',priority:'high',status:'new'},
-      {direction:'Дисциплина труда',proposal:'Ввести гибкий старт смены на МАЗС для снижения опозданий',responsible:'Т. Ибраева',priority:'medium',status:'inProgress'},
-      {direction:'Обучение',proposal:'Перенести программы Q3 на октябрь без потери бюджета',responsible:'Д. Керимбеков',priority:'medium',status:'new'},
-      {direction:'Бюджет',proposal:'Пересмотреть лимит на срочный подбор с учётом сезонности',responsible:'А. Маслов',priority:'high',status:'new'}
-    ],
-    notes:'В следующем отчёте — детализация по пилоту геолокационного контроля и итоги оценки 360 для руководителей среднего звена.',
-    conclusion:'Приоритет следующего месяца — снижение опозданий на МАЗС и завершение пилота геоконтроля.'
+  functionAnalysis:{
+    totals:{departments:0,positions:0,units:0,fullPct:0},
+    categories:[],groups:[],potential:[],
+    conclusion:'Данных функционального анализа за этот период нет.'
+  },
+
+  uchrInteraction:{
+    uchr:{avg:9.89,count:19,total:32,notEvaluated:15,delta:-0.01,remarks:[]},
+    company:{months:[]},
+    conclusion:'Данных по взаимодействию УЧР за этот период нет.'
   }
 };
 </script>
@@ -1135,6 +1137,27 @@ window.__HR__.DEMO = {
   }
 
   /* ---------- 2. Подбор ---------- */
+  function massHtml(m){
+    var rows = (m&&m.byDept)||[];
+    if(!rows.length) return '';
+    var tot = function(k){ return rows.reduce(function(a,x){ return a+(x[k]||0); },0); };
+    var stages = [
+      {stage:'Отклики', count:tot('responses')},
+      {stage:'Первичный контакт', count:tot('contacted')},
+      {stage:'Направлено', count:tot('sent')},
+      {stage:'Сбор документов', count:tot('documents')},
+      {stage:'Оформились', count:tot('hired')}
+    ];
+    var deptRows = rows.map(function(x){
+      return '<tr class="row-hover"><td>'+esc(x.dept)+'</td><td class="num">'+x.vacancies+'</td><td class="num">'+x.responses+'</td>'
+        + '<td class="num">'+x.contacted+'</td><td class="num">'+x.sent+'</td><td class="num">'+x.hired+'</td></tr>';
+    }).join('');
+    return card('Массовый подбор водителей · '+tot('vacancies')+' вакансий', 
+        '<div class="grid grid-cols-2">'
+          + card('Воронка', C.funnelChart({stages:stages}))
+          + card('По подразделениям', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Подразделение</th><th class="num">Вакансии</th><th class="num">Отклики</th><th class="num">Контакт</th><th class="num">Направлено</th><th class="num">Оформлено</th></tr></thead><tbody>'+deptRows+'</tbody></table></div>')
+        + '</div>');
+  }
   function render_recruitment(d){
     var prioPill = {'высокий':'critical','средний':'warning','низкий':'muted'};
     var statusPillMap = {'Открыта':'muted','В подборе':'muted','Оффер':'warning','оффер принят':'good',
@@ -1163,7 +1186,8 @@ window.__HR__.DEMO = {
       + card('Срок закрытия по подразделениям, дней', C.barChartH({items:d.byDept.slice().sort(function(a,b){return b.avgDays-a.avgDays;}).map(function(x){return {label:x.dept,value:x.avgDays,color:'var(--steel)'};})}))
     + '</div>'
     + (activeList.length ? card('Все вакансии в активном поиске ('+activeList.length+' · '+activeHeadcount+' чел.)',
-        '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Должность</th><th>Отдел</th><th class="num">Кол-во</th><th>Приоритет</th><th>Статус</th><th>Рекрутер</th></tr></thead><tbody>'+activeRows+'</tbody></table></div>') : '');
+        '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Должность</th><th>Отдел</th><th class="num">Кол-во</th><th>Приоритет</th><th>Статус</th><th>Рекрутер</th></tr></thead><tbody>'+activeRows+'</tbody></table></div>') : '')
+    + massHtml(d.massRecruitment);
   }
 
   /* ---------- 3. Кадровое администрирование ---------- */
@@ -1185,9 +1209,61 @@ window.__HR__.DEMO = {
   }
 
   /* ---------- 4. Оценка и обучение ---------- */
+  function driverIprHtml(d){
+    var t=d.driverTest, i=d.ipr;
+    if(!t||!i) return '';
+    var pct=function(a,b){ return b? (Math.round(a/b*1000)/10) : 0; };
+    var sp=t.sept, op=t.oct;
+    var sPart=sp.participants, oPart=op.participants;
+    var delta=function(a,b,unit){ var x=Math.round((b-a)*10)/10; return (x>0?'+':'')+x+unit; };
+    var testRows=[
+      ['Приняли участие, чел.', sPart, oPart, delta(sPart,oPart,'')],
+      ['Успешно, %', pct(sp.success,sPart), pct(op.success,oPart), delta(pct(sp.success,sPart),pct(op.success,oPart),' п.п.')],
+      ['Удовлетворительно, %', pct(sp.satisfactory,sPart), pct(op.satisfactory,oPart), delta(pct(sp.satisfactory,sPart),pct(op.satisfactory,oPart),' п.п.')],
+      ['Неудовлетворительно, %', pct(sp.unsatisfactory,sPart), pct(op.unsatisfactory,oPart), delta(pct(sp.unsatisfactory,sPart),pct(op.unsatisfactory,oPart),' п.п.')],
+      ['Не приняли участие, чел.', '—', op.notTook, '—']
+    ].map(function(r){ return '<tr><td>'+r[0]+'</td><td class="num">'+r[1]+'</td><td class="num">'+r[2]+'</td><td class="num">'+r[3]+'</td></tr>'; }).join('');
+    var iprRows=[
+      ['Назначено тестов', i.sept.assigned, i.oct.assigned, delta(i.sept.assigned,i.oct.assigned,'')],
+      ['Выполнено', i.sept.done, i.oct.done, delta(i.sept.done,i.oct.done,'')],
+      ['Охват, %', pct(i.sept.done,i.sept.assigned), pct(i.oct.done,i.oct.assigned), delta(pct(i.sept.done,i.sept.assigned),pct(i.oct.done,i.oct.assigned),' п.п.')],
+      ['Нет подтверждения', i.sept.noConfirm, i.oct.noConfirm, delta(i.sept.noConfirm,i.oct.noConfirm,'')]
+    ].map(function(r){ return '<tr><td>'+r[0]+'</td><td class="num">'+r[1]+'</td><td class="num">'+r[2]+'</td><td class="num">'+r[3]+'</td></tr>'; }).join('');
+    var head_row='<thead><tr><th>Показатель</th><th class="num">Сентябрь</th><th class="num">Октябрь</th><th class="num">Изменение</th></tr></thead>';
+    return '<div class="grid grid-cols-2">'
+      + card('Водители: тест «Альтранс Логистикс», сентябрь → октябрь', '<div class="tbl-wrap"><table class="tbl">'+head_row+'<tbody>'+testRows+'</tbody></table></div>')
+      + card('ИПР руководителей: сентябрь → октябрь'+(i.oct.preliminary?' (октябрь предварительно)':''), '<div class="tbl-wrap"><table class="tbl">'+head_row+'<tbody>'+iprRows+'</tbody></table></div>')
+      + '</div>';
+  }
+  function operatorsHtml(d){
+    var o=d.operatorsAttestation;
+    if(!o) return '';
+    var delta=function(a,b){ var x=Math.round((a-b)*10)/10; return (x>0?'+':'')+x.toFixed(1).replace('.',',')+' п.п.'; };
+    var fmt1=function(v){ return String(v).replace('.',','); };
+    var cur=o.oct26, prev=o.jun26, y=o.oct25;
+    var rows=[
+      ['Явка, %', y.participationPct, prev.participationPct, cur.participationPct, delta(cur.participationPct,prev.participationPct)],
+      ['Отлично, %', y.excellent, prev.excellent, cur.excellent, delta(cur.excellent,prev.excellent)],
+      ['Хорошо, %', y.good, prev.good, cur.good, delta(cur.good,prev.good)],
+      ['Удовлетворительно, %', y.satisfactory, prev.satisfactory, cur.satisfactory, delta(cur.satisfactory,prev.satisfactory)],
+      ['Неудовлетворительно, %', y.unsatisfactory, prev.unsatisfactory, cur.unsatisfactory, delta(cur.unsatisfactory,prev.unsatisfactory)],
+      ['Подтвердили квалификацию, %', y.confirmedPct, prev.confirmedPct, cur.confirmedPct, delta(cur.confirmedPct,prev.confirmedPct)]
+    ].map(function(r){ return '<tr><td>'+r[0]+'</td><td class="num">'+fmt1(r[1])+'</td><td class="num">'+fmt1(r[2])+'</td><td class="num">'+fmt1(r[3])+'</td><td class="num">'+r[4]+'</td></tr>'; }).join('');
+    var risks=o.risks.map(function(x){ return '<li style="margin-bottom:6px">'+esc(x)+'</li>'; }).join('');
+    return '<div class="grid grid-cols-2">'
+      + card('Аттестация операторов АЗС: октябрь 2026 к июню 2026', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Показатель</th><th class="num">Окт 2025</th><th class="num">Июнь 2026</th><th class="num">Окт 2026</th><th class="num">Изм. к июню</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
+        + '<p style="font-size:13px;color:var(--ink-2);margin-top:8px">Всего подлежало: '+o.eligible+', приняли участие: '+o.participated+', не приняли: '+o.notTook+'. Сентябрьской аттестации не было, поэтому сравнение с июнем.</p>')
+      + card('Выводы и зоны риска', '<p style="font-size:14px;color:var(--ink-2);line-height:1.5;margin-bottom:8px">'+esc(o.conclusion)+'</p><ul style="font-size:13.5px;color:var(--ink-2);padding-left:18px">'+risks+'</ul>')
+      + '</div>';
+  }
   function render_assessment(d){
     var seqColors=['var(--critical)','var(--serious)','var(--warning)','var(--good)'];
-    var distSegs = d.resultsDistribution.map(function(x,i){ return {label:x.band,value:x.count,color:seqColors[seqColors.length-1-i]||'var(--accent)'}; });
+    var opsC = d.operatorsAttestation && d.operatorsAttestation.counts;
+    var distBands = d.resultsDistribution.map(function(x,i){
+      var add = opsC ? [opsC.excellent, opsC.good, opsC.satisfactory, opsC.unsatisfactory][i] : 0;
+      return {band:x.band, count:x.count+(add||0)};
+    });
+    var distSegs = distBands.map(function(x,i){ return {label:x.band,value:x.count,color:seqColors[seqColors.length-1-i]||'var(--accent)'}; });
     var radarRows = d.radar360.axes.map(function(a,i){
       return '<tr><td>'+esc(a)+'</td><td class="num">'+fmt(d.radar360.self[i],1)+'</td><td class="num">'+fmt(d.radar360.peers[i],1)+'</td></tr>';
     }).join('');
@@ -1209,13 +1285,15 @@ window.__HR__.DEMO = {
     return head(4,'Оценка и обучение', d.conclusion)
     + '<div class="grid grid-cols-3">'
       + card('Средний балл аттестаций, динамика', C.lineChart({labels:d.avgScore.history.map(function(h){return h.month;}), series:[{name:'Средний балл',values:d.avgScore.history.map(function(h){return h.score;}),color:'var(--accent)'}]}))
-      + card('Распределение результатов', C.donutChart({segments:distSegs, centerLabel:'аттестовано', centerValue:d.resultsDistribution.reduce(function(a,x){return a+x.count;},0)}))
+      + card('Распределение результатов', C.donutChart({segments:distSegs, centerLabel:'аттестовано', centerValue:distBands.reduce(function(a,x){return a+x.count;},0)}))
       + card('Оценка 360: я vs коллеги', C.radarChart({axes:d.radar360.axes, maxValue:5, series:[{name:'Самооценка',values:d.radar360.self,color:'var(--accent)'},{name:'Оценка коллег',values:d.radar360.peers,color:'var(--steel)'}]})+radar360Extra)
     + '</div>'
     + '<div class="grid grid-cols-2">'
       + card('Топ программ обучения', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Программа</th><th class="num">Участники</th><th class="num">Ср. балл</th></tr></thead><tbody>'+topicRows+'</tbody></table></div>')
       + card('Наибольшая динамика результата', moversHtml)
-    + '</div>';
+    + '</div>'
+    + driverIprHtml(d)
+    + operatorsHtml(d);
   }
 
   /* ---------- 5. Дисциплина труда ---------- */
@@ -1236,6 +1314,31 @@ window.__HR__.DEMO = {
   }
 
   /* ---------- 6. Результативность отделов ---------- */
+  function hrKpeHtml(d){
+    var k=d.hrKpe;
+    if(!k) return '';
+    var dims=['Команда','Кадры','Подбор','Обучение'].map(function(n){ return '<tr><td>'+n+'</td><td class="num">'+String(k.dims[n]).replace('.',',')+'%</td></tr>'; }).join('');
+    var rem=k.remarks.map(function(x){ return '<li style="margin-bottom:6px"><b>'+esc(x.dept)+'</b> — '+esc(x.manager)+': '+esc(x.text)+'</li>'; }).join('');
+    return card('Кадровый КПЭ (Red KPI), октябрь 2026 · '+k.evaluated+' руководителей, предварительно', 
+        '<div class="grid grid-cols-3">'
+          + card('Средний итог', C.statTile({label:'кадровый КПЭ', value:String(k.avgPct).replace('.',','), unit:'%'}))
+          + card('На 100%', C.statTile({label:'руководителей', value:k.full100, unit:' из '+k.evaluated}))
+          + card('Средние по критериям', '<div class="tbl-wrap"><table class="tbl"><tbody>'+dims+'</tbody></table></div>')
+        + '</div>'
+        + card('Подтверждённые замечания ('+k.remarks.length+')', '<ul style="font-size:13.5px;color:var(--ink-2);padding-left:18px">'+rem+'</ul>')
+        + '<p style="font-size:12.5px;color:var(--muted);margin-top:6px">'+esc(k.note)+'</p>');
+  }
+  function interactionSepHtml(d){
+    var x=d.interactionSep;
+    if(!x) return '';
+    var rows=Object.keys(x.groups).map(function(g){ var v=x.groups[g]; return '<tr><td>'+esc(g)+'</td><td class="num">'+String(v.score).replace('.',',')+'</td><td class="num">'+v.evals+'</td><td class="num" style="font-size:12px;color:var(--muted)">'+esc(v.members.join(', '))+'</td></tr>'; }).join('');
+    var weak=x.weakest.map(function(w){ return '<li style="margin-bottom:4px"><b>'+esc(w.dept)+'</b> — '+String(w.score).replace('.',',')+'</li>'; }).join('');
+    return '<div class="grid grid-cols-2">'
+      + card('Взаимодействие СП, сентябрь 2026 (Red KPI)', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Группа</th><th class="num">Балл</th><th class="num">Оценок</th><th>Состав</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
+        + '<p style="font-size:13px;color:var(--ink-2);margin-top:8px">Общий средний балл: '+String(x.overall).replace('.',',')+'. Ожидалось оценок: '+x.expected+', не заполнено: '+x.missing+'.</p>')
+      + card('Наименьшие баллы', '<ul style="font-size:13.5px;color:var(--ink-2);padding-left:18px">'+weak+'</ul>')
+      + '</div>';
+  }
   function render_departments(d){
     var rows = d.rows.slice().sort(function(a,b){return b.total-a.total;});
     var trs = rows.map(function(r,i){
@@ -1247,7 +1350,9 @@ window.__HR__.DEMO = {
     + '<div class="grid grid-cols-2">'
       + card('Сводный рейтинг (клик по строке — детали справа)', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Подразделение</th><th class="num">Взаимод.</th><th class="num">Исполнение</th><th class="num">Кадр. работа</th><th class="num">KPI</th><th class="num">Итог</th></tr></thead><tbody>'+trs+'</tbody></table></div>')
       + card('Детали подразделения', '<div id="dept-radar">'+C.radarChart({axes:['Взаимод.','Поручения','Кадр. работа','KPI'], maxValue:10, series:[{name:rows[0].dept,values:[rows[0].interaction,rows[0].execution,rows[0].hrWork,rows[0].kpi/10],color:'var(--accent)'},{name:'Средний по компании',values:['interaction','execution','hrWork','kpi'].map(function(k){return rows.reduce(function(a,r){return a+(k==='kpi'?r.kpi/10:r[k]);},0)/rows.length;}),color:'var(--steel)'}]})+'</div>')
-    + '</div>';
+    + '</div>'
+    + interactionSepHtml(d)
+    + hrKpeHtml(d);
   }
 
   /* ---------- 7. Бюджет ---------- */
@@ -1333,30 +1438,49 @@ window.__HR__.DEMO = {
   }
 
   /* ---------- 10. Предложения и прочее ---------- */
-  function render_proposals(d){
-    var prioMap = {high:['Высокий','critical'], medium:['Средний','warning'], low:['Низкий','muted']};
-    var statusMap = {new:['Новое','steel'], inProgress:['В работе','warning'], done:['Выполнено','good']};
-    var grouped = {};
-    d.items.forEach(function(it){ (grouped[it.direction]=grouped[it.direction]||[]).push(it); });
-    var html = Object.keys(grouped).map(function(dir){
-      var rows = grouped[dir].map(function(it){
-        var p = prioMap[it.priority], s = statusMap[it.status];
-        return '<div class="card" style="padding:10px 12px;gap:4px">'
-          + (it.image?'<img src="'+esc(it.image)+'" alt="" style="width:100%;height:150px;object-fit:cover;border-radius:10px;margin-bottom:8px;display:block">':'')
-          + '<div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><span style="font-size:14px">'+esc(it.proposal)+'</span><span class="pill pill-'+(it.priority==='high'?'critical':it.priority==='medium'?'warning':'muted')+'">'+p[0]+'</span></div><div style="font-size:13.5px;font-weight:500;color:var(--muted);display:flex;justify-content:space-between"><span>Ответственный: '+esc(it.responsible)+'</span><span>'+s[0]+'</span></div></div>';
-      }).join('');
-      return card(dir, rows);
+  function render_functionAnalysis(d){
+    var t=d.totals;
+    var cats=d.categories.map(function(c){ return {label:c.name, value:c.units, sub:c.positions+' должн.'}; });
+    var groups=d.groups.map(function(g){ return {label:g.group, value:g.units, sub:'потенциал: '+g.pot}; });
+    var pot=d.potential.map(function(x){ return '<tr class="row-hover"><td>'+esc(x.dept)+'</td><td class="num">'+x.units+'</td></tr>'; }).join('');
+    return head(7,'Функциональный анализ должностей. Потенциал к оптимизации (1 этап)', d.conclusion)
+    + '<div class="grid grid-cols-3">'
+      + card('Подразделений', C.statTile({label:'без УЧР', value:t.departments}))
+      + card('Должностей', C.statTile({label:'в анализе', value:t.positions}))
+      + card('Единиц', C.statTile({label:'полнота анкет '+t.fullPct+'%', value:t.units}))
+    + '</div>'
+    + '<div class="grid grid-cols-2">'
+      + card('Категории, единиц', C.barChartH({items:cats}))
+      + card('Единицы по группам подразделений', C.barChartH({items:groups}))
+    + '</div>'
+    + card('Потенциал к сокращению по подразделениям', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Подразделение</th><th class="num">Единиц</th></tr></thead><tbody>'+pot+'</tbody></table></div>');
+  }
+  function render_uchrInteraction(d){
+    var u=d.uchr;
+    var rem=u.remarks.map(function(x){
+      return '<tr class="row-hover"><td>'+esc(x.dept)+'</td><td class="num">'+x.score+'</td><td>'+esc(x.category)+'</td><td>'+esc(x.text)+'</td><td>'+esc(x.answer)+'</td></tr>';
     }).join('');
-    return head(10,'Предложения и прочее', d.conclusion)
-    + '<div class="grid grid-cols-2">'+html+'</div>'
-    + card('Прочее', '<p style="font-size:14.5px;color:var(--ink-2);line-height:1.5">'+esc(d.notes)+'</p>');
+    var months=d.company.months;
+    var mVals=months.map(function(m){ return m.avg; });
+    var mLabels=months.map(function(m){ return m.month; });
+    return head(10,'Взаимодействие отдела УЧР', d.conclusion)
+    + '<div class="grid grid-cols-3">'
+      + card('Оценка УЧР, октябрь 2026', C.statTile({label:'средний балл, '+u.count+' оценок', value:String(u.avg).replace('.',','), unit:'', delta:u.delta, deltaUnit:' б.'}))
+      + card('Не оценили', C.statTile({label:'подразделений из '+u.total, value:u.notEvaluated}))
+      + card('Оценки 9 и ниже', C.statTile({label:'с замечаниями', value:u.remarks.length}))
+    + '</div>'
+    + card('Замечания от других отделов и ответы УЧР', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Оценивает</th><th class="num">Балл</th><th>Категория</th><th>Замечание</th><th>Ответ УЧР</th></tr></thead><tbody>'+rem+'</tbody></table></div>')
+    + '<div class="grid grid-cols-2">'
+      + card('Средний балл компании по месяцам', C.lineChart({labels:mLabels, series:[{name:'Средний балл',values:mVals,color:'var(--accent)'}]}))
+      + card('Оценки по месяцам', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Месяц</th><th class="num">Балл</th><th class="num">Оценок</th><th class="num">9 и ниже</th><th class="num">Нет взаимодействия</th></tr></thead><tbody>'+months.map(function(m){ return '<tr><td>'+m.month+'</td><td class="num">'+String(m.avg).replace('.',',')+'</td><td class="num">'+m.count+'</td><td class="num">'+(m.low==null?'—':m.low)+'</td><td class="num">'+(m.none==null?'—':m.none)+'</td></tr>'; }).join('')+'</tbody></table></div>')
+    + '</div>';
   }
 
   var RENDERERS = {
     composition:render_composition,
     recruitment:render_recruitment, admin:render_admin, assessment:render_assessment,
     discipline:render_discipline, departments:render_departments,
-    budget:render_budget, plan:render_plan, hrEfficiency:render_hrEfficiency, proposals:render_proposals
+    budget:render_budget, plan:render_plan, hrEfficiency:render_hrEfficiency, functionAnalysis:render_functionAnalysis, uchrInteraction:render_uchrInteraction
   };
 
   H.RENDERERS = RENDERERS;
@@ -1588,17 +1712,6 @@ window.__HR__.DEMO = {
         var pastBest = rowsFromSheet(ws(w,'История лучших'),[{key:'month',header:'Месяц'},{key:'name',header:'ФИО'}]).filter(function(r){return r.name;}).map(function(r){return {month:str(r.month),name:str(r.name)};});
         var m = readMetrics(ws(w,'Показатели'));
         return { staff: staff.length?staff:d.staff, pastBest: pastBest.length?pastBest:d.pastBest, conclusion: str(m['Вывод'], d.conclusion) };
-      }
-    },
-    proposals:{
-      build:function(d){ return wb([
-        {name:'Предложения', ws:sheetFromRows(d.items,[{key:'direction',header:'Направление'},{key:'proposal',header:'Предложение'},{key:'responsible',header:'Ответственный'},{key:'priority',header:'Приоритет (high/medium/low)'},{key:'status',header:'Статус (new/inProgress/done)'}])},
-        {name:'Показатели', ws:metricsSheet([['Прочее', d.notes],['Вывод', d.conclusion]])}
-      ]); },
-      apply:function(d,w){
-        var items = rowsFromSheet(ws(w,'Предложения'),[{key:'direction',header:'Направление'},{key:'proposal',header:'Предложение'},{key:'responsible',header:'Ответственный'},{key:'priority',header:'Приоритет (high/medium/low)'},{key:'status',header:'Статус (new/inProgress/done)'}]).filter(function(r){return r.proposal;});
-        var m = readMetrics(ws(w,'Показатели'));
-        return { items: items.length?items:d.items, notes: str(m['Прочее'], d.notes), conclusion: str(m['Вывод'], d.conclusion) };
       }
     }
   };
@@ -1918,7 +2031,10 @@ window.__HR__.DEMO = {
       var data = payload && payload.data;
       var any=false;
       if(data){
-        BLOCKS.forEach(function(b){ if(data[b.key]){ state.data[b.key]=data[b.key]; any=true; } });
+        BLOCKS.forEach(function(b){
+          if(data[b.key]){ state.data[b.key]=data[b.key]; any=true; }
+          else { state.data[b.key]=JSON.parse(JSON.stringify(H.DEMO[b.key])); }
+        });
         if(data.meta){ state.data.meta = data.meta; any=true; }
       }
       if(payload && payload.period) state.currentPeriod = payload.period;
@@ -1993,6 +2109,7 @@ window.__HR__.DEMO = {
         var buf = await file.arrayBuffer();
         var workbook = XLSX.read(buf, {type:'array'});
         var tmpl = H.TEMPLATES[key];
+        if(!tmpl){ statusEl.innerHTML = ''; toast('Для этого раздела загрузка из файла не предусмотрена'); return; }
         var newData = tmpl.apply(state.data[key], workbook);
         state.data[key] = Object.assign({}, state.data[key], newData);
         renderTOC();
@@ -2075,7 +2192,8 @@ window.__HR__.DEMO = {
     budget: function(d){ var tp=d.byLine.reduce(function(a,x){return a+x.plan;},0), tf=d.byLine.reduce(function(a,x){return a+x.fact;},0); return 'Освоение бюджета: '+(Math.round(tf/tp*1000)/10)+'% от плана.'; },
     plan: function(d){ var t=d.protocolStatus; return 'Протокольные поручения исполнено: '+t.done+' из '+(t.done+t.inProgress+t.postponed+t.notDone)+'.'; },
     hrEfficiency: function(d){ var best=d.staff.filter(function(s){return s.isBestThisMonth;})[0]; return 'Лучший сотрудник месяца: '+(best?best.name+' ('+best.kpiPct+'% КПЭ)':'—')+'.'; },
-    proposals: function(d){ return d.items.length+' предложений на рассмотрении.'; }
+    functionAnalysis: function(d){ return 'Потенциал к сокращению: '+d.categories[0].units+' ед. в '+d.categories[0].positions+' должностях из '+d.totals.units+' ед.'; },
+    uchrInteraction: function(d){ return 'Оценка УЧР: '+String(d.uchr.avg).replace('.',',')+' ('+d.uchr.count+' оценок, замечаний: '+d.uchr.remarks.length+').'; }
   };
   async function exportWord(){
     if(typeof JSZip==='undefined'){ toast('Библиотека экспорта не загрузилась — попробуйте снова'); return; }
