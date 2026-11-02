@@ -1180,8 +1180,8 @@ window.__HR__.DEMO = {
           + '<p style="font-size:13px;color:var(--ink-2);margin-top:4px">Закрыто из резерва: <b class="num">'+d.reserve.closedFromReservePct+'%</b> ('+(d.reserve.closedFromReservePct-d.reserve.prevClosedFromReservePct>=0?'+':'')+(d.reserve.closedFromReservePct-d.reserve.prevClosedFromReservePct)+' п.п.)</p>')
     + '</div>'
     + '<div class="grid grid-cols-2">'
-      + card('Открытые вакансии по подразделениям', C.barChartH({items:d.byDept.map(function(x){return {label:x.dept,value:x.open,sub:x.avgDays+' дн.'};})}))
-      + card('Срок закрытия по подразделениям, дней', C.barChartH({items:d.byDept.slice().sort(function(a,b){return b.avgDays-a.avgDays;}).map(function(x){return {label:x.dept,value:x.avgDays,color:'var(--steel)'};})}))
+      + card('Открытые вакансии по подразделениям', C.barChartH({items:d.byDept.filter(function(x){return x.open>0;}).map(function(x){return {label:x.dept,value:x.open,sub:x.avgDays+' дн.'};})}))
+      + card('Срок закрытия по подразделениям, дней', C.barChartH({items:d.byDept.filter(function(x){return x.closeDays!=null;}).slice().sort(function(a,b){return b.closeDays-a.closeDays;}).map(function(x){return {label:x.dept,value:x.closeDays,color:'var(--steel)'};})}))
     + '</div>'
     + (activeList.length ? card('Все вакансии в активном поиске ('+activeList.length+' · '+activeHeadcount+' чел.)',
         '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Должность</th><th>Отдел</th><th class="num">Кол-во</th><th>Приоритет</th><th>Статус</th><th>Рекрутер</th></tr></thead><tbody>'+activeRows+'</tbody></table></div>') : '')
