@@ -1197,14 +1197,11 @@ window.__HR__.DEMO = {
     }).join('');
     return head(3,'Кадровое администрирование', d.conclusion)
     + '<div class="grid grid-cols-3">'
-      + card('Среднее время оформления', C.statTile({label:'дней на документ',value:d.avgProcessingDays.current,digits:1,delta:d.avgProcessingDays.current-d.avgProcessingDays.prev,deltaGood:false,deltaUnit:' дн.',deltaDigits:1}))
-      + card('Статус исполнения', C.donutChart({segments:[
-            {label:'Исполнено',value:d.statusBreakdown.done,color:'var(--good)'},
-            {label:'В работе',value:d.statusBreakdown.inProgress,color:'var(--steel)'},
-            {label:'Просрочено',value:d.statusBreakdown.overdue,color:'var(--critical)'}
-          ], centerLabel:'документов', centerValue:d.statusBreakdown.done+d.statusBreakdown.inProgress+d.statusBreakdown.overdue}))
+      + card('Среднее время оформления', d.avgProcessingDays.current==null ? '<p style="font-size:13.5px;color:var(--ink-2)">В таблице сроков оформления нет</p>' : C.statTile({label:'дней на документ',value:d.avgProcessingDays.current,digits:1,delta:d.avgProcessingDays.current-d.avgProcessingDays.prev,deltaGood:false,deltaUnit:' дн.'}))
+      + card('Статус исполнения', '<p style="font-size:13.5px;color:var(--ink-2)">В таблице статусов исполнения нет</p>')
       + card('Документооборот по типам', C.barChartV({items:d.docsByType}))
     + '</div>'
+    + (d.headcount && d.headcount.length ? card('Численный состав компании', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Показатель</th>'+d.headcount.map(function(h){ return '<th class="num">'+esc(h.month)+'</th>'; }).join('')+'</tr></thead><tbody>'+'<tr><td>Женщины</td>'+d.headcount.map(function(h){ return '<td class="num">'+fmt(h.female,0)+'</td>'; }).join('')+'</tr>'+'<tr><td>Мужчины</td>'+d.headcount.map(function(h){ return '<td class="num">'+fmt(h.male,0)+'</td>'; }).join('')+'</tr>'+'<tr><td><b>Итого</b></td>'+d.headcount.map(function(h){ return '<td class="num"><b>'+fmt(h.total,0)+'</b></td>'; }).join('')+'</tr>'+'</tbody></table></div>') : '')
     + card('Просроченные документы', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Документ</th><th>Подразделение</th><th>Ответственный</th><th class="num">Просрочка</th></tr></thead><tbody>'+overdueRows+'</tbody></table></div>');
   }
 
@@ -1344,7 +1341,7 @@ window.__HR__.DEMO = {
     var trs = rows.map(function(r,i){
       var cls = i===0?'pill-good':(i===rows.length-1?'pill-critical':'pill-muted');
       return '<tr class="row-hover dept-row" data-dept="'+esc(r.dept)+'" style="cursor:pointer"><td>'+C.statusPill('#'+(i+1),i===0?'good':(i===rows.length-1?'critical':'muted'))+' '+esc(r.dept)+'</td>'
-        + '<td class="num">'+fmt(r.interaction,1)+'</td><td class="num">'+fmt(r.execution,1)+'</td><td class="num">'+fmt(r.hrWork,1)+'</td><td class="num">'+r.kpi+'</td><td class="num"><b>'+fmt(r.total,1)+'</b></td></tr>';
+        + '<td class="num">'+fmt(r.interaction,1)+'</td><td class="num">'+fmt(r.execution,1)+'</td><td class="num">'+fmt(r.hrWork,1)+'</td><td class="num">'+fmt(r.kpi,0)+'</td><td class="num"><b>'+fmt(r.total,1)+'</b></td></tr>';
     }).join('');
     return head(6,'Результативность отделов', d.conclusion)
     + '<div class="grid grid-cols-2">'
@@ -1450,7 +1447,7 @@ window.__HR__.DEMO = {
       + card('Единиц', C.statTile({label:'полнота анкет '+t.fullPct+'%', value:t.units}))
     + '</div>'
     + '<div class="grid grid-cols-2">'
-      + card('Категории, единиц', C.barChartH({items:cats}))
+      + card('Категории', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Категория</th><th class="num">Единиц</th><th class="num">Должностей</th></tr></thead><tbody>'+d.categories.map(function(c){ return '<tr><td>'+esc(c.name)+'</td><td class="num"><b>'+String(c.units).replace(/\B(?=(\d{3})+(?!\d))/g,' ')+'</b></td><td class="num">'+c.positions+'</td></tr>'; }).join('')+'</tbody></table></div>')
       + card('Единицы по группам подразделений', C.barChartH({items:groups}))
     + '</div>'
     + card('Потенциал к сокращению по подразделениям', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Подразделение</th><th class="num">Единиц</th></tr></thead><tbody>'+pot+'</tbody></table></div>');
@@ -1473,6 +1470,10 @@ window.__HR__.DEMO = {
     + '<div class="grid grid-cols-2">'
       + card('Средний балл компании по месяцам', C.lineChart({labels:mLabels, series:[{name:'Средний балл',values:mVals,color:'var(--accent)'}]}))
       + card('Оценки по месяцам', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Месяц</th><th class="num">Балл</th><th class="num">Оценок</th><th class="num">9 и ниже</th><th class="num">Нет взаимодействия</th></tr></thead><tbody>'+months.map(function(m){ return '<tr><td>'+m.month+'</td><td class="num">'+String(m.avg).replace('.',',')+'</td><td class="num">'+m.count+'</td><td class="num">'+(m.low==null?'—':m.low)+'</td><td class="num">'+(m.none==null?'—':m.none)+'</td></tr>'; }).join('')+'</tbody></table></div>')
+    + '</div>'
+    + '<div class="grid grid-cols-2">'
+      + card('Типы нарушений, октябрь', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Категория</th><th class="num">Количество</th></tr></thead><tbody>'+(d.company.violations||[]).map(function(v){ return '<tr><td>'+esc(v.type)+'</td><td class="num"><b>'+v.count+'</b></td></tr>'; }).join('')+'</tbody></table></div>')
+      + card('Распределение оценок, октябрь', '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>Оценка</th><th class="num">Оценок</th><th class="num">Доля</th></tr></thead><tbody>'+(d.company.distribution||[]).map(function(v){ return '<tr><td>'+esc(v.label)+'</td><td class="num">'+v.count+'</td><td class="num">'+v.pct+'%</td></tr>'; }).join('')+'</tbody></table></div>')
     + '</div>';
   }
 
