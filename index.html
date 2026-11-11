@@ -244,8 +244,6 @@
   .slide-conclusion b{ color:var(--ink); }
 
   /* ---------- Состав компании: слайд целиком в один экран, без прокрутки ---------- */
-  .slide-fixed .slide-inner{ overflow:hidden; }
-  .slide-fixed .scroll-hint, .slide-fixed .scroll-fade{ display:none; }
   .comp{ flex:1; min-height:0; display:flex; flex-direction:column; gap:16px; }
   .comp-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px; }
   .comp-eyebrow{ font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
@@ -285,8 +283,6 @@
   .comp-gender-legend{ display:flex; justify-content:space-between; gap:8px; font-size:13px; color:var(--ink-2); margin-top:auto; }
   .comp-gender-legend b{ color:var(--ink); }
   @media (max-width:760px){
-    .slide-fixed .slide-inner{ overflow-y:auto; }
-    .slide-fixed .scroll-hint{ display:inline-flex; }
     .comp-title{ font-size:22px; }
     .comp-head{ flex-direction:column; align-items:flex-start; }
     .comp-kpis{ grid-template-columns:1fr 1fr; }
@@ -2111,7 +2107,6 @@ window.__HR__.DEMO = {
   function renderBlockView(key){
     var data = state.data[key];
     var fn = H.RENDERERS[key];
-    slideView.classList.add('slide-fixed');
     viewBody.innerHTML = fn(data, state.data.meta, state.data);
     runCountUps(viewBody); runKpiBars(viewBody);
     flipContent();
