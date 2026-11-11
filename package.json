@@ -5,5 +5,8 @@
   "description": "HR-панель Ред Петролеум — статическая страница + API на Vercel Functions + Neon Postgres",
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0"
+  },
+  "scripts": {
+    "test": "node --test tests/headline.test.js"
   }
 }

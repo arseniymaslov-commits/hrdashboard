@@ -14,6 +14,7 @@
     --bg:#F1F1EF; --surface:#FFFFFF; --surface-2:#F6F5F3; --surface-3:#EDECE9;
     --ink:#16181C; --ink-2:#4B4F58; --muted:#5E6169;
     --grid:#E4E3E0; --border:rgba(15,17,21,0.10); --border-strong:rgba(15,17,21,0.18);
+    --card-border:rgba(15,17,21,0.10); --bar-muted:#8E9199; --chart-sets:#2A5FA5; --chart-female:#9DB8DA; --chart-odt:#B7791F; --chart-company:#6B6F78;
     --accent:#8C2F3E; --accent-ink:#FFFFFF; --accent-soft:#F3DEE1; --accent-soft-ink:#5C1F2A;
     --steel:#2A5FA5; --steel-soft:#DCE6F3; --steel-soft-ink:#1D3F6E;
     --good:#0ca30c; --warning:#c98100; --serious:#c14e2b; --critical:#b32e2e;
@@ -29,12 +30,12 @@
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
       color-scheme: dark;
-      --bg:#0E0F11; --surface:#1B1D21; --surface-2:#202226; --surface-3:#26282D;
+      --bg:#0E0F11; --surface:#0E0F11; --surface-2:#1B1D21; --surface-3:#26282D;
       --ink:#F4F4F3; --ink-2:#C3C2BE; --muted:#9EA1A8;
-      --grid:#303236; --border:rgba(255,255,255,0.10); --border-strong:rgba(255,255,255,0.18);
-      --accent:#C25569; --accent-ink:#1B1013; --accent-soft:#3A1F26; --accent-soft-ink:#F0C3CB;
+      --grid:#303236; --border:rgba(255,255,255,0.10); --border-strong:#3A3D44; --card-border:#2C2F35; --bar-muted:#8E9199; --chart-sets:#8FBDF2; --chart-female:#4B6E9C; --chart-odt:#D9A24E; --chart-company:#9EA1A8;
+      --accent:#D9778A; --accent-ink:#1B1013; --accent-soft:#3A1F26; --accent-soft-ink:#F0C3CB;
       --steel:#5B8FCF; --steel-soft:#1E2A3A; --steel-soft-ink:#BFD6F2;
-      --good:#3FC53F; --warning:#E4A93A; --serious:#E88E6B; --critical:#E4696E;
+      --good:#5FD35F; --warning:#E4A93A; --serious:#E88E6B; --critical:#E4696E;
       --good-soft:#173420; --warning-soft:#3A2C10; --serious-soft:#3A2318; --critical-soft:#3A1B1D;
       --seq-1:#3A1F26; --seq-2:#5A2C36; --seq-3:#8C3F4E; --seq-4:#C25569; --seq-5:#E895A2;
       --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
@@ -44,12 +45,12 @@
   }
   :root[data-theme="dark"]{
     color-scheme: dark;
-    --bg:#0E0F11; --surface:#1B1D21; --surface-2:#202226; --surface-3:#26282D;
+    --bg:#0E0F11; --surface:#0E0F11; --surface-2:#1B1D21; --surface-3:#26282D;
     --ink:#F4F4F3; --ink-2:#C3C2BE; --muted:#9EA1A8;
-    --grid:#303236; --border:rgba(255,255,255,0.10); --border-strong:rgba(255,255,255,0.18);
-    --accent:#C25569; --accent-ink:#1B1013; --accent-soft:#3A1F26; --accent-soft-ink:#F0C3CB;
+    --grid:#303236; --border:rgba(255,255,255,0.10); --border-strong:#3A3D44; --card-border:#2C2F35; --bar-muted:#8E9199; --chart-sets:#8FBDF2; --chart-female:#4B6E9C; --chart-odt:#D9A24E; --chart-company:#9EA1A8;
+    --accent:#D9778A; --accent-ink:#1B1013; --accent-soft:#3A1F26; --accent-soft-ink:#F0C3CB;
     --steel:#5B8FCF; --steel-soft:#1E2A3A; --steel-soft-ink:#BFD6F2;
-    --good:#3FC53F; --warning:#E4A93A; --serious:#E88E6B; --critical:#E4696E;
+    --good:#5FD35F; --warning:#E4A93A; --serious:#E88E6B; --critical:#E4696E;
     --good-soft:#173420; --warning-soft:#3A2C10; --serious-soft:#3A2318; --critical-soft:#3A1B1D;
     --seq-1:#3A1F26; --seq-2:#5A2C36; --seq-3:#8C3F4E; --seq-4:#C25569; --seq-5:#E895A2;
     --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
@@ -71,15 +72,47 @@
   /* ---------- Topbar ---------- */
   .topbar{
     position:sticky; top:env(safe-area-inset-top,0px); z-index:40;
-    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
-    padding:12px 20px; padding-inline:max(20px, calc(16px + env(safe-area-inset-left,0px))) max(20px, calc(16px + env(safe-area-inset-right,0px)));
+    display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:16px;
+    height:72px; padding:0 24px;
+    padding-inline:max(24px, calc(16px + env(safe-area-inset-left,0px))) max(24px, calc(16px + env(safe-area-inset-right,0px)));
     background:color-mix(in oklab, var(--bg) 86%, transparent);
     backdrop-filter:blur(10px);
     border-bottom:1px solid var(--border);
   }
-  .brand{ display:flex; flex-direction:column; gap:1px; margin-right:auto; }
-  .brand-name{ font-family:var(--font-display); font-weight:700; font-size:15px; letter-spacing:.01em; }
-  .brand-sub{ font-size:13px; color:var(--muted); font-weight:500; }
+  .topbar-left, .topbar-center, .topbar-right{ display:flex; align-items:center; gap:10px; min-width:0; }
+  .topbar-left{ justify-content:flex-start; }
+  .topbar-center{ justify-content:center; min-width:0; }
+  .topbar-right{ justify-content:flex-end; flex-wrap:nowrap; }
+  .brand-name{ font-family:var(--font-display); font-weight:600; font-size:16px; white-space:nowrap; }
+  .data-status{ display:inline-flex; align-items:center; gap:7px; font-size:13px; color:var(--muted); white-space:nowrap; }
+  .data-status::before{ content:""; width:8px; height:8px; border-radius:50%; background:var(--muted); }
+  .data-status.is-live{ color:var(--ink-2); }
+  .data-status.is-live::before{ background:var(--good); }
+  .period-label{ font-size:13px; color:var(--muted); font-weight:500; margin-right:2px; }
+  .ctl{
+    display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    height:44px; padding:0 16px; border-radius:10px; border:1px solid var(--border-strong);
+    background:transparent; color:var(--ink); cursor:pointer; font-size:14px; font-weight:600; white-space:nowrap;
+    transition:background .16s ease, border-color .16s ease;
+  }
+  .ctl:hover{ background:var(--surface-2); }
+  .ctl:focus-visible, .menu-item:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  .ctl-icon{ width:44px; padding:0; font-size:16px; }
+  .ctl-select{ min-width:180px; padding:0 12px; background:var(--surface); }
+  .ctl-primary{ background:var(--accent); color:var(--accent-ink); border-color:transparent; }
+  .ctl-primary:hover{ background:var(--accent); filter:brightness(1.06); }
+  .ctl[disabled]{ opacity:.45; cursor:not-allowed; background:transparent; }
+  .menu{ position:relative; }
+  .menu-list{
+    position:absolute; right:0; top:calc(100% + 6px); z-index:60; min-width:200px; padding:6px;
+    background:var(--surface); border:1px solid var(--border-strong); border-radius:10px; box-shadow:var(--shadow-md);
+  }
+  .menu-list[hidden]{ display:none; }
+  .menu-item{
+    display:block; width:100%; height:40px; padding:0 12px; border:0; border-radius:6px; text-align:left;
+    background:transparent; color:var(--ink); font-size:14px; font-weight:500; cursor:pointer;
+  }
+  .menu-item:hover, .menu-item:focus-visible{ background:var(--surface-2); }
   .topbar-group{ display:flex; align-items:center; gap:8px; }
   .icon-btn{
     display:inline-flex; align-items:center; justify-content:center; gap:6px;
@@ -103,6 +136,13 @@
     display:inline-flex; align-items:center; gap:5px; white-space:nowrap;
   }
   .badge-demo.is-live{ background:var(--good-soft); color:var(--good); }
+  @media (max-width:760px){
+    .topbar{ grid-template-columns:1fr; height:auto; padding:12px 16px; gap:10px; }
+    .topbar-left, .topbar-center, .topbar-right{ justify-content:center; flex-wrap:wrap; }
+    .topbar-right{ justify-content:center; flex-wrap:wrap; }
+    .topbar-center{ flex-wrap:wrap; }
+    .ctl-select{ min-width:0; flex:1 1 100%; }
+  }
 
   /* ---------- Deck ---------- */
   .deck-wrap{ flex:1; display:flex; align-items:center; justify-content:center; padding:22px clamp(12px,4vw,40px); }
@@ -202,6 +242,57 @@
     border-radius:var(--radius-sm); padding:10px 14px; max-width:520px;
   }
   .slide-conclusion b{ color:var(--ink); }
+
+  /* ---------- Состав компании: слайд целиком в один экран, без прокрутки ---------- */
+  .slide-fixed .slide-inner{ overflow:hidden; }
+  .slide-fixed .scroll-hint, .slide-fixed .scroll-fade{ display:none; }
+  .comp{ flex:1; min-height:0; display:flex; flex-direction:column; gap:16px; }
+  .comp-head{ display:flex; align-items:flex-end; justify-content:space-between; gap:24px; }
+  .comp-eyebrow{ font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+  .comp-title{ font-size:30px; font-weight:600; line-height:1.2; margin-top:6px; }
+  .comp-period{ font-size:13px; color:var(--muted); white-space:nowrap; }
+  .comp-kpis{ display:grid; grid-template-columns:repeat(5,1fr); gap:16px; }
+  .comp-kpi{ padding:18px 20px; gap:0; border-color:var(--card-border); }
+  .comp-kpi-label{ font-size:13px; color:var(--muted); }
+  .comp-kpi-value{ font-family:var(--font-display); font-size:36px; font-weight:600; line-height:1.15; margin-top:6px; }
+  .comp-kpi-change{ font-size:13px; color:var(--muted); margin-top:4px; min-height:18px; }
+  .comp-kpi-change.is-good{ color:var(--good); }
+  .comp-kpi-change.is-bad{ color:var(--critical); }
+  .comp-bottom{ flex:1; min-height:0; display:grid; grid-template-columns:372px 1fr 316px; gap:16px; }
+  .comp-col{ display:flex; flex-direction:column; gap:16px; min-height:0; }
+  .comp-card{ border-color:var(--card-border); padding:20px; min-height:0; gap:12px; }
+  .comp-card-title{ font-size:17px; font-weight:600; color:var(--ink); text-transform:none; letter-spacing:0; }
+  .comp-card-sub{ font-size:13px; color:var(--muted); margin-top:-6px; }
+  .comp-bars{ display:flex; flex-direction:column; gap:10px; margin-top:6px; }
+  .comp-bar-row{ display:grid; grid-template-columns:96px 1fr 48px; align-items:center; gap:10px; font-size:13px; }
+  .comp-bar-label{ color:var(--ink-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .comp-bar-track{ height:18px; border-radius:4px; background:var(--surface-3); overflow:hidden; }
+  .comp-bar-fill{ height:100%; border-radius:4px; background:var(--bar-muted); }
+  .comp-bar-fill.is-top{ background:var(--accent); }
+  .comp-bar-value{ text-align:right; font-weight:600; color:var(--ink); }
+  .comp-foot{ margin-top:auto; font-size:13px; color:var(--muted); }
+  .comp-foot b{ color:var(--ink-2); }
+  .comp-chart{ flex:1; min-height:240px; position:relative; }
+  .comp-chart svg{ position:absolute; inset:0; width:100%; height:100%; }
+  .comp-table{ width:100%; font-size:13px; border-collapse:collapse; }
+  .comp-table td{ padding:7px 0; border-bottom:1px solid var(--grid); color:var(--ink-2); }
+  .comp-table td.num{ text-align:right; font-variant-numeric:tabular-nums; }
+  .comp-table tr:last-child td{ border-bottom:0; font-weight:600; color:var(--ink); }
+  .comp-table td.is-bad{ color:var(--critical); }
+  .comp-table td.is-good{ color:var(--good); }
+  .comp-gender-bar{ display:flex; height:18px; border-radius:4px; overflow:hidden; margin-top:6px; }
+  .comp-gender-bar span{ display:block; height:100%; }
+  .comp-gender-legend{ display:flex; justify-content:space-between; gap:8px; font-size:13px; color:var(--ink-2); margin-top:auto; }
+  .comp-gender-legend b{ color:var(--ink); }
+  @media (max-width:760px){
+    .slide-fixed .slide-inner{ overflow-y:auto; }
+    .slide-fixed .scroll-hint{ display:inline-flex; }
+    .comp-title{ font-size:22px; }
+    .comp-head{ flex-direction:column; align-items:flex-start; }
+    .comp-kpis{ grid-template-columns:1fr 1fr; }
+    .comp-bottom{ grid-template-columns:1fr; flex:none; }
+    .comp-chart{ height:260px; flex:none; }
+  }
 
   /* ---------- Grid / cards ---------- */
   .grid{ display:grid; gap:14px; }
@@ -425,28 +516,32 @@
 </style>
 
 <div class="app" id="app">
-  <div class="topbar">
-    <div class="brand">
-      <span class="brand-name">УЧР · ОсОО «Альфа Ойл»</span>
-      <span class="brand-sub" id="topbar-period">—</span>
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="brand-name">УЧР · Альфа Ойл</span>
+      <span class="data-status" id="data-badge">Демонстрационные данные</span>
+      <span id="topbar-period" hidden></span>
     </div>
-    <span class="badge-demo" id="data-badge">● Демонстрационные данные</span>
-    <div class="topbar-group">
-      <select id="period-select" class="icon-btn" style="font-weight:600" title="Выбрать период"></select>
-      <button class="icon-btn" id="btn-new-period" title="Начать новый отчётный месяц">+ Новый месяц</button>
+    <div class="topbar-center">
+      <label class="period-label" for="period-select">Период</label>
+      <select id="period-select" class="ctl ctl-select" title="Выбрать период"></select>
+      <button class="ctl" id="btn-new-period" title="Начать новый отчётный месяц">+ Новый месяц</button>
+      <button class="ctl ctl-icon" id="btn-prev" aria-label="Предыдущий слайд" title="Предыдущий слайд (←)">←</button>
+      <span class="slide-index" aria-live="polite"><span id="slide-cur">1</span> из <span id="slide-total">12</span></span>
+      <button class="ctl ctl-icon" id="btn-next" aria-label="Следующий слайд" title="Следующий слайд (→)">→</button>
     </div>
-    <div class="topbar-group">
-      <button class="icon-btn" id="btn-prev" title="Предыдущий слайд (←)">←</button>
-      <span class="slide-index"><span id="slide-cur">1</span> / <span id="slide-total">12</span></span>
-      <button class="icon-btn" id="btn-next" title="Следующий слайд (→)">→</button>
+    <div class="topbar-right">
+      <button class="ctl" id="btn-upload">Обновить данные</button>
+      <div class="menu" id="export-menu">
+        <button class="ctl" id="btn-export-toggle" aria-haspopup="menu" aria-expanded="false" aria-controls="export-list">Экспорт</button>
+        <div class="menu-list" id="export-list" role="menu" aria-labelledby="btn-export-toggle" hidden>
+          <button class="menu-item" role="menuitem" id="btn-export-pdf">PDF</button>
+          <button class="menu-item" role="menuitem" id="btn-export-word">Сводка Word</button>
+        </div>
+      </div>
+      <button class="ctl ctl-primary" id="btn-present" title="Во весь экран для показа в Meet/Zoom (клавиша F, выход — Esc)">Презентация</button>
     </div>
-    <div class="topbar-group">
-      <button class="icon-btn" id="btn-upload">⇪ Обновить данные</button>
-      <button class="icon-btn" id="btn-export-pdf">PDF</button>
-      <button class="icon-btn primary" id="btn-export-word">Сводка Word</button>
-      <button class="icon-btn" id="btn-present" title="Во весь экран для показа в Meet/Zoom (клавиша F, выход — Esc)">⛶ Презентация</button>
-    </div>
-  </div>
+  </header>
   <button id="btn-exit-present" class="icon-btn" title="Выйти из режима презентации (Esc)">✕</button>
 
   <div class="deck-wrap">
@@ -665,6 +760,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="headline.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -848,7 +944,8 @@ window.__HR__.DEMO = {
   /* ---------------- Horizontal bar chart (ranked categories) ---------------- */
   function barChartH(opts){
     var items = opts.items, color = opts.color || 'var(--accent)';
-    var W=560, rowH=30, gap=8, labelW=118, padR=64, top=6;
+    var W=560, rowH=30, gap=8, labelW=118, top=6;
+    var padR = items.some(function(i){return i.sub;}) ? 170 : 64;
     var max = opts.max || Math.max.apply(null, items.map(function(i){return i.value;})) * 1.12;
     var H_ = top*2 + items.length*(rowH+gap) - gap;
     var barMaxW = W - labelW - padR;
@@ -1100,38 +1197,147 @@ window.__HR__.DEMO = {
   function card(title, inner, cls){ return '<div class="card hoverable'+(cls?(' '+cls):'')+'"><div class="card-title">'+esc(title)+'</div>'+inner+'</div>'; }
 
   /* ---------- 1. Состав компании ---------- */
-  function render_composition(d){
+  function render_composition(d, meta){
     var hist = d.headcountHistory;
-    var current = hist[hist.length-1].count;
-    var prev = hist[hist.length-2].count;
-    return head(1,'Состав компании', d.conclusion)
-    + '<div class="grid grid-cols-4">'
-      + card('Численность', C.statTile({label:'сотрудников, на конец месяца',value:current,delta:current-prev,deltaGood:true,deltaUnit:' чел.'}))
-      + card('Принято за месяц', C.statTile({label:'новых сотрудников',value:d.hired}))
-      + card('Уволено за месяц', C.statTile({label:'сотрудников',value:d.fired}))
-      + card('Текучесть кадров', C.statTile({label:'% в месяц',value:d.turnoverRate.current,digits:1,unit:'%',delta:d.turnoverRate.current-d.turnoverRate.prev,deltaGood:false,deltaUnit:' п.п.',deltaDigits:1}))
-    + '</div>'
-    + '<div class="grid grid-cols-2">'
-      + card('Численность, динамика 6 месяцев', C.lineChart({labels:hist.map(function(h){return h.month;}), series:[{name:'Численность',values:hist.map(function(h){return h.count;}),color:'var(--accent)'}]}))
-      + card('Состав по полу', C.pictogramChart({segments:[
-          {label:'Мужчины',value:d.gender.male,color:'var(--steel)',icon:'male'},
-          {label:'Женщины',value:d.gender.female,color:'var(--accent)',icon:'female'}
-        ], unitsTotal:50, cols:10}))
-    + '</div>'
-    + '<div class="grid grid-cols-2">'
-      + card('Структура персонала по подразделениям', C.barChartH({items:d.structureByDept.map(function(x){return {label:x.dept,value:x.count};})}))
-      + card('Внутреннее закрытие вакансий и УЧР ratio', ''
-          + C.statTile({label:'закрыто внутренними кандидатами, %',value:d.internalFillRate.current,unit:'%',delta:d.internalFillRate.current-d.internalFillRate.prev,deltaGood:true,deltaUnit:' п.п.'})
-          + '<p style="font-size:13px;color:var(--ink-2);margin-top:6px">УЧР ratio: <b class="num">'+fmt(d.hrRatio,1)+'%</b> (специалистов УЧР на 100 сотрудников)</p>')
-    + '</div>'
-    + card('Топ подразделений по текучести, динамика 6 месяцев', C.lineChart({
-        labels:d.departmentTurnover[0].history.map(function(h){return h.month;}),
-        series:d.departmentTurnover.map(function(dt,i){
-          var colors=['var(--critical)','var(--serious)','var(--warning)'];
-          return {name:dt.dept, values:dt.history.map(function(h){return h.rate;}), color:colors[i%colors.length]};
-        }),
-        yFmt:function(v){return fmt(v,1)+'%';}
-      }));
+    var n = hist.length;
+    var cur = hist[n-1].count;
+    var prev = n > 1 ? hist[n-2].count : null;
+    var HL = window.HRHeadline;
+    meta = meta || {};
+
+    function kpi(label, value, change, tone){
+      return '<div class="card comp-kpi"><div class="comp-kpi-label">'+label+'</div>'
+        + '<div class="comp-kpi-value num">'+value+'</div>'
+        + '<div class="comp-kpi-change num'+(tone?' is-'+tone:'')+'">'+(change||'')+'</div></div>';
+    }
+    function signedDelta(delta, digits){
+      var sign = delta < 0 ? '−' : '+';
+      return sign + fmt(Math.abs(delta), digits);
+    }
+    var hcChange = prev==null ? '' : signedDelta(cur-prev,0)+' чел. (было '+fmt(prev,0)+')';
+    var t = d.turnoverRate, f = d.internalFillRate;
+    var tDelta = t.current - t.prev;
+    var fDelta = f.current - f.prev;
+    var tChange = signedDelta(tDelta,1)+' п.п. (было '+fmt(t.prev,1)+'%)';
+    var fChange = signedDelta(fDelta,0)+' п.п. (было '+fmt(f.prev,0)+'%)';
+
+    var kpis = '<div class="comp-kpis">'
+      + kpi('Численность', fmt(cur,0), hcChange, '')
+      + kpi('Принято', fmt(d.hired,0), 'новых сотрудников', '')
+      + kpi('Уволено', fmt(d.fired,0), 'сотрудников', '')
+      + kpi('Текучесть за месяц', fmt(t.current,1)+'%', tChange, tDelta<0?'good':'bad')
+      + kpi('Закрыто внутренними', fmt(f.current,0)+'%', fChange, fDelta>0?'good':'bad')
+      + '</div>';
+
+    // Численность по подразделениям: 8 крупнейших, полосы относительно максимума.
+    var structure = d.structureByDept.slice(0,8);
+    var maxCount = structure.reduce(function(a,x){ return Math.max(a,x.count); }, 0);
+    var bars = structure.map(function(x){
+      var isTop = x.count === maxCount;
+      return '<div class="comp-bar-row"><span class="comp-bar-label" title="'+esc(x.dept)+'">'+esc(x.dept)+'</span>'
+        + '<div class="comp-bar-track"><div class="comp-bar-fill'+(isTop?' is-top':'')+'" style="width:'+(x.count/maxCount*100).toFixed(1)+'%"></div></div>'
+        + '<span class="comp-bar-value num">'+fmt(x.count,0)+'</span></div>';
+    }).join('');
+    var structureCard = '<div class="card comp-card">'
+      + '<div class="comp-card-title">'+esc(HL.buildCardTitle('composition','structure',d) || 'Структура по подразделениям')+'</div>'
+      + '<div class="comp-card-sub">Численность, 8 крупнейших подразделений</div>'
+      + '<div class="comp-bars">'+bars+'</div>'
+      + '<div class="comp-foot">УЧР ratio: <b class="num">'+fmt(d.hrRatio,1)+'</b> специалиста УЧР на 100 сотрудников</div>'
+      + '</div>';
+
+    var turnoverCard = '<div class="card comp-card">'
+      + '<div class="comp-card-title">'+esc(HL.buildCardTitle('composition','turnover',d) || 'Текучесть по подразделениям')+'</div>'
+      + '<div class="comp-card-sub">Текучесть по подразделениям, % в месяц</div>'
+      + '<div class="comp-chart">'+turnoverSvg(d)+'</div>'
+      + '</div>';
+
+    var monthRows = hist.map(function(h,i){
+      var change = i===0 ? '' : (h.count - hist[i-1].count);
+      var changeHtml = change==='' ? '' : '<td class="num '+(change<0?'is-bad':(change>0?'is-good':''))+'">'+(change===0?'0':signedDelta(change,0))+'</td>';
+      return '<tr><td>'+esc(h.month)+'</td><td class="num">'+fmt(h.count,0)+'</td>'+(change===''?'<td></td>':changeHtml)+'</tr>';
+    }).join('');
+    var monthsCard = '<div class="card comp-card">'
+      + '<div class="comp-card-title">Численность по месяцам</div>'
+      + '<div class="comp-card-sub">На конец месяца, изменение</div>'
+      + '<table class="comp-table"><tbody>'+monthRows+'</tbody></table>'
+      + '</div>';
+
+    var male = d.gender.male, female = d.gender.female;
+    var total = male + female;
+    var malePct = Math.round(male/total*100);
+    var genderCard = '<div class="card comp-card">'
+      + '<div class="comp-card-title">Состав по полу</div>'
+      + '<div class="comp-gender-bar"><span style="width:'+malePct+'%;background:var(--chart-sets)"></span><span style="width:'+(100-malePct)+'%;background:var(--chart-female)"></span></div>'
+      + '<div class="comp-gender-legend"><span>Мужчины <b class="num">'+fmt(male,0)+'</b> · '+malePct+'%</span>'
+      + '<span>Женщины <b class="num">'+fmt(female,0)+'</b> · '+(100-malePct)+'%</span></div>'
+      + '</div>';
+
+    var header = '<div class="comp-head"><div>'
+      + '<div class="comp-eyebrow">Раздел 1 из '+H.BLOCKS.length+' · Состав компании</div>'
+      + '<h2 class="comp-title">'+esc(HL.buildHeadline('composition', d))+'</h2></div>'
+      + '<div class="comp-period">'+esc(HL.periodCompareLabel(meta))+'</div></div>';
+
+    return '<div class="comp">' + header + kpis
+      + '<div class="comp-bottom">'
+      + '<div class="comp-col">'+structureCard+'</div>'
+      + '<div class="comp-col">'+turnoverCard+'</div>'
+      + '<div class="comp-col">'+monthsCard+genderCard+'</div>'
+      + '</div></div>';
+  }
+
+  /* Линейный график текучести: 3 подразделения и компания пунктиром, подписи справа у последних точек. */
+  function turnoverSvg(d){
+    var W = 440, Hh = 300, ml = 36, mr = 124, mt = 12, mb = 28;
+    var months = d.turnoverRate.history.map(function(h){ return h.month; });
+    var colors = { 'ОРП':'var(--accent)', 'СЭТС':'var(--chart-sets)', 'ОДТ-МАЗС':'var(--chart-odt)' };
+    var series = d.departmentTurnover.map(function(dt){
+      return { name: dt.dept, values: dt.history.map(function(h){ return h.rate; }), color: colors[dt.dept] || 'var(--ink-2)', width: dt.dept==='СЭТС' ? 3 : 2 };
+    });
+    series.push({ name:'Компания', values: d.turnoverRate.history.map(function(h){ return h.rate; }), color:'var(--chart-company)', width:2, dashed:true });
+
+    var maxV = series.reduce(function(a,s){ return s.values.reduce(function(b,v){ return Math.max(b,v); }, a); }, 0);
+    var top = Math.max(4, Math.ceil(maxV/4)*4);
+    var nM = months.length;
+    function x(i){ return ml + i*(W-ml-mr)/(nM-1); }
+    function y(v){ return mt + (1 - v/top)*(Hh-mt-mb); }
+
+    var grid = '';
+    for(var g=0; g<=top; g+=4){
+      grid += '<line x1="'+ml+'" x2="'+(W-mr)+'" y1="'+y(g)+'" y2="'+y(g)+'" stroke="var(--grid)" stroke-width="1"/>'
+        + '<text x="'+(ml-8)+'" y="'+(y(g)+4)+'" text-anchor="end" font-size="12" fill="var(--muted)">'+g+'</text>';
+    }
+    var xLabels = months.map(function(m,i){
+      var last = i===nM-1;
+      return '<text x="'+x(i)+'" y="'+(Hh-8)+'" text-anchor="middle" font-size="12" fill="'+(last?'var(--ink)':'var(--muted)')+'"'+(last?' font-weight="700"':'')+'>'+esc(m)+'</text>';
+    }).join('');
+
+    var paths = '', ends = [];
+    series.forEach(function(s){
+      var pts = s.values.map(function(v,i){ return x(i).toFixed(1)+','+y(v).toFixed(1); });
+      paths += '<polyline points="'+pts.join(' ')+'" fill="none" stroke="'+s.color+'" stroke-width="'+s.width+'" stroke-linejoin="round"'
+        + (s.dashed?' stroke-dasharray="5 4"':'')+'/>';
+      var lastV = s.values[s.values.length-1];
+      paths += '<circle cx="'+x(nM-1)+'" cy="'+y(lastV)+'" r="4" fill="'+s.color+'"/>';
+      ends.push({ text: s.name+' '+fmt(lastV,1)+'%', color: s.color, y: y(lastV) });
+    });
+
+    // Подписи не ближе 16px друг к другу: сначала сдвигаем вниз, затем поднимаем тех, кто ушёл за низ.
+    ends.sort(function(a,b){ return a.y - b.y; });
+    for(var i=1;i<ends.length;i++){ if(ends[i].y - ends[i-1].y < 16) ends[i].y = ends[i-1].y + 16; }
+    var maxY = Hh - mb;
+    if(ends.length && ends[ends.length-1].y > maxY){
+      ends[ends.length-1].y = maxY;
+      for(var j=ends.length-2;j>=0;j--){ if(ends[j+1].y - ends[j].y < 16) ends[j].y = ends[j+1].y - 16; }
+    }
+    var labels = ends.map(function(e){
+      return '<text x="'+(x(nM-1)+10)+'" y="'+e.y.toFixed(1)+'" dominant-baseline="middle" font-size="13" font-weight="600" fill="'+e.color+'">'+esc(e.text)+'</text>';
+    }).join('');
+
+    var aria = 'Текучесть по подразделениям за '+months[nM-1]+': '+series.map(function(s){
+      return s.name+' '+fmt(s.values[s.values.length-1],1)+'%';
+    }).join(', ');
+    return '<svg viewBox="0 0 '+W+' '+Hh+'" preserveAspectRatio="xMidYMid meet" role="img" aria-label="'+esc(aria)+'">'
+      + grid + paths + labels + xLabels + '</svg>';
   }
 
   /* ---------- 2. Подбор ---------- */
@@ -1833,7 +2039,8 @@ window.__HR__.DEMO = {
   function renderBlockView(key){
     var data = state.data[key];
     var fn = H.RENDERERS[key];
-    viewBody.innerHTML = fn(data);
+    slideView.classList.toggle('slide-fixed', key==='composition');
+    viewBody.innerHTML = fn(data, state.data.meta);
     runCountUps(viewBody); runKpiBars(viewBody);
     flipContent();
     if(key==='departments') wireDepartmentRadar(viewBody, data);
@@ -1974,9 +2181,9 @@ window.__HR__.DEMO = {
     // status: 'live' | 'offline' | 'archive'
     var badge = document.getElementById('data-badge');
     badge.classList.remove('is-live');
-    if(status==='live'){ badge.textContent='● Данные из базы'; badge.classList.add('is-live'); }
-    else if(status==='archive'){ badge.textContent='● Архив: '+label; }
-    else { badge.textContent='● Демонстрационные данные (офлайн)'; }
+    if(status==='live'){ badge.textContent='Данные из базы'; badge.classList.add('is-live'); }
+    else if(status==='archive'){ badge.textContent='Архив: '+label; }
+    else { badge.textContent='Демонстрационные данные (офлайн)'; }
   }
   function applyBadgeAndEditState(loadOk){
     var isArchive = !!(state.currentPeriod && state.latestPeriod && state.currentPeriod!==state.latestPeriod);
@@ -2278,9 +2485,51 @@ window.__HR__.DEMO = {
     wireModal();
     wireTooltip();
     wirePresentMode();
-    document.getElementById('btn-export-pdf').addEventListener('click', exportPDF);
-    document.getElementById('btn-export-word').addEventListener('click', exportWord);
+    document.getElementById('btn-export-pdf').addEventListener('click', function(){ closeExportMenu(); exportPDF(); });
+    document.getElementById('btn-export-word').addEventListener('click', function(){ closeExportMenu(); exportWord(); });
+    wireExportMenu();
     initCapabilities();
+  }
+
+  /* ---------------- export menu: click, keyboard, Esc, outside click ---------------- */
+  function exportMenuEls(){
+    return { root: document.getElementById('export-menu'), toggle: document.getElementById('btn-export-toggle'), list: document.getElementById('export-list') };
+  }
+  function isExportMenuOpen(){ return !exportMenuEls().list.hidden; }
+  function openExportMenu(focusFirst){
+    var m = exportMenuEls();
+    m.list.hidden = false;
+    m.toggle.setAttribute('aria-expanded', 'true');
+    if(focusFirst) { var first = m.list.querySelector('[role="menuitem"]'); if(first) first.focus(); }
+  }
+  function closeExportMenu(returnFocus){
+    var m = exportMenuEls();
+    if(m.list.hidden) return;
+    m.list.hidden = true;
+    m.toggle.setAttribute('aria-expanded', 'false');
+    if(returnFocus) m.toggle.focus();
+  }
+  function wireExportMenu(){
+    var m = exportMenuEls();
+    m.toggle.addEventListener('click', function(){
+      if(isExportMenuOpen()) closeExportMenu(false); else openExportMenu(false);
+    });
+    m.toggle.addEventListener('keydown', function(e){
+      if(e.key==='ArrowDown'){ e.preventDefault(); openExportMenu(true); }
+    });
+    m.list.addEventListener('keydown', function(e){
+      var items = Array.prototype.slice.call(m.list.querySelectorAll('[role="menuitem"]'));
+      var idx = items.indexOf(document.activeElement);
+      if(e.key==='Escape'){ e.preventDefault(); closeExportMenu(true); }
+      else if(e.key==='ArrowDown'){ e.preventDefault(); items[(idx+1)%items.length].focus(); }
+      else if(e.key==='ArrowUp'){ e.preventDefault(); items[(idx-1+items.length)%items.length].focus(); }
+    });
+    document.addEventListener('click', function(e){
+      if(isExportMenuOpen() && !m.root.contains(e.target)) closeExportMenu(false);
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key==='Escape' && isExportMenuOpen()) closeExportMenu(true);
+    });
   }
 
   if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', boot); } else { boot(); }
