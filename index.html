@@ -381,7 +381,7 @@
   .dk-card-s{ font-size:13px; color:var(--muted); }
   .dk-stack{ display:flex; flex-direction:column; gap:9px; }
   .dk-bar{ display:grid; gap:10px; align-items:center; font-size:13px; }
-  .dk-bar-l{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ink-2); }
+  .dk-bar-l{ white-space:normal; line-height:1.3; color:var(--ink-2); overflow-wrap:anywhere; }
   .dk-bar-v{ text-align:right; font-weight:600; }
   .dk-track{ height:18px; background:var(--surface-3); border-radius:4px; overflow:hidden; }
   .dk-fill{ display:block; height:18px; border-radius:4px; background:var(--bar-muted); }
@@ -406,7 +406,7 @@
   .dk-rank-cols .dk-stack{ gap:3px; }
   .dk-rank{ display:grid; grid-template-columns:18px 92px minmax(0,1fr) 40px; gap:8px; align-items:center; font-size:13px; }
   .dk-rank-n{ color:var(--muted); font-variant-numeric:tabular-nums; }
-  .dk-rank-l{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .dk-rank-l{ white-space:normal; line-height:1.3; overflow-wrap:anywhere; }
   .dk-remarks{ display:flex; flex-direction:column; gap:8px; font-size:13px; color:var(--ink-2); }
   .dk-remark{ display:flex; flex-direction:column; gap:1px; font-size:13px; }
   .dk-remark-t{ color:var(--ink-2); }
@@ -419,7 +419,7 @@
   .dk-person{ background:var(--surface); border:1px solid var(--card-border); border-radius:12px; padding:7px 10px; display:flex; flex-direction:column; gap:2px; min-width:0; }
   .dk-person.is-best{ border-color:var(--accent); }
   .dk-person-n{ font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .dk-person-p{ font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .dk-person-p{ font-size:12px; color:var(--muted); line-height:1.3; overflow-wrap:anywhere; }
   .dk-person-b{ font-size:12px; color:var(--accent); font-weight:600; }
   .dk-person-k{ margin-top:auto; font-size:13px; color:var(--muted); line-height:1.3; }
   .dk-person-k span{ font-size:16px; font-weight:600; color:var(--ink); }
@@ -441,7 +441,10 @@
   @media (max-width:760px){
     .dk-head{ flex-direction:column; align-items:flex-start; }
     .dk-kpis{ grid-template-columns:1fr 1fr; }
-    .dk-grid{ grid-template-columns:1fr !important; }
+    .dk-grid{ grid-template-columns:1fr !important; grid-auto-rows:auto; align-items:start; }
+    .dk-card{ min-height:auto; }
+    .dk-bar{ grid-template-columns:minmax(0,40%) minmax(0,1fr) 40px !important; }
+    .dk-kpi-v{ font-size:28px; line-height:36px; }
     .dk-rank-cols, .dk-people{ grid-template-columns:1fr 1fr; }
   }
 
