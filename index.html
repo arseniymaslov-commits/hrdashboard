@@ -691,6 +691,11 @@
       <button class="icon-btn" id="btn-download-template" style="flex:1">⇩ Скачать шаблон (.xlsx)</button>
     </div>
     <div class="file-drop" id="file-drop">Нажмите, чтобы выбрать файл .xlsx или .csv для загрузки</div>
+    <div class="row">
+      <button class="icon-btn" id="btn-snapshot-download" style="flex:1">⇩ Месяц (.json)</button>
+      <button class="icon-btn" id="btn-snapshot-upload" style="flex:1">⇧ Загрузить месяц (.json)</button>
+    </div>
+    <input type="file" id="snapshot-input" accept=".json,application/json" style="display:none">
     <div id="upload-status"></div>
     <div class="row" style="justify-content:flex-end">
       <button class="icon-btn" id="btn-modal-close">Закрыть</button>
@@ -2439,6 +2444,48 @@ window.__HR__.DEMO = {
     }catch(e){ toast('Не удалось сохранить данные: '+(e&&e.message?e.message:e)); return false; }
   }
 
+  /* Загрузка всего месяца одним JSON-снимком: сначала проверка (dryRun),
+     затем подтверждение пользователя и запись в текущий период. */
+  async function importSnapshot(file){
+    var statusEl = document.getElementById('upload-status');
+    var period = state.latestPeriod;
+    if(!period){ toast('Периоды ещё не загружены — попробуйте через секунду'); return; }
+    if(!getEditToken()){ toast('Введите ключ редактирования в окне «Обновить данные»'); return; }
+    statusEl.innerHTML = '<div class="modal-status">Проверяем снимок…</div>';
+    var snap;
+    try{ snap = JSON.parse(await file.text()); }
+    catch(err){ statusEl.innerHTML = '<div class="modal-status err">Файл не является корректным JSON</div>'; return; }
+
+    var headers = {'Content-Type':'application/json', 'X-Edit-Token': getEditToken()};
+    var base = API_BASE+'/import?period='+encodeURIComponent(period);
+    function showErrors(list){
+      statusEl.innerHTML = '<div class="modal-status err">Снимок не прошёл проверку, ничего не записано:<br>'+(list||[]).map(esc).join('<br>')+'</div>';
+    }
+    try{
+      var dry = await fetch(base+'&dryRun=1', {method:'POST', headers:headers, body:JSON.stringify(snap)});
+      var dj = await dry.json().catch(function(){ return {}; });
+      if(dry.status===401){ statusEl.innerHTML = '<div class="modal-status err">Неверный ключ редактирования</div>'; return; }
+      if(dry.status===422){ showErrors(dj.errors); return; }
+      if(!dry.ok) throw new Error('HTTP '+dry.status);
+
+      var warn = dj.warnings || [];
+      var text = 'Записать снимок в текущий период («'+(period)+'»)?\n\nБлоков: '+(dj.blocks||[]).length+'\nПредупреждений: '+warn.length+(warn.length?'\n\n'+warn.slice(0,8).join('\n'):'');
+      if(!confirm(text)){ statusEl.innerHTML = ''; return; }
+
+      var res = await fetch(base, {method:'POST', headers:headers, body:JSON.stringify(snap)});
+      var rj = await res.json().catch(function(){ return {}; });
+      if(res.status===403){ toast('Редактирование доступно только для текущего периода'); statusEl.innerHTML = ''; return; }
+      if(res.status===422){ showErrors(rj.errors); return; }
+      if(!res.ok) throw new Error('HTTP '+res.status);
+
+      statusEl.innerHTML = '<div class="modal-status">Снимок записан, обновляем отчёт…</div>';
+      await loadFromApi(period);
+      statusEl.innerHTML = '<div class="modal-status ok">Готово: записано блоков '+((rj.written||[]).length)+'. Изменения увидят все, кто откроет отчёт.'+(warn.length?' Предупреждений: '+warn.length+'.':'')+'</div>';
+    }catch(err){
+      statusEl.innerHTML = '<div class="modal-status err">Не удалось загрузить снимок: '+esc(err&&err.message?err.message:String(err))+'</div>';
+    }
+  }
+
   /* ---------------- upload modal ---------------- */
   var modal, selectEl;
   function wireModal(){
@@ -2461,6 +2508,18 @@ window.__HR__.DEMO = {
       var out = XLSX.write(workbook, {bookType:'xlsx', type:'array'});
       var blob = new Blob([out], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
       offerDownload(blob, 'Шаблон_'+key+'.xlsx');
+    });
+    document.getElementById('btn-snapshot-download').addEventListener('click', function(){
+      var snap = {};
+      BLOCKS.forEach(function(b){ snap[b.key] = state.data[b.key]; });
+      snap.meta = state.data.meta;
+      var blob = new Blob([JSON.stringify(snap, null, 2)], {type:'application/json'});
+      offerDownload(blob, 'Снимок_'+(state.latestPeriod||'месяц')+'.json');
+    });
+    document.getElementById('btn-snapshot-upload').addEventListener('click', function(){ document.getElementById('snapshot-input').click(); });
+    document.getElementById('snapshot-input').addEventListener('change', function(e){
+      var file = e.target.files[0]; e.target.value = '';
+      if(file) importSnapshot(file);
     });
     document.getElementById('file-drop').addEventListener('click', function(){ document.getElementById('file-input').click(); });
     document.getElementById('file-input').addEventListener('change', async function(e){
