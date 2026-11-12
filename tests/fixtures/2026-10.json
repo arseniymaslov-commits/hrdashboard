@@ -1,0 +1,2662 @@
+{
+  "assessment": {
+    "ipr": {
+      "oct": {
+        "done": 1,
+        "assigned": 39,
+        "noConfirm": 38,
+        "preliminary": true
+      },
+      "sept": {
+        "done": 37,
+        "assigned": 50,
+        "noConfirm": 13
+      }
+    },
+    "movers": [
+      {
+        "name": "С. Осмоналиев",
+        "delta": 42,
+        "position": "Водитель-курьер, ОДТ",
+        "direction": "up"
+      },
+      {
+        "name": "А. Мамаюсупов",
+        "delta": 25,
+        "position": "Водитель-курьер, ОДТ",
+        "direction": "up"
+      },
+      {
+        "name": "С. Мамытбеков",
+        "delta": -100,
+        "position": "Водитель-курьер, ОДТ",
+        "direction": "down"
+      }
+    ],
+    "avgScore": {
+      "prev": 93,
+      "current": 91,
+      "history": [
+        {
+          "month": "Июл",
+          "score": 95
+        },
+        {
+          "month": "Авг",
+          "score": 93
+        },
+        {
+          "month": "Сен",
+          "score": 91
+        }
+      ]
+    },
+    "radar360": {
+      "axes": [
+        "Результат",
+        "Надёжность",
+        "Развитие",
+        "Коммуникация",
+        "Инициатива"
+      ],
+      "self": [
+        4.6,
+        4.8,
+        4.7,
+        4.8,
+        4.6
+      ],
+      "peers": [
+        4.7,
+        4.6,
+        4.6,
+        4.7,
+        4.6
+      ]
+    },
+    "topTopics": [],
+    "conclusion": "Средний балл кейсовых проверок снизился до 91% (−2 п.п., третий месяц подряд снижение с 95%); самооценка сотрудников устойчиво выше внешней оценки по инициативе и результату.",
+    "driverTest": {
+      "oct": {
+        "paper": 4,
+        "notTook": 15,
+        "success": 22,
+        "participants": 136,
+        "satisfactory": 99,
+        "unsatisfactory": 15
+      },
+      "name": "Водители: тест «Альтранс Логистикс»",
+      "sept": {
+        "success": 46,
+        "participants": 131,
+        "satisfactory": 83,
+        "unsatisfactory": 2
+      }
+    },
+    "iprEmployees": {
+      "rows": [
+        {
+          "A": 0,
+          "B": 1,
+          "C": 0,
+          "D": 2,
+          "E": 0,
+          "sent": 3,
+          "staff": 3,
+          "errors": 0,
+          "paused": 0,
+          "company": "ЗАО \"Али Гарант\"",
+          "notSent": 0,
+          "waiting": 3,
+          "noRecord": 0,
+          "pausedSent": 0,
+          "sentNoPause": 3
+        },
+        {
+          "A": 0,
+          "B": 4,
+          "C": 15,
+          "D": 0,
+          "E": 3,
+          "sent": 20,
+          "staff": 22,
+          "errors": 0,
+          "paused": 0,
+          "company": "КРО",
+          "notSent": 1,
+          "waiting": 20,
+          "noRecord": 1,
+          "pausedSent": 0,
+          "sentNoPause": 20
+        },
+        {
+          "A": 0,
+          "B": 0,
+          "C": 5,
+          "D": 0,
+          "E": 0,
+          "sent": 4,
+          "staff": 5,
+          "errors": 0,
+          "paused": 0,
+          "company": "Маркетинг",
+          "notSent": 1,
+          "waiting": 4,
+          "noRecord": 0,
+          "pausedSent": 0,
+          "sentNoPause": 4
+        },
+        {
+          "A": 1,
+          "B": 1,
+          "C": 12,
+          "D": 0,
+          "E": 1,
+          "sent": 11,
+          "staff": 15,
+          "errors": 0,
+          "paused": 0,
+          "company": "ОДТ",
+          "notSent": 2,
+          "waiting": 11,
+          "noRecord": 2,
+          "pausedSent": 0,
+          "sentNoPause": 11
+        },
+        {
+          "A": 0,
+          "B": 0,
+          "C": 0,
+          "D": 1,
+          "E": 1,
+          "sent": 1,
+          "staff": 2,
+          "errors": 1,
+          "paused": 0,
+          "company": "ОИАР",
+          "notSent": 0,
+          "waiting": 1,
+          "noRecord": 0,
+          "pausedSent": 0,
+          "sentNoPause": 1
+        },
+        {
+          "A": 4,
+          "B": 2,
+          "C": 6,
+          "D": 0,
+          "E": 0,
+          "sent": 8,
+          "staff": 12,
+          "errors": 0,
+          "paused": 0,
+          "company": "ОКП",
+          "notSent": 2,
+          "waiting": 8,
+          "noRecord": 2,
+          "pausedSent": 0,
+          "sentNoPause": 8
+        },
+        {
+          "A": 0,
+          "B": 2,
+          "C": 10,
+          "D": 1,
+          "E": 2,
+          "sent": 0,
+          "staff": 15,
+          "errors": 13,
+          "paused": 0,
+          "company": "ОКС",
+          "notSent": 0,
+          "waiting": 0,
+          "noRecord": 2,
+          "pausedSent": 0,
+          "sentNoPause": 0
+        },
+        {
+          "A": 0,
+          "B": 1,
+          "C": 6,
+          "D": 0,
+          "E": 4,
+          "sent": 6,
+          "staff": 11,
+          "errors": 0,
+          "paused": 0,
+          "company": "ОМТС",
+          "notSent": 2,
+          "waiting": 6,
+          "noRecord": 3,
+          "pausedSent": 0,
+          "sentNoPause": 6
+        },
+        {
+          "A": 6,
+          "B": 4,
+          "C": 2,
+          "D": 0,
+          "E": 0,
+          "sent": 10,
+          "staff": 12,
+          "errors": 0,
+          "paused": 0,
+          "company": "ОП",
+          "notSent": 1,
+          "waiting": 10,
+          "noRecord": 1,
+          "pausedSent": 0,
+          "sentNoPause": 10
+        },
+        {
+          "A": 1,
+          "B": 1,
+          "C": 0,
+          "D": 3,
+          "E": 0,
+          "sent": 4,
+          "staff": 5,
+          "errors": 0,
+          "paused": 0,
+          "company": "ОПЗИ",
+          "notSent": 0,
+          "waiting": 4,
+          "noRecord": 1,
+          "pausedSent": 0,
+          "sentNoPause": 4
+        },
+        {
+          "A": 0,
+          "B": 0,
+          "C": 3,
+          "D": 0,
+          "E": 1,
+          "sent": 0,
+          "staff": 4,
+          "errors": 0,
+          "paused": 0,
+          "company": "ОПРМ",
+          "notSent": 2,
+          "waiting": 0,
+          "noRecord": 2,
+          "pausedSent": 0,
+          "sentNoPause": 0
+        },
+        {
+          "A": 0,
+          "B": 0,
+          "C": 2,
+          "D": 0,
+          "E": 0,
+          "sent": 2,
+          "staff": 2,
+          "errors": 0,
+          "paused": 0,
+          "company": "ОРН",
+          "notSent": 0,
+          "waiting": 2,
+          "noRecord": 0,
+          "pausedSent": 0,
+          "sentNoPause": 2
+        },
+        {
+          "A": 1,
+          "B": 3,
+          "C": 11,
+          "D": 0,
+          "E": 0,
+          "sent": 14,
+          "staff": 15,
+          "errors": 0,
+          "paused": 0,
+          "company": "ОРП",
+          "notSent": 0,
+          "waiting": 14,
+          "noRecord": 1,
+          "pausedSent": 0,
+          "sentNoPause": 14
+        },
+        {
+          "A": 0,
+          "B": 0,
+          "C": 4,
+          "D": 0,
+          "E": 0,
+          "sent": 4,
+          "staff": 4,
+          "errors": 0,
+          "paused": 0,
+          "company": "ОРС",
+          "notSent": 0,
+          "waiting": 4,
+          "noRecord": 0,
+          "pausedSent": 0,
+          "sentNoPause": 4
+        },
+        {
+          "A": 0,
+          "B": 1,
+          "C": 0,
+          "D": 0,
+          "E": 0,
+          "sent": 0,
+          "staff": 1,
+          "errors": 1,
+          "paused": 0,
+          "company": "ОРСБ",
+          "notSent": 0,
+          "waiting": 0,
+          "noRecord": 0,
+          "pausedSent": 0,
+          "sentNoPause": 0
+        },
+        {
+          "A": 0,
+          "B": 0,
+          "C": 4,
+          "D": 1,
+          "E": 0,
+          "sent": 3,
+          "staff": 5,
+          "errors": 1,
+          "paused": 0,
+          "company": "Ред Маркет",
+          "notSent": 1,
+          "waiting": 3,
+          "noRecord": 0,
+          "pausedSent": 0,
+          "sentNoPause": 3
+        },
+        {
+          "A": 0,
+          "B": 2,
+          "C": 1,
+          "D": 0,
+          "E": 2,
+          "sent": 5,
+          "staff": 5,
+          "errors": 0,
+          "paused": 0,
+          "company": "ОТ, ТБ и ПБ",
+          "notSent": 0,
+          "waiting": 5,
+          "noRecord": 0,
+          "pausedSent": 0,
+          "sentNoPause": 5
+        },
+        {
+          "A": 3,
+          "B": 1,
+          "C": 5,
+          "D": 1,
+          "E": 0,
+          "sent": 7,
+          "staff": 10,
+          "errors": 0,
+          "paused": 0,
+          "company": "ОЦП",
+          "notSent": 2,
+          "waiting": 7,
+          "noRecord": 1,
+          "pausedSent": 0,
+          "sentNoPause": 7
+        },
+        {
+          "A": 0,
+          "B": 1,
+          "C": 1,
+          "D": 0,
+          "E": 4,
+          "sent": 6,
+          "staff": 6,
+          "errors": 0,
+          "paused": 0,
+          "company": "ПЭО",
+          "notSent": 0,
+          "waiting": 6,
+          "noRecord": 0,
+          "pausedSent": 0,
+          "sentNoPause": 6
+        },
+        {
+          "A": 0,
+          "B": 1,
+          "C": 1,
+          "D": 0,
+          "E": 1,
+          "sent": 2,
+          "staff": 3,
+          "errors": 0,
+          "paused": 0,
+          "company": "САУП - ОК",
+          "notSent": 1,
+          "waiting": 2,
+          "noRecord": 0,
+          "pausedSent": 0,
+          "sentNoPause": 2
+        },
+        {
+          "A": 6,
+          "B": 2,
+          "C": 0,
+          "D": 0,
+          "E": 0,
+          "sent": 7,
+          "staff": 8,
+          "errors": 0,
+          "paused": 8,
+          "company": "СВКА",
+          "notSent": 0,
+          "waiting": 0,
+          "noRecord": 1,
+          "pausedSent": 7,
+          "sentNoPause": 0
+        },
+        {
+          "A": 0,
+          "B": 4,
+          "C": 0,
+          "D": 0,
+          "E": 0,
+          "sent": 0,
+          "staff": 4,
+          "errors": 4,
+          "paused": 0,
+          "company": "СВОТиК",
+          "notSent": 0,
+          "waiting": 0,
+          "noRecord": 0,
+          "pausedSent": 0,
+          "sentNoPause": 0
+        },
+        {
+          "A": 0,
+          "B": 0,
+          "C": 2,
+          "D": 0,
+          "E": 1,
+          "sent": 2,
+          "staff": 3,
+          "errors": 0,
+          "paused": 0,
+          "company": "ССБН-УН",
+          "notSent": 0,
+          "waiting": 2,
+          "noRecord": 1,
+          "pausedSent": 0,
+          "sentNoPause": 2
+        },
+        {
+          "A": 0,
+          "B": 0,
+          "C": 4,
+          "D": 0,
+          "E": 3,
+          "sent": 7,
+          "staff": 7,
+          "errors": 0,
+          "paused": 0,
+          "company": "СЭТС",
+          "notSent": 0,
+          "waiting": 7,
+          "noRecord": 0,
+          "pausedSent": 0,
+          "sentNoPause": 7
+        },
+        {
+          "A": 0,
+          "B": 0,
+          "C": 1,
+          "D": 0,
+          "E": 1,
+          "sent": 2,
+          "staff": 2,
+          "errors": 0,
+          "paused": 0,
+          "company": "ТС",
+          "notSent": 0,
+          "waiting": 2,
+          "noRecord": 0,
+          "pausedSent": 0,
+          "sentNoPause": 2
+        },
+        {
+          "A": 0,
+          "B": 0,
+          "C": 1,
+          "D": 0,
+          "E": 3,
+          "sent": 2,
+          "staff": 4,
+          "errors": 0,
+          "paused": 0,
+          "company": "УНБХ",
+          "notSent": 0,
+          "waiting": 2,
+          "noRecord": 2,
+          "pausedSent": 0,
+          "sentNoPause": 2
+        },
+        {
+          "A": 0,
+          "B": 0,
+          "C": 1,
+          "D": 1,
+          "E": 1,
+          "sent": 3,
+          "staff": 3,
+          "errors": 0,
+          "paused": 0,
+          "company": "Энергия будущего",
+          "notSent": 0,
+          "waiting": 3,
+          "noRecord": 0,
+          "pausedSent": 0,
+          "sentNoPause": 3
+        }
+      ],
+      "period": "Октябрь 2026",
+      "totals": {
+        "A": 22,
+        "B": 31,
+        "C": 97,
+        "D": 10,
+        "E": 28,
+        "sent": 133,
+        "staff": 188,
+        "errors": 20,
+        "paused": 8,
+        "notSent": 15,
+        "waiting": 126,
+        "noRecord": 20,
+        "pausedSent": 7,
+        "sentNoPause": 126
+      }
+    },
+    "resultsDistribution": [
+      {
+        "band": "90–100",
+        "count": 198
+      },
+      {
+        "band": "75–89",
+        "count": 68
+      },
+      {
+        "band": "60–74",
+        "count": 9
+      },
+      {
+        "band": "<60",
+        "count": 7
+      }
+    ],
+    "operatorsAttestation": {
+      "jun26": {
+        "good": 74.2,
+        "excellent": 4.7,
+        "confirmedPct": 98.4,
+        "satisfactory": 19.5,
+        "unsatisfactory": 1.6,
+        "participationPct": 94.2
+      },
+      "oct25": {
+        "good": 63.5,
+        "excellent": 12.8,
+        "confirmedPct": 97.8,
+        "satisfactory": 21.4,
+        "unsatisfactory": 2.2,
+        "participationPct": 91.9
+      },
+      "oct26": {
+        "good": 42.3,
+        "excellent": 53.7,
+        "confirmedPct": 97.4,
+        "satisfactory": 1.4,
+        "unsatisfactory": 2.6,
+        "participationPct": 97.3
+      },
+      "risks": [
+        "Доврачебная помощь (СЛР, обморожения, травмы): 47–58% правильных ответов",
+        "Мерчандайзинг: около 45% допускают ошибки при выкладке товаров импульсного спроса",
+        "Газоопасные работы и проливы топлива: 25–28% не до конца знают алгоритмы"
+      ],
+      "counts": {
+        "good": 367,
+        "excellent": 466,
+        "satisfactory": 12,
+        "unsatisfactory": 23
+      },
+      "notTook": 24,
+      "eligible": 892,
+      "categories": {
+        "junior": {
+          "excellent": 60,
+          "participated": 375,
+          "unsatisfactory": 3.5
+        },
+        "senior": {
+          "excellent": 48.9,
+          "participated": 493,
+          "unsatisfactory": 2
+        }
+      },
+      "conclusion": "Явка выросла до 97,3% (июнь — 94,2%), квалификацию подтвердили 97,4% операторов. Доля «отлично» выросла с 4,7% до 53,7%, а «удовлетворительно» упала с 19,5% до 1,4%. Неудовлетворительных оценок 2,6% — выше июня (1,6%), и чаще они у младших операторов (3,5% против 2,0%).",
+      "participated": 868
+    }
+  },
+  "meta": {
+    "period": "Октябрь 2026",
+    "company": "ОсОО «Альфа Ойл»",
+    "prevPeriod": "Сентябрь 2026"
+  },
+  "discipline": {
+    "byDept": [
+      {
+        "dept": "Бухгалтерия",
+        "count": 133
+      },
+      {
+        "dept": "Руководители",
+        "count": 76
+      },
+      {
+        "dept": "ОЦП",
+        "count": 42
+      },
+      {
+        "dept": "ПЭО+ОИАР",
+        "count": 41
+      },
+      {
+        "dept": "УЧР",
+        "count": 26
+      },
+      {
+        "dept": "Заместители",
+        "count": 23
+      },
+      {
+        "dept": "Маркетинг",
+        "count": 22
+      },
+      {
+        "dept": "ОРН+ЭБ",
+        "count": 19
+      }
+    ],
+    "byType": [
+      {
+        "type": "Опоздания",
+        "count": 424
+      },
+      {
+        "type": "Отсутствие",
+        "count": 106
+      }
+    ],
+    "recent": [
+      {
+        "date": "30.10",
+        "dept": "ОКП",
+        "type": "Опоздание",
+        "status": "98 минут",
+        "employee": "Алмазбеков Досбол",
+        "severity": "critical"
+      },
+      {
+        "date": "30.10",
+        "dept": "ОКИ",
+        "type": "Опоздание",
+        "status": "86 минут",
+        "employee": "Шаамырза Текебаев",
+        "severity": "critical"
+      },
+      {
+        "date": "30.10",
+        "dept": "ПЭО+ОИАР",
+        "type": "Опоздание",
+        "status": "76 минут",
+        "employee": "Турарбек кызы Жоогазын",
+        "severity": "critical"
+      },
+      {
+        "date": "30.10",
+        "dept": "Руководители",
+        "type": "Опоздание",
+        "status": "71 минут",
+        "employee": "Шейшенбеков Аманбол",
+        "severity": "critical"
+      },
+      {
+        "date": "30.10",
+        "dept": "Бухгалтерия",
+        "type": "Опоздание",
+        "status": "39 минут",
+        "employee": "Эрнисова Айпери",
+        "severity": "warning"
+      }
+    ],
+    "history": [
+      {
+        "count": 757,
+        "month": "Сен"
+      },
+      {
+        "count": 530,
+        "month": "Окт"
+      }
+    ],
+    "conclusion": "Опоздания и отсутствия за октябрь (по 30.10): 530 событий против 757 в сентябре (−30%). Опозданий 424 (сентябрь 593), отсутствий 106 (сентябрь 164). Подразделения в выгрузке названы по-новому, поэтому сравнение по отделам не делалось.",
+    "totalViolations": {
+      "prev": 757,
+      "current": 530
+    }
+  },
+  "departments": {
+    "rows": [
+      {
+        "kpi": 100,
+        "dept": "Бухгалтерия",
+        "total": 7.47,
+        "hrWork": 10,
+        "execution": 0,
+        "components": 4,
+        "evaluations": 18,
+        "interaction": 9.89
+      },
+      {
+        "kpi": 97,
+        "dept": "Маркетинг",
+        "total": 7.92,
+        "hrWork": 10,
+        "execution": 2,
+        "components": 4,
+        "evaluations": 18,
+        "interaction": 10
+      },
+      {
+        "kpi": 89.1,
+        "dept": "ОДТ",
+        "total": 7.18,
+        "hrWork": 10,
+        "execution": 0,
+        "components": 4,
+        "evaluations": 16,
+        "interaction": 9.81
+      },
+      {
+        "kpi": 100,
+        "dept": "ОИАР",
+        "total": 10,
+        "hrWork": 10,
+        "execution": 10,
+        "components": 4,
+        "evaluations": 14,
+        "interaction": 10
+      },
+      {
+        "kpi": 100,
+        "dept": "ОИБ",
+        "total": 8,
+        "hrWork": 10,
+        "execution": 2,
+        "components": 4,
+        "evaluations": 19,
+        "interaction": 10
+      },
+      {
+        "kpi": 100,
+        "dept": "ОК",
+        "total": 7.5,
+        "hrWork": 10,
+        "execution": 0,
+        "components": 4,
+        "evaluations": 19,
+        "interaction": 10
+      },
+      {
+        "kpi": 100,
+        "dept": "ОКИ",
+        "total": 7.8,
+        "hrWork": 10,
+        "execution": 1.2,
+        "components": 4,
+        "evaluations": 15,
+        "interaction": 10
+      },
+      {
+        "kpi": 100,
+        "dept": "ОКП",
+        "total": 10,
+        "hrWork": 10,
+        "execution": 10,
+        "components": 4,
+        "evaluations": 16,
+        "interaction": 10
+      },
+      {
+        "kpi": null,
+        "dept": "ОКС",
+        "total": 4.94,
+        "hrWork": null,
+        "execution": 0,
+        "components": 2,
+        "evaluations": 16,
+        "interaction": 9.88
+      },
+      {
+        "kpi": 100,
+        "dept": "ОМЗ",
+        "total": 10,
+        "hrWork": 10,
+        "execution": 10,
+        "components": 4,
+        "evaluations": 14,
+        "interaction": 10
+      },
+      {
+        "kpi": 95.6,
+        "dept": "ОМТС",
+        "total": 8.36,
+        "hrWork": 9,
+        "execution": 5,
+        "components": 4,
+        "evaluations": 19,
+        "interaction": 9.89
+      },
+      {
+        "kpi": 91.6,
+        "dept": "ОП",
+        "total": 8.52,
+        "hrWork": 10,
+        "execution": 5,
+        "components": 4,
+        "evaluations": 17,
+        "interaction": 9.94
+      },
+      {
+        "kpi": 100,
+        "dept": "ОПЗИ",
+        "total": 7.5,
+        "hrWork": 10,
+        "execution": 0,
+        "components": 4,
+        "evaluations": 13,
+        "interaction": 10
+      },
+      {
+        "kpi": 100,
+        "dept": "ОПРМ",
+        "total": 8.75,
+        "hrWork": 10,
+        "execution": 5,
+        "components": 4,
+        "evaluations": 19,
+        "interaction": 10
+      },
+      {
+        "kpi": 100,
+        "dept": "ОРН",
+        "total": 7.45,
+        "hrWork": 10,
+        "execution": 0,
+        "components": 4,
+        "evaluations": 15,
+        "interaction": 9.8
+      },
+      {
+        "kpi": 100,
+        "dept": "ОРП",
+        "total": 8.06,
+        "hrWork": 9,
+        "execution": 3.3,
+        "components": 4,
+        "evaluations": 19,
+        "interaction": 9.95
+      },
+      {
+        "kpi": 100,
+        "dept": "ОРС",
+        "total": 7.48,
+        "hrWork": 10,
+        "execution": 0,
+        "components": 4,
+        "evaluations": 16,
+        "interaction": 9.94
+      },
+      {
+        "kpi": null,
+        "dept": "ОРСБ",
+        "total": 9.96,
+        "hrWork": 10,
+        "execution": 10,
+        "components": 3,
+        "evaluations": 15,
+        "interaction": 9.87
+      },
+      {
+        "kpi": 92.9,
+        "dept": "ОТТБПБ",
+        "total": 7.32,
+        "hrWork": 10,
+        "execution": 0,
+        "components": 4,
+        "evaluations": 17,
+        "interaction": 10
+      },
+      {
+        "kpi": 100,
+        "dept": "ОЦП",
+        "total": 7.95,
+        "hrWork": 9,
+        "execution": 2.9,
+        "components": 4,
+        "evaluations": 18,
+        "interaction": 9.89
+      },
+      {
+        "kpi": null,
+        "dept": "ОЭС",
+        "total": 10,
+        "hrWork": 10,
+        "execution": 10,
+        "components": 3,
+        "evaluations": 13,
+        "interaction": 10
+      },
+      {
+        "kpi": 89.1,
+        "dept": "ПЭО",
+        "total": 7.51,
+        "hrWork": 10,
+        "execution": 1.2,
+        "components": 4,
+        "evaluations": 19,
+        "interaction": 9.95
+      },
+      {
+        "kpi": null,
+        "dept": "СБ",
+        "total": 4.93,
+        "hrWork": null,
+        "execution": 0,
+        "components": 2,
+        "evaluations": 15,
+        "interaction": 9.87
+      },
+      {
+        "kpi": null,
+        "dept": "СК Али гарант",
+        "total": 10,
+        "hrWork": null,
+        "execution": 10,
+        "components": 2,
+        "evaluations": 12,
+        "interaction": 10
+      },
+      {
+        "kpi": 69.4,
+        "dept": "СЭТС",
+        "total": 7.91,
+        "hrWork": 10,
+        "execution": 5,
+        "components": 4,
+        "evaluations": 14,
+        "interaction": 9.71
+      },
+      {
+        "kpi": 96.8,
+        "dept": "СиСО",
+        "total": 8.79,
+        "hrWork": null,
+        "execution": 6.7,
+        "components": 3,
+        "evaluations": 11,
+        "interaction": 10
+      },
+      {
+        "kpi": 100,
+        "dept": "ТС",
+        "total": 9.18,
+        "hrWork": 10,
+        "execution": 6.7,
+        "components": 4,
+        "evaluations": 15,
+        "interaction": 10
+      },
+      {
+        "kpi": null,
+        "dept": "Трейд Ойл",
+        "total": 10,
+        "hrWork": null,
+        "execution": 10,
+        "components": 2,
+        "evaluations": 8,
+        "interaction": 10
+      },
+      {
+        "kpi": 100,
+        "dept": "УН+АХО",
+        "total": 9.98,
+        "hrWork": 10,
+        "execution": 10,
+        "components": 4,
+        "evaluations": 16,
+        "interaction": 9.94
+      },
+      {
+        "kpi": 100,
+        "dept": "УНБХ",
+        "total": 7.5,
+        "hrWork": 10,
+        "execution": 0,
+        "components": 4,
+        "evaluations": 17,
+        "interaction": 10
+      },
+      {
+        "kpi": 94.4,
+        "dept": "УЧР",
+        "total": 9.83,
+        "hrWork": 10,
+        "execution": 10,
+        "components": 4,
+        "evaluations": 19,
+        "interaction": 9.89
+      },
+      {
+        "kpi": null,
+        "dept": "ЭБ",
+        "total": 4.96,
+        "hrWork": null,
+        "execution": 0,
+        "components": 2,
+        "evaluations": 11,
+        "interaction": 9.91
+      }
+    ],
+    "hrKpe": {
+      "dims": {
+        "Кадры": 24,
+        "Подбор": 25,
+        "Команда": 25,
+        "Обучение": 25
+      },
+      "note": "Предварительно: период не закрыт, методика v1",
+      "avgPct": 99,
+      "full100": 26,
+      "remarks": [
+        {
+          "dept": "ОМТС",
+          "text": "Не предоставлено КПЭ руководителя с 01. 07. 2026",
+          "manager": "Тынаева Айдай Таалайбековна"
+        },
+        {
+          "dept": "ОРП",
+          "text": "Некорректные отметки в системе Red Staff со стороны оператор и недостаточный контроль управляющих. Итого: 52 сотрудников на 45 объектах. У каждого заполнен только один день, остальные 24 дня в сводной пустые.",
+          "manager": "Шейшенбеков Аманбол Шейшенбекович"
+        },
+        {
+          "dept": "ОЦП",
+          "text": "Не предоставлен КПЭ Младший DWH инженер",
+          "manager": "Сагынбек уулу Урмат"
+        }
+      ],
+      "evaluated": 29,
+      "full100Pct": 89.7
+    },
+    "kpiSource": "КПЭ по ШР (факт/план), обновлённая таблица; kpi — с ограничением 100%, kpiRaw — без ограничения",
+    "conclusion": "Рейтинг — средний балл по взаимодействию, KPI по ШР, кадровой работе и исполнению протокольных поручений. Исполнение поручений: задачи в срок ÷ все назначенные задачи × 10; отделы без задач получают 10 (нарушений нет). Лидеры: ОИАР, ОКП, ОМЗ, ОЭС, УН+АХО, ОРСБ и УЧР (9,8 и выше). Ниже всех: ОКС, СБ и ЭБ (около 5 баллов) — задачи есть, но ни одна не выполнена в срок. Ноль по исполнению поручений у ОК, ОДТ, ОПЗИ, ОРН, УНБХ, ОТТБПБ, ОРС и Бухгалтерии.",
+    "ratingNote": "Полный рейтинг: среднее доступных компонентов — взаимодействие (октябрь, дашборд), КПЭ по ШР (с ограничением 100%), кадровая работа, исполнение поручений (выгрузка задач, октябрь). У УЧР кадровый КПЭ не считается.",
+    "interactionSep": {
+      "groups": {
+        "ОК": {
+          "evals": 28,
+          "score": 9.93,
+          "members": [
+            "ОК"
+          ]
+        },
+        "ТД": {
+          "evals": 100,
+          "score": 9.74,
+          "members": [
+            "ОКС",
+            "ТС",
+            "ОМТС",
+            "СЭТС"
+          ]
+        },
+        "АХО": {
+          "evals": 24,
+          "score": 10,
+          "members": [
+            "УН+АХО"
+          ]
+        },
+        "ДИТ": {
+          "evals": 77,
+          "score": 9.87,
+          "members": [
+            "ОЦП",
+            "ОКИ",
+            "ОИБ"
+          ]
+        },
+        "ОДТ": {
+          "evals": 23,
+          "score": 9.83,
+          "members": [
+            "ОДТ"
+          ]
+        },
+        "УЧР": {
+          "evals": 30,
+          "score": 9.9,
+          "members": [
+            "УЧР"
+          ]
+        }
+      },
+      "period": "Сентябрь 2026",
+      "missing": 14,
+      "overall": 9.85,
+      "weakest": [
+        {
+          "dept": "ЭБ",
+          "score": 9.57
+        },
+        {
+          "dept": "ОКС",
+          "score": 9.56
+        },
+        {
+          "dept": "СиСО",
+          "score": 9.68
+        },
+        {
+          "dept": "ОЦП",
+          "score": 9.7
+        },
+        {
+          "dept": "ОМТС",
+          "score": 9.7
+        }
+      ],
+      "expected": 102
+    }
+  },
+  "composition": {
+    "fired": 177,
+    "hired": 169,
+    "gender": {
+      "male": 2244,
+      "female": 574
+    },
+    "hrRatio": 0.7,
+    "conclusion": "Численность компании за октябрь 2818 человек (сентябрь 2834). Принято 169, уволено 177. Текучесть кадров 6,5% (сентябрь 7,1%, −0,6 п.п.). В штате 80% мужчин и 20% женщин.",
+    "turnoverRate": {
+      "prev": 7.1,
+      "current": 6.5,
+      "history": [
+        {
+          "rate": 7.9,
+          "month": "Апр"
+        },
+        {
+          "rate": 3.7,
+          "month": "Май"
+        },
+        {
+          "rate": 6,
+          "month": "Июн"
+        },
+        {
+          "rate": 7.1,
+          "month": "Июл"
+        },
+        {
+          "rate": 5.5,
+          "month": "Авг"
+        },
+        {
+          "rate": 7.1,
+          "month": "Сен"
+        },
+        {
+          "rate": 6.5,
+          "month": "Окт"
+        }
+      ]
+    },
+    "structureByDept": [
+      {
+        "dept": "ОРП",
+        "count": 1399
+      },
+      {
+        "dept": "Securi Force",
+        "count": 287
+      },
+      {
+        "dept": "СЭТС",
+        "count": 212
+      },
+      {
+        "dept": "ОДТ",
+        "count": 186
+      },
+      {
+        "dept": "УНБХ",
+        "count": 133
+      },
+      {
+        "dept": "ТД",
+        "count": 123
+      },
+      {
+        "dept": "САУП",
+        "count": 78
+      },
+      {
+        "dept": "ОКС",
+        "count": 60
+      }
+    ],
+    "headcountHistory": [
+      {
+        "count": 2799,
+        "month": "Июль"
+      },
+      {
+        "count": 2833,
+        "month": "Август"
+      },
+      {
+        "count": 2834,
+        "month": "Сентябрь"
+      },
+      {
+        "count": 2818,
+        "month": "Октябрь"
+      }
+    ],
+    "internalFillRate": {
+      "prev": 14,
+      "current": 19
+    },
+    "departmentTurnover": [
+      {
+        "dept": "ОРП",
+        "history": [
+          {
+            "rate": 10.2,
+            "month": "Апр"
+          },
+          {
+            "rate": 4.5,
+            "month": "Май"
+          },
+          {
+            "rate": 7.7,
+            "month": "Июн"
+          },
+          {
+            "rate": 9.2,
+            "month": "Июл"
+          },
+          {
+            "rate": 7.3,
+            "month": "Авг"
+          },
+          {
+            "rate": 9.2,
+            "month": "Сен"
+          },
+          {
+            "rate": 8.8,
+            "month": "Окт"
+          }
+        ]
+      },
+      {
+        "dept": "ОДТ-МАЗС",
+        "history": [
+          {
+            "rate": 5.8,
+            "month": "Апр"
+          },
+          {
+            "rate": 5.5,
+            "month": "Май"
+          },
+          {
+            "rate": 8.3,
+            "month": "Июн"
+          },
+          {
+            "rate": 7.2,
+            "month": "Июл"
+          },
+          {
+            "rate": 5.7,
+            "month": "Авг"
+          },
+          {
+            "rate": 9.9,
+            "month": "Сен"
+          },
+          {
+            "rate": 4.8,
+            "month": "Окт"
+          }
+        ]
+      },
+      {
+        "dept": "СЭТС",
+        "history": [
+          {
+            "rate": 5.5,
+            "month": "Апр"
+          },
+          {
+            "rate": 4.2,
+            "month": "Май"
+          },
+          {
+            "rate": 4.3,
+            "month": "Июн"
+          },
+          {
+            "rate": 6.3,
+            "month": "Июл"
+          },
+          {
+            "rate": 4.3,
+            "month": "Авг"
+          },
+          {
+            "rate": 7.1,
+            "month": "Сен"
+          },
+          {
+            "rate": 7.8,
+            "month": "Окт"
+          }
+        ]
+      }
+    ]
+  },
+  "proposals": {
+    "items": [
+      {
+        "image": "images/mauritius.png",
+        "status": "new",
+        "priority": "medium",
+        "proposal": "Маврикий — Radisson Blu Poste Lafayette 4* (18+) / RIU Turquoise Mauritius 4* / RIU Palace Mauricius 4* (18+), 3–10 января 2027 (8 дней/7 ночей), всё включено, перелёт из Бишкека с пересадкой (10–12 ч)",
+        "direction": "Мотивация",
+        "responsible": "А. Маслов"
+      },
+      {
+        "image": "images/seychelles.png",
+        "status": "new",
+        "priority": "medium",
+        "proposal": "Сейшелы — Canopy by Hilton Seychelles 4*, 4–12 янв 2027 (9д/8н); Savoy Seychelles Resort & Spa 5*, 4–12 янв 2027 (9д/8н, тариф для молодожёнов); Hilton Seychelles Northolme Resort & Spa 5*, 2–9 янв 2027 (8д/7н) — завтраки, перелёт из Алматы",
+        "direction": "Мотивация",
+        "responsible": "А. Маслов"
+      },
+      {
+        "image": "images/maldives.png",
+        "status": "new",
+        "priority": "medium",
+        "proposal": "Мальдивы — Lagoon View Maldives 4*, 4–10 янв 2027 (7д/6н); Adaaran Club Rannalhi 4*, 4–10 янв 2027 (7д/6н); Villa Park Sun Island 5*, 4–11 янв 2027 (8д/7н) — всё включено, перелёт из Алматы",
+        "direction": "Мотивация",
+        "responsible": "А. Маслов"
+      },
+      {
+        "image": "images/srilanka.png",
+        "status": "new",
+        "priority": "medium",
+        "proposal": "Шри-Ланка — Anarva Mount Lavinia 4* / Mandarina Colombo 4* / Cinnamon Lakeside 5*, все варианты 4–11 января 2027 (8 дней/7 ночей) — завтраки, перелёт из Алматы",
+        "direction": "Мотивация",
+        "responsible": "А. Маслов"
+      }
+    ],
+    "notes": "Мотивационная поездка для руководителей — реальное коммерческое предложение (цены не показаны здесь по решению УЧР, полная версия с тарифами есть у УЧР). Остальные категории предложений пока демо, ждут протокол УЧР за октябрь.",
+    "conclusion": "Предложена мотивационная поездка для руководителей на январь 2027 — КП на 4 направления (Маврикий, Сейшелы, Мальдивы, Шри-Ланка). Приоритеты остальных предложений будут внесены по итогам протокола УЧР за октябрь."
+  },
+  "hrEfficiency": {
+    "staff": [
+      {
+        "name": "А. Маслов",
+        "kpiPct": 100,
+        "position": "Руководитель УЧР",
+        "functions": "Управление отделом",
+        "violation": null,
+        "isBestThisMonth": false
+      },
+      {
+        "name": "З. Акматова",
+        "kpiPct": 100,
+        "position": "Зам. рук. УЧР",
+        "functions": "Управление отделом",
+        "violation": null,
+        "isBestThisMonth": false
+      },
+      {
+        "name": "У. Абилов",
+        "kpiPct": 100,
+        "position": "Зам. рук. УЧР Юг",
+        "functions": "Управление отделом (регион)",
+        "violation": null,
+        "isBestThisMonth": false
+      },
+      {
+        "name": "Н. Наматова",
+        "kpiPct": 100,
+        "position": "Ст. специалист АКО",
+        "functions": "Кадровое администрирование",
+        "violation": null,
+        "isBestThisMonth": false
+      },
+      {
+        "name": "З. Тилибаева",
+        "kpiPct": 100,
+        "position": "Специалист по КА",
+        "functions": "Кадровое администрирование",
+        "violation": null,
+        "isBestThisMonth": false
+      },
+      {
+        "name": "Х. Тохтаева",
+        "kpiPct": 100,
+        "position": "Специалист по КА",
+        "functions": "Кадровое администрирование",
+        "violation": null,
+        "isBestThisMonth": true
+      },
+      {
+        "name": "У. Тажибай уулу",
+        "kpiPct": 100,
+        "position": "Специалист по КА",
+        "functions": "Кадровое администрирование",
+        "violation": null,
+        "isBestThisMonth": false
+      },
+      {
+        "name": "А. Усенгазиева",
+        "kpiPct": 100,
+        "position": "Специалист по Д-А",
+        "functions": "Делопроизводство/архив",
+        "violation": null,
+        "isBestThisMonth": false
+      },
+      {
+        "name": "Ю. Калугина",
+        "kpiPct": 100,
+        "position": "Специалист по Д-А",
+        "functions": "Делопроизводство/архив",
+        "violation": null,
+        "isBestThisMonth": false
+      },
+      {
+        "name": "В. Абдылдаева",
+        "kpiPct": 100,
+        "position": "Специалист по оценке",
+        "functions": "Оценка персонала",
+        "violation": null,
+        "isBestThisMonth": false
+      },
+      {
+        "name": "М. Кадыралиева",
+        "kpiPct": 100,
+        "position": "Специалист по обучению",
+        "functions": "Обучение и развитие",
+        "violation": null,
+        "isBestThisMonth": false
+      },
+      {
+        "name": "А. Нурлан кызы",
+        "kpiPct": 100,
+        "position": "HR по дисциплине",
+        "functions": "Дисциплина труда",
+        "violation": null,
+        "isBestThisMonth": false
+      },
+      {
+        "name": "Н. Сыпабекова",
+        "kpiPct": 100,
+        "position": "Ст. специалист ОПАП",
+        "functions": "Подбор и адаптация",
+        "violation": null,
+        "isBestThisMonth": false
+      },
+      {
+        "name": "Б. Асылбеков",
+        "kpiPct": 98,
+        "position": "Специалист ОПАП",
+        "functions": "Подбор и найм: СЭТС, ОДТ, ОКП (массовый)",
+        "violation": "Несоблюдение сроков подбора в Балыкчы",
+        "isBestThisMonth": false
+      },
+      {
+        "name": "А. Мамбетакунова",
+        "kpiPct": 100,
+        "position": "Специалист ОПАП",
+        "functions": "Подбор и адаптация",
+        "violation": null,
+        "isBestThisMonth": false
+      }
+    ],
+    "pastBest": [
+      {
+        "name": "Б. Асылбеков",
+        "month": "Сентябрь"
+      }
+    ],
+    "teamPlans": [
+      {
+        "team": "АКО (Административно-кадровый отдел)",
+        "tasks": [
+          {
+            "task": "Положение АКО",
+            "status": "В работе",
+            "comment": "В разработке, на согласование до 30.07",
+            "responsible": "Н. Наматова"
+          },
+          {
+            "task": "ДИ старшего специалиста АКО",
+            "status": "В работе",
+            "comment": "В разработке, на согласование до 30.07",
+            "responsible": "Н. Наматова"
+          },
+          {
+            "task": "Доработки по В2В совместно с ОЦП",
+            "status": "Исполнено",
+            "comment": "Тестируется автоотправка документа на подпись после согласования",
+            "responsible": "А. Усенгазиева, Ю. Калугина"
+          },
+          {
+            "task": "Сверка приказов Google Sheets ↔ B2B",
+            "status": "В работе",
+            "comment": "Выполнено ~30%, трудоёмкая задача",
+            "responsible": "Ю. Калугина"
+          },
+          {
+            "task": "Перенос реестра производственных приказов в B2B",
+            "status": "В работе",
+            "comment": "Тестовый модуль — 29.09, финальный запуск ориентировочно на этой неделе",
+            "responsible": "А. Усенгазиева, Ю. Калугина"
+          },
+          {
+            "task": "Результаты водителей СЭТС",
+            "status": "постоянная задача",
+            "comment": "Ежемесячное обновление данных",
+            "responsible": "Х. Тохтаева"
+          },
+          {
+            "task": "Согласовать ШР и орг. структуру компании",
+            "status": "Исполнено",
+            "comment": "Подготовка ШР и орг. структуры за 3-й квартал",
+            "responsible": "Н. Наматова, З. Тилибаева"
+          },
+          {
+            "task": "Аудит кадрового учёта (проверка СВКА, поручение ГД)",
+            "status": "В работе",
+            "comment": "",
+            "responsible": "Н. Наматова, З. Тилибаева, Х. Тохтаева, У. Тажибай уулу"
+          },
+          {
+            "task": "Оформить сокращение штатных единиц после утверждения ГД",
+            "status": "Исполнено",
+            "comment": "",
+            "responsible": "Н. Наматова"
+          },
+          {
+            "task": "Переподписать КПЭ всем руководителям",
+            "status": "Исполнено",
+            "comment": "После согласования соответствующего ВНД",
+            "responsible": "Н. Наматова, З. Тилибаева"
+          },
+          {
+            "task": "Ежемесячный отчёт по кадровому администрированию по СП",
+            "status": "постоянная задача",
+            "comment": "",
+            "responsible": "Н. Наматова"
+          }
+        ],
+        "progress": "0/11"
+      },
+      {
+        "team": "СУЭП (Сектор управления эффективностью персонала)",
+        "tasks": [
+          {
+            "task": "360° самооценка по СП — повысить охват",
+            "status": "В работе",
+            "comment": "",
+            "responsible": "В. Абдылдаева"
+          },
+          {
+            "task": "Методология оценки результативности по группам должностей/СП",
+            "status": "В работе",
+            "comment": "Протокольное поручение",
+            "responsible": "В. Абдылдаева"
+          },
+          {
+            "task": "Оценка среза знаний на кейсовых задачах",
+            "status": "В работе",
+            "comment": "",
+            "responsible": "В. Абдылдаева"
+          },
+          {
+            "task": "План обучения новыми тренерами (УНБХ, КРО)",
+            "status": "Исполнено",
+            "comment": "",
+            "responsible": "М. Кадыралиева"
+          },
+          {
+            "task": "Единая база оценок (срезы/аттестация/360°)",
+            "status": "Исполнено",
+            "comment": "По сотрудникам готово, по руководителям уже есть",
+            "responsible": "В. Абдылдаева"
+          },
+          {
+            "task": "Единая база статусов ИПР",
+            "status": "новая задача",
+            "comment": "",
+            "responsible": "М. Кадыралиева"
+          },
+          {
+            "task": "Обновление базы внутреннего резерва по ИПР",
+            "status": "Ожидание",
+            "comment": "Ждёт результатов ИПР",
+            "responsible": "Н. Сыпабекова"
+          },
+          {
+            "task": "Сводная база отчётности по всем СП и секторам УЧР",
+            "status": "В работе",
+            "comment": "",
+            "responsible": "Ж. Нурбаев"
+          },
+          {
+            "task": "ИПР для сотрудников по результатам оценок",
+            "status": "новая задача",
+            "comment": "Опрос прошли 59 чел.: нужна прокачка проф. навыков — 95%, знаний ВНД — 73%, упр. навыков — 37%, дисциплины — 15%, коммуникаций — 14%",
+            "responsible": "М. Кадыралиева"
+          },
+          {
+            "task": "Тестовый опросник по компетенциям ИПР для руководителей",
+            "status": "новая задача",
+            "comment": "Вопросы составлены и проверены, разосланы через Google Forms",
+            "responsible": "М. Кадыралиева"
+          }
+        ],
+        "progress": "0/10"
+      }
+    ],
+    "conclusion": "Лучший сотрудник месяца — Х. Тохтаева (100% КПЭ). У сотрудников УЧР КПЭ 100%, кроме Б. Асылбекова (98%): несоблюдение сроков подбора в Балыкчы."
+  },
+  "functionAnalysis": {
+    "groups": [
+      {
+        "pot": 16,
+        "sup": 47,
+        "vit": 1500,
+        "uncl": 30,
+        "group": "КД",
+        "units": 1593
+      },
+      {
+        "pot": 0,
+        "sup": 0,
+        "vit": 0,
+        "uncl": 338,
+        "group": "Альтранс",
+        "units": 338
+      },
+      {
+        "pot": 0,
+        "sup": 39,
+        "vit": 96,
+        "uncl": 101,
+        "group": "ТД",
+        "units": 236
+      },
+      {
+        "pot": 11,
+        "sup": 60,
+        "vit": 2,
+        "uncl": 21,
+        "group": "САУП",
+        "units": 94
+      },
+      {
+        "pot": 0,
+        "sup": 41,
+        "vit": 0,
+        "uncl": 1,
+        "group": "КРО",
+        "units": 42
+      },
+      {
+        "pot": 2,
+        "sup": 20,
+        "vit": 17,
+        "uncl": 0,
+        "group": "ДИТ",
+        "units": 39
+      },
+      {
+        "pot": 0,
+        "sup": 7,
+        "vit": 0,
+        "uncl": 5,
+        "group": "Руководство",
+        "units": 12
+      },
+      {
+        "pot": 0,
+        "sup": 11,
+        "vit": 0,
+        "uncl": 0,
+        "group": "СВКА",
+        "units": 11
+      },
+      {
+        "pot": 0,
+        "sup": 0,
+        "vit": 0,
+        "uncl": 6,
+        "group": "Контакт",
+        "units": 6
+      },
+      {
+        "pot": 0,
+        "sup": 0,
+        "vit": 0,
+        "uncl": 1,
+        "group": "ТЕХНИЧЕСКИЙ",
+        "units": 1
+      }
+    ],
+    "totals": {
+      "units": 2372,
+      "fullPct": 78,
+      "positions": 380,
+      "departments": 31
+    },
+    "potential": [
+      {
+        "dept": "КД-ОКП",
+        "units": 13
+      },
+      {
+        "dept": "САУП-Бухгалтерия",
+        "units": 5
+      },
+      {
+        "dept": "САУП-ПЭО",
+        "units": 4
+      },
+      {
+        "dept": "КД-Маркетинг",
+        "units": 3
+      },
+      {
+        "dept": "ДИТ-Отдел цифровых продуктов",
+        "units": 2
+      },
+      {
+        "dept": "САУП-Отдел казначейства",
+        "units": 2
+      }
+    ],
+    "categories": [
+      {
+        "name": "Потенциально к сокращению",
+        "units": 29,
+        "positions": 14
+      },
+      {
+        "name": "Поддерживает систему",
+        "units": 225,
+        "positions": 126
+      },
+      {
+        "name": "Жизненно важная функция",
+        "units": 1615,
+        "positions": 133
+      },
+      {
+        "name": "Требует уточнения",
+        "units": 503,
+        "positions": 107
+      }
+    ],
+    "conclusion": "Этап 1: 2372 ед. в 31 подразделении (УЧР исключён). Потенциал к сокращению — 29 ед. в 14 должностях, больше всего в КД-ОКП (13). 1615 ед. — жизненно важные функции. 503 ед. требуют уточнения, из них 338 — водители Альтранс: анкеты не заполнены, кадровых выводов по ним нет."
+  },
+  "massRecruitment": {
+    "byDept": [
+      {
+        "dept": "СЭТС",
+        "sent": 63,
+        "hired": 6,
+        "contacted": 425,
+        "documents": 7,
+        "responses": 623,
+        "vacancies": 11
+      },
+      {
+        "dept": "ОКП",
+        "sent": 41,
+        "hired": 10,
+        "contacted": 49,
+        "documents": 6,
+        "responses": 113,
+        "vacancies": 18
+      },
+      {
+        "dept": "ОДТ",
+        "sent": 90,
+        "hired": 14,
+        "contacted": 126,
+        "documents": 11,
+        "responses": 314,
+        "vacancies": 42
+      }
+    ],
+    "conclusion": "Массовый подбор водителей за октябрь: 71 вакансия, 1050 откликов, оформлено 30 чел. (СЭТС 6, ОКП 10, ОДТ 14)."
+  },
+  "uchrInteraction": {
+    "uchr": {
+      "avg": 9.89,
+      "count": 19,
+      "delta": -0.01,
+      "total": 34,
+      "remarks": [
+        {
+          "dept": "СЭТС",
+          "text": "Вакантные места для водительского состава в Чуйской и Иссык-Кульской областях остаются открытыми. Транспортные средства простаивают без водителей.",
+          "score": 9,
+          "answer": "Балыкчи: потребность закрыта, выход водителей с 1 ноября (А. Маслов, 28.10)",
+          "category": "Нарушение сроков исполнения"
+        },
+        {
+          "dept": "ОПЗИ",
+          "text": "Вакантна позиция бухгалтера более 6 мес.",
+          "score": 9,
+          "answer": "Согласны с оценкой. Вакансия открыта 19.02, закрыта 28.08, возобновлена 10.09. Из 65 кандидатов 57 отказов, 7 собеседований, 1 оффер (отказ через день). 53% отказов с нашей стороны, 44% от кандидатов, 3% без связи (А. Маслов, 27.10)",
+          "category": "Иное"
+        }
+      ],
+      "notEvaluated": 15
+    },
+    "period": "2026-10",
+    "company": {
+      "months": [
+        {
+          "avg": 10,
+          "low": null,
+          "none": 153,
+          "count": 2,
+          "month": "Июнь"
+        },
+        {
+          "avg": 9.84,
+          "low": 12,
+          "none": 1,
+          "count": 109,
+          "month": "Июль"
+        },
+        {
+          "avg": 10,
+          "low": null,
+          "none": null,
+          "count": 60,
+          "month": "Август"
+        },
+        {
+          "avg": 9.79,
+          "low": 36,
+          "none": 33,
+          "count": 271,
+          "month": "Сентябрь"
+        },
+        {
+          "avg": 9.94,
+          "low": 26,
+          "none": 82,
+          "count": 503,
+          "month": "Октябрь"
+        }
+      ],
+      "violations": [
+        {
+          "type": "Нарушение сроков исполнения",
+          "count": 11
+        },
+        {
+          "type": "Несвоевременная или неполная обратная связь",
+          "count": 10
+        },
+        {
+          "type": "Неисполнение обязательного требования или поручения",
+          "count": 5
+        },
+        {
+          "type": "Иное",
+          "count": 4
+        },
+        {
+          "type": "Недостаточная координация действий",
+          "count": 2
+        },
+        {
+          "type": "Неполные или некорректные данные и документы",
+          "count": 2
+        }
+      ],
+      "distribution": [
+        {
+          "pct": 82,
+          "count": 477,
+          "label": "10 — без отклонений"
+        },
+        {
+          "pct": 4,
+          "count": 23,
+          "label": "9 — незначительно"
+        },
+        {
+          "pct": 0,
+          "count": 2,
+          "label": "8 — требует внимания"
+        },
+        {
+          "pct": 0,
+          "count": 1,
+          "label": "≤7 — критично"
+        },
+        {
+          "pct": 14,
+          "count": 82,
+          "label": "Нет взаимодействия"
+        }
+      ]
+    },
+    "conclusion": "Взаимодействие УЧР за октябрь: средний балл 9,89 (19 оценок), 2 замечания с ответами УЧР. Компания: средний балл 9,94 при 503 оценках, рост с 9,79 в сентябре."
+  },
+  "admin": {
+    "types": [
+      {
+        "type": "Приём",
+        "months": [
+          165,
+          198,
+          181,
+          169
+        ]
+      },
+      {
+        "type": "Увольнение",
+        "months": [
+          200,
+          162,
+          179,
+          177
+        ]
+      },
+      {
+        "type": "Отпуск",
+        "months": [
+          287,
+          290,
+          185,
+          175
+        ]
+      },
+      {
+        "type": "Перевод",
+        "months": [
+          93,
+          76,
+          84,
+          83
+        ]
+      },
+      {
+        "type": "Совмещение / оплата",
+        "months": [
+          45,
+          41,
+          36,
+          42
+        ]
+      },
+      {
+        "type": "Дисциплинарное взыскание",
+        "months": [
+          40,
+          29,
+          22,
+          37
+        ]
+      },
+      {
+        "type": "Общий отдел",
+        "months": [
+          41,
+          34,
+          35,
+          49
+        ]
+      }
+    ],
+    "months": [
+      "Июль",
+      "Август",
+      "Сентябрь",
+      "Октябрь"
+    ],
+    "byCompany": [
+      {
+        "men": 1877,
+        "fires": 169,
+        "hires": 155,
+        "leave": 165,
+        "women": 528,
+        "company": "Альфа Ойл",
+        "penalty": 37,
+        "transfer": 77
+      },
+      {
+        "men": 60,
+        "fires": 0,
+        "hires": 0,
+        "leave": 5,
+        "women": 6,
+        "company": "ОКС",
+        "penalty": 0,
+        "transfer": 0
+      },
+      {
+        "men": 285,
+        "fires": 6,
+        "hires": 13,
+        "leave": 1,
+        "women": 2,
+        "company": "Securi Force",
+        "penalty": 0,
+        "transfer": 6
+      },
+      {
+        "men": 22,
+        "fires": 2,
+        "hires": 1,
+        "leave": 4,
+        "women": 38,
+        "company": "Ред Маркет",
+        "penalty": 0,
+        "transfer": 0
+      }
+    ],
+    "headcount": [
+      {
+        "male": 2234,
+        "month": "Июль",
+        "total": 2799,
+        "female": 565
+      },
+      {
+        "male": 2250,
+        "month": "Август",
+        "total": 2833,
+        "female": 583
+      },
+      {
+        "male": 2254,
+        "month": "Сентябрь",
+        "total": 2834,
+        "female": 580
+      },
+      {
+        "male": 2244,
+        "month": "Октябрь",
+        "total": 2818,
+        "female": 574
+      }
+    ],
+    "conclusion": "Кадровые приказы за октябрь: принято 169, уволено 177, отпусков 175, переводов 83, дисциплинарных взысканий 37. Численность 2818 человек (574 женщины, 2244 мужчины)."
+  },
+  "plan": {
+    "sectors": [
+      {
+        "done": 4,
+        "note": "по таблице «План работы» на октябрь",
+        "total": 15,
+        "sector": "АКО"
+      },
+      {
+        "done": 10,
+        "note": "по таблице «План работы» на октябрь",
+        "total": 15,
+        "sector": "СУЭП"
+      }
+    ],
+    "nextPlan": [
+      {
+        "item": "Дискавери проект RedStaff 2",
+        "description": ""
+      },
+      {
+        "item": "Анализ и хронометраж работы товароведов Ред Маркет",
+        "description": ""
+      },
+      {
+        "item": "Функциональный анализ должностей и процессов",
+        "description": ""
+      },
+      {
+        "item": "ИПР сотрудников и 360",
+        "description": ""
+      },
+      {
+        "item": "Цифровой архив",
+        "description": ""
+      },
+      {
+        "item": "Организация обучения водителей и управляющих ОДТ",
+        "description": ""
+      }
+    ],
+    "conclusion": "Сектора за октябрь: АКО — 4 из 15 задач выполнено, СУЭП — 10 из 15. Протокольные поручения: 6 из 8 в срок, 2 в процессе, отложенных нет. Сравнение с сентябрём пока недоступно: плана за сентябрь нет.",
+    "factVsPlan": [
+      {
+        "item": "Командообразование в СП (тимбилдинги)",
+        "status": "inProgress",
+        "comment": "17 СП провели, остальным срок до 30.10"
+      },
+      {
+        "item": "Табелирование операторов — интеграция Альфа АЗС/1С",
+        "status": "done",
+        "comment": "Выполнено, идёт тестирование"
+      },
+      {
+        "item": "КПЭ «Кадровая работа» для руководителей СП",
+        "status": "done",
+        "comment": "Внесено в КПЭ руководителей"
+      },
+      {
+        "item": "Ревизия вакантных штатных единиц",
+        "status": "done",
+        "comment": "Закрыты 48 штатных единиц (в основном офис)"
+      },
+      {
+        "item": "Проверка кадрового администрирования (СВКА)",
+        "status": "done",
+        "comment": "По итогам снижен КПЭ 3 спец. КА — 90%"
+      },
+      {
+        "item": "ИПР руководителям с контрольными сроками",
+        "status": "done",
+        "comment": "Контрольная точка 30.10 состоялась"
+      },
+      {
+        "item": "Перевод сотрудников на трудовые отношения (САУП/ПЭО)",
+        "status": "inProgress",
+        "comment": "Проведено 2 встречи, нужна консолидация данных"
+      },
+      {
+        "item": "КПЭ-критерии САУП-бухгалтерии и Ред Маркет для ГД",
+        "status": "done",
+        "comment": "Письмо от 03.09.2026"
+      }
+    ],
+    "currentTasks": [
+      {
+        "task": "Завершить тимбилдинги в оставшихся СП",
+        "status": "inProgress",
+        "deadline": "30.10",
+        "responsible": "А. Маслов"
+      },
+      {
+        "task": "Перевод сотрудников на трудовые отношения — выбрать вариант",
+        "status": "inProgress",
+        "deadline": "уточняется",
+        "responsible": "САУП / ПЭО"
+      },
+      {
+        "task": "Интеграция Альфа АЗС — 1С (табелирование)",
+        "status": "done",
+        "deadline": "выполнено, тестирование",
+        "responsible": "УЧР / ДИТ"
+      }
+    ],
+    "protocol01Oct": {
+      "done": 7,
+      "items": [
+        "Командообразование и тимбилдинги в СП (перенесено из протокола от 02.07)",
+        "Табелирование операторов, интеграция Альфа АЗС и 1С (перенесено из протокола от 02.07)",
+        "Поторопить САУП и ПЭО по переводу сотрудников на трудовые отношения",
+        "Информация СВКА о штрафах по АЗС и УНБХ за месяц",
+        "Список водителей СЭТС, оштрафованных за превышение скорости, для СВКА",
+        "Согласовать поездку руководителей и выбрать направление",
+        "Ежемесячный отчёт УЧР о ходе оптимизации штата"
+      ],
+      "total": 7,
+      "source": "Протокол отчетного собрания УЧР от 01.10.2026, чек-лист 1"
+    },
+    "protocolStatus": {
+      "done": 6,
+      "notDone": 0,
+      "postponed": 0,
+      "inProgress": 2
+    },
+    "protocolHistory": [
+      {
+        "done": 5,
+        "month": "Сен",
+        "notDone": 0,
+        "postponed": 1,
+        "inProgress": 2
+      }
+    ]
+  },
+  "budget": {
+    "byLine": [
+      {
+        "fact": 676000,
+        "line": "Заработная плата (постоянная)",
+        "note": "освоено 100% (по данным руководителя)",
+        "plan": 676000,
+        "nextPlan": 710000
+      },
+      {
+        "fact": 158373,
+        "line": "Услуги: ChatGPT + Red Staff, СКУД",
+        "note": "",
+        "plan": 253883,
+        "nextPlan": 179943
+      },
+      {
+        "fact": 500000,
+        "line": "Мероприятия (тимбилдинг, поездка)",
+        "note": "",
+        "plan": 0,
+        "nextPlan": 6272000
+      },
+      {
+        "fact": 61651,
+        "line": "Расходы по документации",
+        "note": "",
+        "plan": 45000,
+        "nextPlan": 0
+      },
+      {
+        "fact": 891607,
+        "line": "Мотивационные программы",
+        "note": "факт с учётом добавленной суммы (по указанию руководителя)",
+        "plan": 1315000,
+        "nextPlan": 695000
+      },
+      {
+        "fact": 400000,
+        "line": "Корпоративные подарки для партнеров и сотрудников",
+        "note": "",
+        "plan": 300000,
+        "nextPlan": 300000
+      },
+      {
+        "fact": 9017,
+        "line": "Непредвиденные затраты",
+        "note": "",
+        "plan": 10000,
+        "nextPlan": 10000
+      },
+      {
+        "fact": 0,
+        "line": "Товары для сопутствующего бизнеса",
+        "note": "",
+        "plan": 100000,
+        "nextPlan": 100000
+      },
+      {
+        "fact": 809000,
+        "line": "Зарплата Переменная (переменная часть)",
+        "note": "освоено 100% (по данным руководителя)",
+        "plan": 809000,
+        "nextPlan": 809000
+      },
+      {
+        "fact": 120000,
+        "line": "Инвестиция — ПО для СКУД",
+        "note": "",
+        "plan": 200000,
+        "nextPlan": 375748
+      },
+      {
+        "fact": 0,
+        "line": "Мебель и принадлежности",
+        "note": "",
+        "plan": 140000,
+        "nextPlan": 0
+      },
+      {
+        "fact": 0,
+        "line": "Обучение",
+        "note": "",
+        "plan": 0,
+        "nextPlan": 43680
+      },
+      {
+        "fact": 0,
+        "line": "Подбор персонала",
+        "note": "",
+        "plan": 0,
+        "nextPlan": 120000
+      },
+      {
+        "fact": 0,
+        "line": "Мерчи для новых сотрудников",
+        "note": "",
+        "plan": 0,
+        "nextPlan": 180000
+      },
+      {
+        "fact": 0,
+        "line": "Трудовые книжки / командировочные",
+        "note": "",
+        "plan": 0,
+        "nextPlan": 0
+      }
+    ],
+    "history": [
+      {
+        "fact": 5654773,
+        "plan": 5664773,
+        "month": "Сен"
+      },
+      {
+        "fact": 3625648,
+        "plan": 3848883,
+        "month": "Окт"
+      }
+    ],
+    "conclusion": "Освоение бюджета УЧР за октябрь: 3 625 648 из 3 848 883 сом (94.2%). Заработная плата постоянная и переменная освоены 100%. План на ноябрь — 9 795 371 сом."
+  },
+  "recruitment": {
+    "byDept": [
+      {
+        "dept": "Али Гарант",
+        "open": 1,
+        "avgDays": 139,
+        "closeDays": null
+      },
+      {
+        "dept": "ОПЗИ",
+        "open": 2,
+        "avgDays": 7,
+        "closeDays": 7
+      },
+      {
+        "dept": "ОРН",
+        "open": 1,
+        "avgDays": 53,
+        "closeDays": null
+      },
+      {
+        "dept": "КРО",
+        "open": 0,
+        "avgDays": null,
+        "closeDays": 48
+      },
+      {
+        "dept": "ТС",
+        "open": 3,
+        "avgDays": 31,
+        "closeDays": 26
+      },
+      {
+        "dept": "ЭБ",
+        "open": 1,
+        "avgDays": 38,
+        "closeDays": null
+      },
+      {
+        "dept": "ОКП",
+        "open": 3,
+        "avgDays": 33,
+        "closeDays": null
+      },
+      {
+        "dept": "САУП",
+        "open": 1,
+        "avgDays": 5,
+        "closeDays": 59
+      },
+      {
+        "dept": "Маркетинг/КД",
+        "open": 0,
+        "avgDays": null,
+        "closeDays": 62
+      },
+      {
+        "dept": "ОПВ",
+        "open": 0,
+        "avgDays": null,
+        "closeDays": 29
+      },
+      {
+        "dept": "ОМ",
+        "open": 0,
+        "avgDays": null,
+        "closeDays": 22
+      }
+    ],
+    "funnel": [
+      {
+        "count": 13,
+        "stage": "Новые, дн."
+      },
+      {
+        "count": 24,
+        "stage": "Скрининг, дн."
+      },
+      {
+        "count": 10,
+        "stage": "Интервью с рекрутером, дн."
+      },
+      {
+        "count": 4,
+        "stage": "Тестовое задание, дн."
+      },
+      {
+        "count": 6,
+        "stage": "Интервью с руководителем, дн."
+      },
+      {
+        "count": 17,
+        "stage": "Принятие решения, дн."
+      },
+      {
+        "count": 8,
+        "stage": "Оффер, дн."
+      }
+    ],
+    "reserve": {
+      "inReserve": 38,
+      "readyToAssign": 14,
+      "assignedFromReserve": 5,
+      "closedFromReservePct": 19,
+      "prevClosedFromReservePct": 14
+    },
+    "activeList": [
+      {
+        "dept": "Али Гарант",
+        "count": 1,
+        "status": "Открыта",
+        "position": "Генеральный директор",
+        "priority": "средний",
+        "recruiter": "Нуржан"
+      },
+      {
+        "dept": "ОПЗИ",
+        "count": 1,
+        "status": "Открыта",
+        "position": "Брокер (Senior)",
+        "priority": "высокий",
+        "recruiter": "Нуржан"
+      },
+      {
+        "dept": "ОПЗИ",
+        "count": 1,
+        "status": "В подборе",
+        "position": "Брокер (Senior)",
+        "priority": "высокий",
+        "recruiter": "Алима"
+      },
+      {
+        "dept": "ОРН",
+        "count": 1,
+        "status": "В подборе",
+        "position": "Ведущий специалист по земельным и имущественным вопросам",
+        "priority": "высокий",
+        "recruiter": "Нуржан"
+      },
+      {
+        "dept": "КРО",
+        "count": 1,
+        "status": "В подборе",
+        "position": "Ревизор (Балыкчы)",
+        "priority": "высокий",
+        "recruiter": "Нуржан"
+      },
+      {
+        "dept": "ТС",
+        "count": 1,
+        "status": "В подборе",
+        "position": "Механик",
+        "priority": "средний",
+        "recruiter": "Алима"
+      },
+      {
+        "dept": "ТС",
+        "count": 1,
+        "status": "Открыта",
+        "position": "Компрессорщик ГНС",
+        "priority": "средне-низкий",
+        "recruiter": "Мирана"
+      },
+      {
+        "dept": "ТС",
+        "count": 1,
+        "status": "В подборе",
+        "position": "Электро-слесарь",
+        "priority": "высокий",
+        "recruiter": "Мирана"
+      },
+      {
+        "dept": "ЭБ",
+        "count": 1,
+        "status": "В подборе",
+        "position": "Бухгалтер",
+        "priority": "высокий",
+        "recruiter": "Алима"
+      },
+      {
+        "dept": "ОКП",
+        "count": 1,
+        "status": "В подборе",
+        "position": "Менеджер по оптовым продажам Бишкек",
+        "priority": "высокий",
+        "recruiter": "Мирана"
+      },
+      {
+        "dept": "ОМТС",
+        "count": 1,
+        "status": "В подборе",
+        "position": "Кладовщик склада в с.Полтавка",
+        "priority": "высокий",
+        "recruiter": "Мирана"
+      },
+      {
+        "dept": "ОДТ",
+        "count": 1,
+        "status": "В подборе",
+        "position": "Мастера цеха",
+        "priority": null,
+        "recruiter": "Бакдоолот"
+      },
+      {
+        "dept": "ОДТ",
+        "count": 1,
+        "status": "В подборе",
+        "position": "Завгар",
+        "priority": null,
+        "recruiter": "Бакдоолот"
+      }
+    ],
+    "adaptation": {
+      "total": 27,
+      "failed": 3,
+      "passed": 22,
+      "inProgress": 2,
+      "successRate": 81,
+      "prevSuccessRate": 74
+    },
+    "conclusion": "Штатный подбор: 12 вакансий в работе (в сентябре 15). Закрыто позиций за октябрь: 8. Срок закрытия: 35 дн. по 8 позициям. Массовый подбор водителей: 71 вакансия, 1050 откликов, оформлено 31 чел. (СЭТС 7, ОКП 10, ОДТ 14).",
+    "avgTimeToHire": {
+      "prev": 16,
+      "unit": "дн.",
+      "current": 35
+    },
+    "closedVacancies": {
+      "list": [
+        "КРО — ревизор (Балыкчы)",
+        "Маркетинг/КД — продакт-менеджер (бизнес девелопер)",
+        "ТС — сварщик",
+        "ОПВ — юрист",
+        "ТС — инженер электронщик (Манас)",
+        "ОМ — оператор контакт-центра",
+        "САУП — бухгалтер НБ ЖА",
+        "ОПЗИ — менеджер по привлечению инвестиций (пауза)"
+      ],
+      "basis": "таблица «для отчета октябрь»: статусы «Закрыта», «оффер принят», «Пауза», дата закрытия в октябре",
+      "count": 8,
+      "withoutDate": 3
+    },
+    "massRecruitment": {
+      "byDept": [
+        {
+          "dept": "СЭТС",
+          "sent": 63,
+          "hired": 7,
+          "contacted": 425,
+          "documents": 7,
+          "responses": 623,
+          "vacancies": 11
+        },
+        {
+          "dept": "ОКП",
+          "sent": 41,
+          "hired": 10,
+          "contacted": 49,
+          "documents": 6,
+          "responses": 113,
+          "vacancies": 18
+        },
+        {
+          "dept": "ОДТ",
+          "sent": 90,
+          "hired": 14,
+          "contacted": 126,
+          "documents": 11,
+          "responses": 314,
+          "vacancies": 42
+        }
+      ],
+      "conclusion": "Массовый подбор водителей за октябрь: 71 вакансия, 1050 откликов, оформлено 31 чел. (СЭТС 7, ОКП 10, ОДТ 14), открыто 40 (СЭТС 4, ОКП 8, ОДТ 28)."
+    }
+  }
+}
