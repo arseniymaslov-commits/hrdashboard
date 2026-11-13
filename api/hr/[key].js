@@ -4,6 +4,7 @@ const { neon } = require('@neondatabase/serverless');
 const ALLOWED_KEYS = new Set([
   'meta', 'composition', 'recruitment', 'admin', 'assessment', 'discipline',
   'departments', 'budget', 'plan', 'hrEfficiency', 'uchrInteraction', 'functionAnalysis',
+  'highlights', 'risks', 'decisions',
 ]);
 
 const MAX_BODY_CHARS = 2_000_000; // 2MB of JSON is more than enough for one block

@@ -725,6 +725,7 @@
   };
 
   var BLOCKS = [
+    {key:'highlights', title:'Главное за месяц', short:'Главное за месяц'},
     {key:'composition', title:'Состав компании', short:'Состав компании'},
     {key:'recruitment', title:'Подбор, найм, адаптация, резерв кадров', short:'Подбор и адаптация'},
     {key:'admin', title:'Кадровое администрирование', short:'Администрирование'},
@@ -735,7 +736,9 @@
     {key:'budget', title:'Бюджет', short:'Бюджет'},
     {key:'plan', title:'План работы и протокольные поручения', short:'План и поручения'},
     {key:'hrEfficiency', title:'Эффективность сотрудников УЧР', short:'Эффективность УЧР'},
-    {key:'uchrInteraction', title:'Взаимодействие отдела УЧР', short:'Взаимодействие УЧР'}
+    {key:'uchrInteraction', title:'Взаимодействие отдела УЧР', short:'Взаимодействие УЧР'},
+    {key:'risks', title:'Риски', short:'Риски'},
+    {key:'decisions', title:'Решения и просьбы к руководству', short:'Решения и просьбы'}
   ];
   var SLIDE_COUNT = BLOCKS.length + 2; // title + toc + blocks
 
@@ -745,6 +748,10 @@
 <script>
 window.__HR__.DEMO = {
   meta:{ period:'Сентябрь 2026', prevPeriod:'Август 2026', company:'ОсОО «Альфа Ойл»' },
+  // управленческая часть: без демо-данных — пока лист не заполнен, слайд честно говорит об этом
+  highlights:{ conclusion:'Выводы за месяц ещё не заполнены в таблице', items:[] },
+  risks:{ conclusion:'Открытых рисков за месяц не заполнено', items:[] },
+  decisions:{ conclusion:'Решений за месяц не заполнено', items:[] },
 
   composition:{
     headcountHistory:[{month:'Апр',count:385},{month:'Май',count:391},{month:'Июн',count:397},{month:'Июл',count:401},{month:'Авг',count:405},{month:'Сен',count:412}],
@@ -1751,11 +1758,78 @@ window.__HR__.DEMO = {
       + dkGrid('minmax(0,1fr) minmax(0,1fr) minmax(0,1.25fr)', dkDense(cardA) + dkDense(cardB) + dkDense(cardC)) + '</div>';
   }
 
+  /* ---------- управленческая часть: Главное, Риски, Решения (листы таблицы) ---------- */
+  function secNo(key){ return H.BLOCKS.map(function(b){ return b.key; }).indexOf(key) + 1; }
+  function listEmpty(key, title, conclusion, meta, hint){
+    return '<div class="dk-slide">' + dkHead(secNo(key), title, conclusion, meta)
+      + dkCard('Пока не заполнено', hint, '<div style="font-size:14px;color:var(--ink-2);line-height:1.5">Заполните лист в таблице УЧР и нажмите «Обновить данные».</div>') + '</div>';
+  }
+  function labelRows(pairs){
+    return pairs.filter(function(p){ return p[1]; }).map(function(p){
+      return '<div style="font-size:13px;line-height:1.5;color:var(--ink-2);margin-top:4px"><b>'+esc(p[0])+':</b> '+esc(p[1])+'</div>';
+    }).join('');
+  }
+  function render_highlights(d, meta){
+    var items = d.items || [];
+    if(!items.length) return listEmpty('highlights', 'Главное за месяц', d.conclusion, meta, 'Лист «Главное»');
+    var cards = items.slice(0, 6).map(function(x){
+      var vals = [];
+      if(x.current) vals.push('сейчас '+x.current);
+      if(x.previous) vals.push('было '+x.previous);
+      if(x.plan) vals.push('план '+x.plan);
+      if(x.delta) vals.push('откл. '+x.delta);
+      var body = '<div style="font-size:13px;line-height:1.5;color:var(--ink-2)">'+esc(vals.join(' · '))+'</div>'
+        + labelRows([['Что делаем', x.action], ['Ответственный', x.owner], ['Срок', x.due]]);
+      return dkDense(dkCard(x.title, x.metric || '', body));
+    }).join('');
+    var cols = items.length > 1 ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)';
+    return '<div class="dk-slide">' + dkHead(secNo('highlights'), 'Главное за месяц', d.conclusion, meta)
+      + dkGrid(cols, cards) + '</div>';
+  }
+  function render_risks(d, meta){
+    var items = d.items || [];
+    if(!items.length) return listEmpty('risks', 'Риски', d.conclusion, meta, 'Лист «Риски»');
+    var open = items.filter(function(x){ return x.status !== 'Закрыт'; });
+    var high = open.filter(function(x){ return x.probability === 'Высокая' || x.impact === 'Высокое'; });
+    var kpis = dkKpis([
+      dkKpi('Открытых рисков', fmt(open.length,0), 'из '+items.length+' в реестре'),
+      dkKpi('Высоких', fmt(high.length,0), 'по вероятности или влиянию', high.length ? 'bad' : ''),
+      dkKpi('Закрыто', fmt(items.length - open.length,0), 'за месяц')
+    ]);
+    var rows = items.map(function(x){
+      return { cells: [esc(x.text), esc([x.probability, x.impact].filter(Boolean).join(' / ')), esc(x.done), esc(x.need), esc(x.status)] };
+    });
+    var card = dkCard('Реестр рисков', 'Вероятность и влияние — из листа «Риски»',
+      dkTable([{a:'l'},{w:'130px',a:'l'},{a:'l'},{a:'l'},{w:'100px',a:'l'}], ['Риск','Вер. / влияние','Что сделано','Что нужно от руководства','Статус'], rows));
+    return '<div class="dk-slide">' + dkHead(secNo('risks'), 'Риски', d.conclusion, meta) + kpis
+      + dkGrid('minmax(0,1fr)', dkDense(card)) + '</div>';
+  }
+  function render_decisions(d, meta){
+    var items = d.items || [];
+    if(!items.length) return listEmpty('decisions', 'Решения и просьбы к руководству', d.conclusion, meta, 'Лист «Решения»');
+    var count = function(s){ return items.filter(function(x){ return x.status === s; }).length; };
+    var kpis = dkKpis([
+      dkKpi('Ждут решения', fmt(count('Ждёт решения'),0), 'нужен ответ руководства', count('Ждёт решения') ? 'bad' : ''),
+      dkKpi('Согласовано', fmt(count('Согласовано'),0), ''),
+      dkKpi('Выполнено', fmt(count('Выполнено'),0), ''),
+      dkKpi('Отклонено', fmt(count('Отклонено'),0), '')
+    ]);
+    var rows = items.map(function(x){
+      return { cells: [esc(x.text), esc(x.why), esc(x.due), esc(x.owner), esc(x.status)] };
+    });
+    var card = dkCard('Что нужно от руководства', 'Решение, срок и ответственный',
+      dkTable([{a:'l'},{a:'l'},{w:'110px',a:'l'},{w:'160px',a:'l'},{w:'140px',a:'l'}], ['Решение / просьба','Почему нужно','Срок','Ответственный','Статус'], rows));
+    return '<div class="dk-slide">' + dkHead(secNo('decisions'), 'Решения и просьбы к руководству', d.conclusion, meta) + kpis
+      + dkGrid('minmax(0,1fr)', dkDense(card)) + '</div>';
+  }
+
   var RENDERERS = {
+    highlights:render_highlights,
     composition:render_composition,
     recruitment:render_recruitment, admin:render_admin, assessment:render_assessment,
     discipline:render_discipline, departments:render_departments,
-    budget:render_budget, plan:render_plan, hrEfficiency:render_hrEfficiency, functionAnalysis:render_functionAnalysis, uchrInteraction:render_uchrInteraction
+    budget:render_budget, plan:render_plan, hrEfficiency:render_hrEfficiency, functionAnalysis:render_functionAnalysis, uchrInteraction:render_uchrInteraction,
+    risks:render_risks, decisions:render_decisions
   };
 
   H.RENDERERS = RENDERERS;
@@ -2115,6 +2189,9 @@ window.__HR__.DEMO = {
   function tocValueOf(key, d, all){
     var n = function(v,k){ return fmt(v,k||0); };
     switch(key){
+      case 'highlights': return { v: String(d.items.length), s: 'выводов за месяц' };
+      case 'risks': return { v: String(d.items.filter(function(x){ return x.status !== 'Закрыт'; }).length), s: 'открытых рисков' };
+      case 'decisions': return { v: String(d.items.filter(function(x){ return x.status === 'Ждёт решения'; }).length), s: 'ждут решения руководства' };
       case 'composition': {
         var h = d.headcountHistory, cur = h[h.length-1].count, prev = h[h.length-2] ? h[h.length-2].count : cur;
         return { v: n(cur)+' чел.', s: 'Текучесть '+n(d.turnoverRate.current,1)+'%, '+dkSigned(d.turnoverRate.current-d.turnoverRate.prev,1)+' п.п.' };
