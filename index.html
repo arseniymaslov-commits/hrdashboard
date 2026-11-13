@@ -696,6 +696,9 @@
       <button class="icon-btn" id="btn-snapshot-upload" style="flex:1">⇧ Загрузить месяц (.json)</button>
     </div>
     <input type="file" id="snapshot-input" accept=".json,application/json" style="display:none">
+    <div class="row">
+      <button class="icon-btn" id="btn-sheet-sync" style="flex:1">⟳ Обновить из Google-таблицы</button>
+    </div>
     <div id="upload-status"></div>
     <div class="row" style="justify-content:flex-end">
       <button class="icon-btn" id="btn-modal-close">Закрыть</button>
@@ -2486,6 +2489,42 @@ window.__HR__.DEMO = {
     }
   }
 
+  /* Обновление из Google-таблицы: сервер читает листы, проверяет и пишет текущий период.
+     Сначала проверка (dryRun), затем подтверждение, затем запись и перечитывание отчёта. */
+  async function syncFromSheet(){
+    var statusEl = document.getElementById('upload-status');
+    if(!getEditToken()){ toast('Введите ключ редактирования в окне «Обновить данные»'); return; }
+    statusEl.innerHTML = '<div class="modal-status">Читаем таблицу и проверяем данные…</div>';
+    var headers = {'X-Edit-Token': getEditToken()};
+    function showErrors(list, detail){
+      var extra = detail ? '<br>'+esc(detail) : '';
+      statusEl.innerHTML = '<div class="modal-status err">Данные не прошли проверку, ничего не записано:<br>'+(list||[]).map(esc).join('<br>')+extra+'</div>';
+    }
+    try{
+      var dry = await fetch(API_BASE+'/sync?dryRun=1', {method:'POST', headers:headers});
+      var dj = await dry.json().catch(function(){ return {}; });
+      if(dry.status===401){ statusEl.innerHTML = '<div class="modal-status err">Неверный ключ редактирования</div>'; return; }
+      if(dry.status===422){ showErrors(dj.errors); return; }
+      if(dry.status===502){ statusEl.innerHTML = '<div class="modal-status err">Не удалось прочитать таблицу: '+esc(dj.detail||'проверьте доступ по ссылке')+'</div>'; return; }
+      if(!dry.ok) throw new Error('HTTP '+dry.status);
+
+      var warn = dj.warnings || [];
+      var text = 'Обновить текущий период из таблицы?\n\nЛистов: '+(dj.blocks||[]).length+'\nПредупреждений: '+warn.length+(warn.length?'\n\n'+warn.slice(0,8).join('\n'):'');
+      if(!confirm(text)){ statusEl.innerHTML = ''; return; }
+
+      var res = await fetch(API_BASE+'/sync', {method:'POST', headers:headers});
+      var rj = await res.json().catch(function(){ return {}; });
+      if(res.status===422){ showErrors(rj.errors); return; }
+      if(!res.ok) throw new Error('HTTP '+res.status);
+
+      statusEl.innerHTML = '<div class="modal-status">Записано, обновляем отчёт…</div>';
+      await loadFromApi(state.latestPeriod);
+      statusEl.innerHTML = '<div class="modal-status ok">Готово: обновлено блоков '+((rj.written||[]).length)+'. Слайды и выводы пересчитаны.'+(warn.length?' Предупреждений: '+warn.length+'.':'')+'</div>';
+    }catch(err){
+      statusEl.innerHTML = '<div class="modal-status err">Не удалось обновить из таблицы: '+esc(err&&err.message?err.message:String(err))+'</div>';
+    }
+  }
+
   /* ---------------- upload modal ---------------- */
   var modal, selectEl;
   function wireModal(){
@@ -2517,6 +2556,7 @@ window.__HR__.DEMO = {
       offerDownload(blob, 'Снимок_'+(state.latestPeriod||'месяц')+'.json');
     });
     document.getElementById('btn-snapshot-upload').addEventListener('click', function(){ document.getElementById('snapshot-input').click(); });
+    document.getElementById('btn-sheet-sync').addEventListener('click', syncFromSheet);
     document.getElementById('snapshot-input').addEventListener('change', function(e){
       var file = e.target.files[0]; e.target.value = '';
       if(file) importSnapshot(file);
